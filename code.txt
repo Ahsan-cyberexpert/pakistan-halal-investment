@@ -1,455 +1,9 @@
-Voice Agent Component
-src/components/VoiceAgent.tsx
-'use client';
-import { useState, useEffect, useRef } from 'react';
+﻿
 
-interface VoiceAgentProps {
-  onCommand: (cmd: string) => void;
-}
+// ==========================================
+// File: src/app/api/payment/deposit/route.ts
+// ==========================================
 
-export default function VoiceAgent({ onCommand }: VoiceAgentProps) {
-  const [isListening, setIsListening] = useState(false);
-  const recognitionRef = useRef<any>(null);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined' && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      recognitionRef.current = new SpeechRecognition();
-      recognitionRef.current.lang = 'ur-PK';
-      recognitionRef.continuous = false;
-      recognitionRef.interimResults = false;
-
-      recognitionRef.current.onresult = (event: any) => {
-        const text = event.results[0][0].transcript.toLowerCase();
-        onCommand(text);
-        setIsListening(false);
-      };
-
-      recognitionRef.current.onerror = () => setIsListening(false);
-      recognitionRef.current.onend = () => setIsListening(false);
-    }
-  }, [onCommand]);
-
-  const speak = (text: string) => {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'ur-PK';
-      utterance.rate = 0.85;
-      window.speechSynthesis.speak(utterance);
-    }
-  };
-
-  const toggleListening = () => {
-    if (isListening) {
-      recognitionRef.current?.stop();
-      setIsListening(false);
-    } else {
-      speak('بولیں۔ ڈیپوزٹ، وِڈڈرا، یا بیلنس؟');
-      recognitionRef.current?.start();
-      setIsListening(true);
-    }
-  };
-
-  return (
-    <div className="fixed bottom-6 right-6 z-50">
-      <button
-        onClick={toggleListening}
-        className={`p-4 rounded-full shadow-lg transition-all duration-300 ${
-          isListening ? 'bg-red-500 scale-110' : 'bg-green-600 hover:bg-green-700'
-        }`}
-      >
-        {isListening ? '🔴 سن رہا ہے...' : '🎤 آواز سے کنٹرول'}
-      </button>
-    </div>
-  );
-}
-
- Deposit & Withdraw Flows
-src/components/DepositFlow.tsx
-'use client';
-import { useState } from 'react';
-
-export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => void }) {
-  const [step, setStep] = useState(1);
-  const [amount, setAmount] = useState('');
-  const [method, setMethod] = useState('');
-  const [pin, setPin] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const methods = [
-    { id: 'jazzcash', name: 'JazzCash', icon: '📱' },
-    { id: 'easypaisa', name: 'EasyPaisa', icon: '🟢' },
-    { id: 'bank', name: 'Bank Account', icon: '🏦' }
-  ];
-
-  const validate = () => {
-    setError('');
-    if (!amount || Number(amount) < 100) return setError('کم از کم PKR 100 درج کریں');
-    if (!method) return setError('ادائیگی کا طریقہ منتخب کریں');
-    if (pin.length !== 4 || !/^\d{4}$/.test(pin)) return setError('4 ہندسوں کا درست PIN درج کریں');
-    return true;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validate()) return;
-    
-    setLoading(true);
-    await new Promise(r => setTimeout(r, 1200)); // Simulate processing
-    onSuccess({ type: 'deposit', amount: Number(amount), method, pin: '****' });
-    setLoading(false);
-  };
-
-  return (
-    <div className="w-full max-w-sm mx-auto p-6 bg-white rounded-2xl shadow-xl border border-gray-100">
-      <h2 className="text-xl font-bold mb-5 text-gray-800">💰 ڈیپوزٹ کریں</h2>
-      
-      {step === 1 && (
-        <div className="space-y-4">
-          <label className="block text-sm font-medium text-gray-700">رقم (PKR)</label>
-          <input
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            placeholder="e.g. 5000"
-            className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-green-500 outline-none"
-          />
-          <button onClick={() => setStep(2)} className="w-full py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 font-medium">
-            آگے بڑھیں
-          </button>
-        </div>
-      )}
-
-      {step === 2 && (
-        <div className="space-y-4">
-          <label className="block text-sm font-medium text-gray-700">ادائیگی کا طریقہ</label>
-          <div className="grid grid-cols-3 gap-3">
-            {methods.map((m) => (
-              <button
-                key={m.id}
-                onClick={() => setMethod(m.id)}
-                className={`p-3 border rounded-xl text-center transition ${
-                  method === m.id ? 'border-green-500 bg-green-50 ring-2 ring-green-200' : 'hover:bg-gray-50'
-                }`}
-              >
-                <div className="text-2xl mb-1">{m.icon}</div>
-                <div className="text-xs font-medium">{m.name}</div>
-              </button>
-            ))}
-          </div>
-          <div className="flex gap-2">
-            <button onClick={() => setStep(1)} className="flex-1 py-3 border rounded-xl hover:bg-gray-50">واپس</button>
-            <button onClick={() => setStep(3)} className="flex-1 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700">آگے بڑھیں</button>
-          </div>
-        </div>
-      )}
-
-      {step === 3 && (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <label className="block text-sm font-medium text-gray-700">4 ہندسوں کا PIN</label>
-          <input
-            type="password"
-            inputMode="numeric"
-            maxLength={4}
-            value={pin}
-            onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))}
-            placeholder="****"
-            className="w-full p-3 border rounded-xl text-center text-xl tracking-widest focus:ring-2 focus:ring-green-500 outline-none"
-          />
-          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
-          <div className="flex gap-2">
-            <button type="button" onClick={() => setStep(2)} className="flex-1 py-3 border rounded-xl hover:bg-gray-50">واپس</button>
-            <button type="submit" disabled={loading} className="flex-1 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 disabled:opacity-50 font-medium">
-              {loading ? 'پروسیس...' : 'تصدیق کریں'}
-            </button>
-          </div>
-        </form>
-      )}
-    </div>
-  );
-}
-
-src/components/WithdrawFlow.tsx (Same structure, just change type & labels)
-'use client';
-import { useState } from 'react';
-
-export default function WithdrawFlow({ onSuccess }: { onSuccess: (data: any) => void }) {
-  const [step, setStep] = useState(1);
-  const [amount, setAmount] = useState('');
-  const [method, setMethod] = useState('');
-  const [pin, setPin] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const methods = [
-    { id: 'jazzcash', name: 'JazzCash', icon: '📱' },
-    { id: 'easypaisa', name: 'EasyPaisa', icon: '🟢' },
-    { id: 'bank', name: 'Bank Account', icon: '🏦' }
-  ];
-
-  const validate = () => {
-    setError('');
-    if (!amount || Number(amount) < 100) return setError('کم از کم PKR 100 درج کریں');
-    if (!method) return setError('رقم وصولی کا طریقہ منتخب کریں');
-    if (pin.length !== 4 || !/^\d{4}$/.test(pin)) return setError('4 ہندسوں کا درست PIN درج کریں');
-    return true;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validate()) return;
-    setLoading(true);
-    await new Promise(r => setTimeout(r, 1200));
-    onSuccess({ type: 'withdraw', amount: Number(amount), method, pin: '****' });
-    setLoading(false);
-  };
-
-  return (
-    <div className="w-full max-w-sm mx-auto p-6 bg-white rounded-2xl shadow-xl border border-gray-100">
-      <h2 className="text-xl font-bold mb-5 text-gray-800">💸 وِڈڈرا کریں</h2>
-      {/* Identical step logic as Deposit, just change labels & type */}
-      {step === 1 && (
-        <div className="space-y-4">
-          <label className="block text-sm font-medium text-gray-700">رقم (PKR)</label>
-          <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="e.g. 2000" className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-green-500 outline-none" />
-          <button onClick={() => setStep(2)} className="w-full py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 font-medium">آگے بڑھیں</button>
-        </div>
-      )}
-      {step === 2 && (
-        <div className="space-y-4">
-          <label className="block text-sm font-medium text-gray-700">رقم وصولی کا طریقہ</label>
-          <div className="grid grid-cols-3 gap-3">
-            {methods.map((m) => (
-              <button key={m.id} onClick={() => setMethod(m.id)} className={`p-3 border rounded-xl text-center transition ${method === m.id ? 'border-green-500 bg-green-50 ring-2 ring-green-200' : 'hover:bg-gray-50'}`}>
-                <div className="text-2xl mb-1">{m.icon}</div><div className="text-xs font-medium">{m.name}</div>
-              </button>
-            ))}
-          </div>
-          <div className="flex gap-2">
-            <button onClick={() => setStep(1)} className="flex-1 py-3 border rounded-xl hover:bg-gray-50">واپس</button>
-            <button onClick={() => setStep(3)} className="flex-1 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700">آگے بڑھیں</button>
-          </div>
-        </div>
-      )}
-      {step === 3 && (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <label className="block text-sm font-medium text-gray-700">4 ہندسوں کا PIN</label>
-          <input type="password" inputMode="numeric" maxLength={4} value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))} placeholder="****" className="w-full p-3 border rounded-xl text-center text-xl tracking-widest focus:ring-2 focus:ring-green-500 outline-none" />
-          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
-          <div className="flex gap-2">
-            <button type="button" onClick={() => setStep(2)} className="flex-1 py-3 border rounded-xl hover:bg-gray-50">واپس</button>
-            <button type="submit" disabled={loading} className="flex-1 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 disabled:opacity-50 font-medium">{loading ? 'پروسیس...' : 'تصدیق کریں'}</button>
-          </div>
-        </form>
-      )}
-    </div>
-  );
-}
-
- Dashboard & API
-src/app/api/transaction/route.ts
-import { NextRequest, NextResponse } from 'next/server';
-
-// Mock state (replace with DB in production)
-let balance = 0;
-let transactions: any[] = [];
-
-export async function POST(req: NextRequest) {
-  try {
-    const { type, amount, method } = await req.json();
-    if (!amount || amount < 100) return NextResponse.json({ error: 'Minimum PKR 100' }, { status: 400 });
-
-    if (type === 'deposit') {
-      balance += amount;
-      transactions.unshift({ id: Date.now(), type, amount, method, status: 'success', date: new Date().toISOString() });
-      return NextResponse.json({ success: true, newBalance: balance });
-    }
-
-    if (type === 'withdraw') {
-      if (amount > balance) return NextResponse.json({ error: 'Insufficient balance' }, { status: 400 });
-      balance -= amount;
-      transactions.unshift({ id: Date.now(), type, amount, method, status: 'success', date: new Date().toISOString() });
-      return NextResponse.json({ success: true, newBalance: balance });
-    }
-
-    return NextResponse.json({ error: 'Invalid type' }, { status: 400 });
-  } catch {
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
-  }
-}
-
-export async function GET() {
-  return NextResponse.json({ balance, transactions: transactions.slice(0, 5) });
-}
-src/app/dashboard/page.tsx
-'use client';
-import { useState, useEffect } from 'react';
-import VoiceAgent from '@/components/VoiceAgent';
-import DepositFlow from '@/components/DepositFlow';
-import WithdrawFlow from '@/components/WithdrawFlow';
-import BalanceCard from '@/components/BalanceCard';
-
-export default function Dashboard() {
-  const [balance, setBalance] = useState(0);
-  const [transactions, setTransactions] = useState<any[]>([]);
-  const [modal, setModal] = useState<'deposit' | 'withdraw' | null>(null);
-
-  useEffect(() => {
-    fetch('/api/transaction').then(r => r.json()).then(d => {
-      setBalance(d.balance);
-      setTransactions(d.transactions);
-    });
-  }, []);
-
-  const handleVoice = (cmd: string) => {
-    if (cmd.includes('deposit') || cmd.includes('ڈیپوزٹ')) setModal('deposit');
-    else if (cmd.includes('withdraw') || cmd.includes('وِڈڈرا')) setModal('withdraw');
-    else if (cmd.includes('balance') || cmd.includes('بیلنس')) {
-      const msg = new SpeechSynthesisUtterance(`آپ کا بیلنس ${balance} روپے ہے`);
-      msg.lang = 'ur-PK';
-      window.speechSynthesis.speak(msg);
-    }
-  };
-
-  const handleSuccess = async (data: any) => {
-    const res = await fetch('/api/transaction', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    const result = await res.json();
-    if (result.success) {
-      setBalance(result.newBalance);
-      const txRes = await fetch('/api/transaction');
-      setTransactions((await txRes.json()).transactions);
-      setModal(null);
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50 p-4 pb-24">
-      <header className="mb-6 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-green-700">🇵 Roziq</h1>
-        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Halal Wealth OS</span>
-      </header>
-
-      <BalanceCard balance={balance} onDeposit={() => setModal('deposit')} onWithdraw={() => setModal('withdraw')} />
-
-      <div className="mt-6">
-        <h2 className="text-lg font-semibold mb-3">Recent Transactions</h2>
-        <div className="space-y-2">
-          {transactions.length === 0 ? (
-            <p className="text-gray-500 text-center py-4">No transactions yet</p>
-          ) : (
-            transactions.map((tx) => (
-              <div key={tx.id} className="flex justify-between p-3 bg-white rounded-xl shadow-sm border border-gray-100">
-                <div>
-                  <div className="font-medium">{tx.type === 'deposit' ? '➕ Deposit' : '➖ Withdraw'}</div>
-                  <div className="text-xs text-gray-500">{new Date(tx.date).toLocaleString('ur-PK')}</div>
-                </div>
-                <div className={`font-bold ${tx.type === 'deposit' ? 'text-green-600' : 'text-red-600'}`}>
-                  {tx.type === 'deposit' ? '+' : '-'}PKR {tx.amount}
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-
-      {modal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="relative w-full max-w-sm">
-            <button onClick={() => setModal(null)} className="absolute -top-10 right-0 text-white text-lg">✕</button>
-            {modal === 'deposit' ? <DepositFlow onSuccess={handleSuccess} /> : <WithdrawFlow onSuccess={handleSuccess} />}
-          </div>
-        </div>
-      )}
-
-      <VoiceAgent onCommand={handleVoice} />
-    </div>
-  );
-}
-src/components/BalanceCard.tsx
-export default function BalanceCard({ balance, onDeposit, onWithdraw }: any) {
-  return (
-    <div className="bg-gradient-to-br from-green-600 to-green-800 rounded-2xl p-6 text-white shadow-lg">
-      <p className="text-green-100 text-sm mb-1">Total Balance</p>
-      <h2 className="text-4xl font-bold mb-4">PKR {balance.toLocaleString()}</h2>
-      <div className="grid grid-cols-2 gap-3">
-        <button onClick={onDeposit} className="py-3 bg-white text-green-700 rounded-xl font-semibold hover:bg-green-50 transition">
-          💰 Deposit
-        </button>
-        <button onClick={onWithdraw} className="py-3 bg-green-700 border border-green-500 text-white rounded-xl font-semibold hover:bg-green-600 transition">
-          💸 Withdraw
-        </button>
-      </div>
-    </div>
-  );
-}
-src/app/page.tsx
-import { redirect } from 'next/navigation';
-
-export default function Home() {
-  redirect('/dashboard');
-}
-Push to GitHub
-git init
-git add .
-git commit -m "Roziq MVP: Voice-guided halal investment platform"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/roziq-platform.git
-git push -u origin main
-
-Create Payment Sandbox Engine
-src/lib/payment-sandbox.ts
-// src/lib/payment-sandbox.ts
-
-export interface SandboxRequest {
-  orderId: string;
-  amount: number;
-  method: 'jazzcash' | 'easypaisa' | 'bank';
-  pin: string; // In real life, this goes directly to the bank, never to your server
-}
-
-export interface SandboxResponse {
-  success: boolean;
-  message: string;
-  bankReference: string;
-  transactionId: string;
-}
-
-// Simulates the external Bank API
-export async function processSandboxPayment(data: SandboxRequest): Promise<SandboxResponse> {
-  return new Promise((resolve) => {
-    console.log(`[SANDBOX] Processing ${data.method} request for PKR ${data.amount}...`);
-
-    // Simulate network delay (3 seconds)
-    setTimeout(() => {
-      // 90% Success rate for demo, 10% Failure to show error handling
-      const isSuccess = Math.random() > 0.1;
-
-      if (isSuccess) {
-        resolve({
-          success: true,
-          message: 'Transaction Successful',
-          bankReference: `REF-${Math.floor(Math.random() * 1000000)}`,
-          transactionId: `TXN-${Date.now()}`
-        });
-      } else {
-        resolve({
-          success: false,
-          message: 'Transaction Failed: Insufficient Balance or Invalid PIN',
-          bankReference: '',
-          transactionId: ''
-        });
-      }
-    }, 3000);
-  });
-}
-
-Create Payment API Route
-src/app/api/payment/deposit/route.ts
 // src/app/api/payment/deposit/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { processSandboxPayment } from '@/lib/payment-sandbox';
@@ -494,9 +48,417 @@ export async function POST(req: NextRequest) {
   }
 }
 
-Update Deposit Flow Component
-src/components/DepositFlow.tsx
-Replace the content of src/components/DepositFlow.tsx with this:
+
+// ==========================================
+// File: src/app/api/transaction/route.ts
+// ==========================================
+
+import { NextRequest, NextResponse } from 'next/server';
+
+// Mock state (replace with DB in production)
+let balance = 0;
+let transactions: any[] = [];
+
+export async function POST(req: NextRequest) {
+  try {
+    const { type, amount, method, symbol, recipient } = await req.json();
+    
+    if (type === 'deposit') {
+      balance += amount;
+      transactions.unshift({ id: Date.now(), type, amount, method, status: 'success', date: new Date().toISOString() });
+      return NextResponse.json({ success: true, newBalance: balance });
+    }
+
+    if (type === 'withdraw' || type === 'buy_stock' || type === 'zakat') {
+      if (amount > balance) return NextResponse.json({ error: 'Insufficient balance' }, { status: 400 });
+      balance -= amount;
+      transactions.unshift({ id: Date.now(), type, amount, method, symbol, recipient, status: 'success', date: new Date().toISOString() });
+      return NextResponse.json({ success: true, newBalance: balance });
+    }
+
+    return NextResponse.json({ error: 'Invalid type' }, { status: 400 });
+  } catch {
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+  }
+}
+
+export async function GET() {
+  return NextResponse.json({ balance, transactions: transactions.slice(0, 10) });
+}
+
+
+// ==========================================
+// File: src/app/dashboard/page.tsx
+// ==========================================
+
+'use client';
+import { useState, useEffect } from 'react';
+import VoiceAgent from '@/components/VoiceAgent';
+import DepositFlow from '@/components/DepositFlow';
+import WithdrawFlow from '@/components/WithdrawFlow';
+import BalanceCard from '@/components/BalanceCard';
+import HalalStockScanner from '@/components/HalalStockScanner';
+import PortfolioDashboard from '@/components/PortfolioDashboard';
+import ZakatCalculator from '@/components/ZakatCalculator';
+import FinancialHealthScore from '@/components/FinancialHealthScore';
+import CommunityChallenges from '@/components/CommunityChallenges';
+import LocalImpactMap from '@/components/LocalImpactMap';
+import { getStockBySymbol } from '@/lib/halal-stock-data';
+
+interface Holding {
+  symbol: string;
+  name: string;
+  invested: number;
+  currentPrice: number;
+  units: number;
+  pnl: number;
+}
+
+interface ZakatRecord {
+  date: string;
+  amount: number;
+  recipient: string;
+}
+
+export default function Dashboard() {
+  const [balance, setBalance] = useState(0);
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [modal, setModal] = useState<'deposit' | 'withdraw' | null>(null);
+  const [holdings, setHoldings] = useState<Holding[]>([]);
+  const [zakatHistory, setZakatHistory] = useState<ZakatRecord[]>([]);
+
+  const totalPortfolioValue = holdings.reduce((sum, h) => sum + h.invested + h.pnl, 0);
+  const dailyPnl = holdings.reduce((sum, h) => sum + h.pnl, 0);
+  const isZakatEligible = (balance + totalPortfolioValue) >= 300000;
+
+  useEffect(() => {
+    fetch('/api/transaction').then(r => r.json()).then(d => {
+      setBalance(d.balance);
+      setTransactions(d.transactions);
+    });
+  }, []);
+
+  const handleVoice = (cmd: string) => {
+    if (cmd.includes('deposit') || cmd.includes('ÚˆÛŒÙ¾ÙˆØ²Ù¹')) setModal('deposit');
+    else if (cmd.includes('withdraw') || cmd.includes('ÙˆÙÚˆÚˆØ±Ø§')) setModal('withdraw');
+    else if (cmd.includes('health') || cmd.includes('ØµØ­Øª')) {
+      document.getElementById('health-section')?.scrollIntoView({ behavior: 'smooth' });
+    }
+    else if (cmd.includes('challenge') || cmd.includes('Ú†ÛŒÙ„Ù†Ø¬')) {
+      document.getElementById('challenge-section')?.scrollIntoView({ behavior: 'smooth' });
+    }
+    else if (cmd.includes('map') || cmd.includes('Ù†Ù‚Ø´Û')) {
+      document.getElementById('map-section')?.scrollIntoView({ behavior: 'smooth' });
+    }
+    else if (cmd.includes('zakat') || cmd.includes('Ø²Ú©ÙˆÙ°')) {
+      document.getElementById('zakat-section')?.scrollIntoView({ behavior: 'smooth' });
+    }
+    else if (cmd.includes('buy') || cmd.includes('Ø®Ø±ÛŒØ¯ÛŒÚº')) {
+      document.getElementById('scanner')?.scrollIntoView({ behavior: 'smooth' });
+    }
+    else if (cmd.includes('balance') || cmd.includes('Ø¨ÛŒÙ„Ù†Ø³')) {
+      const msg = new SpeechSynthesisUtterance(`Ø¢Ù¾ Ú©Ø§ Ø¨ÛŒÙ„Ù†Ø³ ${balance} Ø±ÙˆÙ¾Û’ ÛÛ’`);
+      msg.lang = 'ur-PK';
+      window.speechSynthesis.speak(msg);
+    }
+  };
+
+  const handleTransactionSuccess = async (data: any) => {
+    const res = await fetch('/api/transaction', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if (result.success) {
+      setBalance(result.newBalance);
+      const txRes = await fetch('/api/transaction');
+      setTransactions((await txRes.json()).transactions);
+      setModal(null);
+    }
+  };
+
+  const handleBuyStock = (symbol: string, amount: number) => {
+    const stock = getStockBySymbol(symbol);
+    if (!stock) return;
+
+    setBalance(prev => prev - amount);
+    setHoldings(prev => {
+      const existing = prev.find(h => h.symbol === symbol);
+      if (existing) {
+        const newUnits = existing.units + (amount / stock.price);
+        const newInvested = existing.invested + amount;
+        return prev.map(h => h.symbol === symbol ? { ...h, invested: newInvested, units: newUnits, pnl: h.pnl } : h);
+      } else {
+        return [...prev, {
+          symbol: stock.symbol, name: stock.name, invested: amount, currentPrice: stock.price, units: amount / stock.price, pnl: 0
+        }];
+      }
+    });
+    setTransactions(prev => [{ id: Date.now(), type: 'buy_stock', symbol, amount, status: 'success', date: new Date().toISOString() }, ...prev]);
+  };
+
+  const handleZakatDonation = (amount: number, recipient: string) => {
+    setBalance(prev => prev - amount);
+    setZakatHistory(prev => [{ date: new Date().toISOString(), amount, recipient }, ...prev]);
+    setTransactions(prev => [{ id: Date.now(), type: 'zakat', amount, recipient, status: 'success', date: new Date().toISOString() }, ...prev]);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-4 pb-24">
+      <header className="mb-6 flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-green-700">ðŸ‡µðŸ‡° Roziq</h1>
+        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Halal Wealth OS</span>
+      </header>
+
+      <BalanceCard balance={balance} onDeposit={() => setModal('deposit')} onWithdraw={() => setModal('withdraw')} />
+
+      <div id="health-section">
+        <FinancialHealthScore 
+          balance={balance} 
+          portfolioValue={totalPortfolioValue} 
+          holdings={holdings} 
+          transactions={transactions} 
+          zakatHistory={zakatHistory} 
+          isZakatEligible={isZakatEligible} 
+        />
+      </div>
+
+      <div id="challenge-section">
+        <CommunityChallenges />
+      </div>
+
+      <div id="map-section">
+        <LocalImpactMap />
+      </div>
+
+      <div id="zakat-section">
+        <ZakatCalculator balance={balance} portfolioValue={totalPortfolioValue} onDonate={handleZakatDonation} />
+      </div>
+
+      <div id="scanner">
+        <HalalStockScanner balance={balance} onBuy={handleBuyStock} />
+      </div>
+
+      <PortfolioDashboard holdings={holdings} totalValue={totalPortfolioValue} dailyPnl={dailyPnl} />
+
+      {/* Zakat History */}
+      {zakatHistory.length > 0 && (
+        <div className="mt-6 bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
+          <h2 className="text-lg font-bold text-gray-800 mb-3">ðŸ¤² Zakat History</h2>
+          <div className="space-y-2">
+            {zakatHistory.map((z, i) => (
+              <div key={i} className="flex justify-between items-center p-3 bg-green-50 rounded-xl">
+                <div>
+                  <div className="font-medium text-green-800">{z.recipient}</div>
+                  <div className="text-xs text-green-600">{new Date(z.date).toLocaleDateString('ur-PK')}</div>
+                </div>
+                <div className="font-bold text-green-700">PKR {z.amount.toFixed(2)}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="mt-6">
+        <h2 className="text-lg font-semibold mb-3">Recent Activity</h2>
+        <div className="space-y-2">
+          {transactions.length === 0 ? (
+            <p className="text-gray-500 text-center py-4">No activity yet</p>
+          ) : (
+            transactions.slice(0, 5).map((tx) => (
+              <div key={tx.id} className="flex justify-between p-3 bg-white rounded-xl shadow-sm border border-gray-100">
+                <div>
+                  <div className="font-medium">
+                    {tx.type === 'deposit' ? 'âž• Deposit' : tx.type === 'withdraw' ? 'âž– Withdraw' : tx.type === 'zakat' ? 'ðŸ¤² Zakat' : `ðŸ“ˆ Buy ${tx.symbol}`}
+                  </div>
+                  <div className="text-xs text-gray-500">{tx.recipient && `To: ${tx.recipient}`} {new Date(tx.date).toLocaleString('ur-PK')}</div>
+                </div>
+                <div className={`font-bold ${tx.type === 'deposit' ? 'text-green-600' : 'text-red-600'}`}>
+                  {tx.type === 'deposit' ? '+' : '-'}PKR {tx.amount}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {modal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="relative w-full max-w-sm">
+            <button onClick={() => setModal(null)} className="absolute -top-10 right-0 text-white text-lg">âœ•</button>
+            {modal === 'deposit' ? <DepositFlow onSuccess={handleTransactionSuccess} /> : <WithdrawFlow onSuccess={handleTransactionSuccess} />}
+          </div>
+        </div>
+      )}
+
+      <VoiceAgent onCommand={handleVoice} />
+    </div>
+  );
+}
+
+
+// ==========================================
+// File: src/app/layout.tsx
+// ==========================================
+
+import type { Metadata } from 'next';
+import './globals.css';
+
+export const metadata: Metadata = {
+  title: 'Pakistan Halal Investment Platform',
+  description: 'A voice-controlled halal investment platform for Pakistan',
+  icons: { icon: 'ðŸ•Œ' },
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="ur" dir="rtl">
+      <body className="font-sans antialiased">
+        {children}
+      </body>
+    </html>
+  );
+}
+
+
+// ==========================================
+// File: src/app/page.tsx
+// ==========================================
+
+import { redirect } from 'next/navigation';
+
+export default function Home() {
+  redirect('/dashboard');
+}
+
+
+// ==========================================
+// File: src/components/BalanceCard.tsx
+// ==========================================
+
+export default function BalanceCard({ balance, onDeposit, onWithdraw }: any) {
+  return (
+    <div className="bg-gradient-to-br from-green-600 to-green-800 rounded-2xl p-6 text-white shadow-lg mb-6">
+      <p className="text-green-100 text-sm mb-1">Total Balance</p>
+      <h2 className="text-4xl font-bold mb-4">PKR {balance.toLocaleString()}</h2>
+      <div className="grid grid-cols-2 gap-3">
+        <button onClick={onDeposit} className="py-3 bg-white text-green-700 rounded-xl font-semibold hover:bg-green-50 transition">
+          ðŸ’° Deposit
+        </button>
+        <button onClick={onWithdraw} className="py-3 bg-green-700 border border-green-500 text-white rounded-xl font-semibold hover:bg-green-600 transition">
+          ðŸ’¸ Withdraw
+        </button>
+      </div>
+    </div>
+  );
+}
+
+
+// ==========================================
+// File: src/components/CommunityChallenges.tsx
+// ==========================================
+
+'use client';
+import { useState } from 'react';
+
+interface Challenge {
+  id: number;
+  title: string;
+  target: number;
+  current: number;
+  reward: string;
+  icon: string;
+}
+
+const INITIAL_CHALLENGES: Challenge[] = [
+  { id: 1, title: '100,000 Pakistanis Invest PKR 1,000', target: 100000, current: 84231, reward: 'Platform donates PKR 10M to Flood Relief', icon: 'ðŸ‡µðŸ‡°' },
+  { id: 2, title: 'Collective PKR 1B in Green Sukuk', target: 1000000000, current: 650000000, reward: 'Platform plants 1 Million Trees', icon: 'ðŸŒ±' },
+  { id: 3, title: '10,000 Users Complete Financial Course', target: 10000, current: 8940, reward: 'Free Hajj Draw for 10 Participants', icon: 'ðŸ“š' },
+];
+
+export default function CommunityChallenges() {
+  const [challenges, setChallenges] = useState<Challenge[]>(INITIAL_CHALLENGES);
+  const [joined, setJoined] = useState<Set<number>>(new Set());
+
+  const handleJoin = (id: number) => {
+    if (joined.has(id)) return;
+    setJoined(prev => new Set([...prev, id]));
+    setChallenges(prev =>
+      prev.map(c => c.id === id ? { ...c, current: c.current + 1 } : c)
+    );
+  };
+
+  const formatNumber = (n: number) => {
+    if (n >= 1000000000) return `${(n / 1000000000).toFixed(1)}B`;
+    if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`;
+    return n.toLocaleString();
+  };
+
+  return (
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-bold text-gray-800">ðŸ¤ Community Challenges</h2>
+        <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Nation Building</span>
+      </div>
+
+      <div className="space-y-4">
+        {challenges.map((c) => {
+          const progress = Math.min(100, (c.current / c.target) * 100);
+          const isJoined = joined.has(c.id);
+          return (
+            <div key={c.id} className={`p-4 rounded-xl border transition ${isJoined ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200 hover:border-blue-300'}`}>
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">{c.icon}</span>
+                <div className="flex-1">
+                  <h3 className="font-bold text-gray-800 text-sm md:text-base">{c.title}</h3>
+                  <p className="text-xs text-gray-500 mt-1"> Reward: {c.reward}</p>
+                  
+                  <div className="mt-3">
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="text-gray-600">{formatNumber(c.current)} / {formatNumber(c.target)}</span>
+                      <span className="font-bold text-blue-600">{progress.toFixed(1)}%</span>
+                    </div>
+                    <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div 
+                        className={`h-full rounded-full transition-all duration-1000 ${isJoined ? 'bg-green-500' : 'bg-blue-500'}`} 
+                        style={{ width: `${progress}%` }}
+                      ></div>
+                    </div>
+                  </div>
+
+                  {!isJoined && (
+                    <button 
+                      onClick={() => handleJoin(c.id)}
+                      className="mt-3 w-full py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition"
+                    >
+                      Join This Challenge
+                    </button>
+                  )}
+                  {isJoined && (
+                    <div className="mt-2 text-center text-green-700 text-xs font-semibold">
+                      âœ… You Joined! Together we grow.
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+
+// ==========================================
+// File: src/components/DepositFlow.tsx
+// ==========================================
+
 'use client';
 import { useState } from 'react';
 
@@ -510,16 +472,16 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
   const [bankStatus, setBankStatus] = useState<'idle' | 'connecting' | 'processing' | 'success' | 'failed'>('idle');
 
   const methods = [
-    { id: 'jazzcash', name: 'JazzCash', color: 'bg-red-50 border-red-200', icon: '' },
-    { id: 'easypaisa', name: 'EasyPaisa', color: 'bg-green-50 border-green-200', icon: '🟢' },
-    { id: 'bank', name: 'Bank Transfer', color: 'bg-blue-50 border-blue-200', icon: '🏦' }
+    { id: 'jazzcash', name: 'JazzCash', color: 'bg-red-50 border-red-200', icon: 'ðŸ“±' },
+    { id: 'easypaisa', name: 'EasyPaisa', color: 'bg-green-50 border-green-200', icon: 'ðŸŸ¢' },
+    { id: 'bank', name: 'Bank Transfer', color: 'bg-blue-50 border-blue-200', icon: 'ðŸ¦' }
   ];
 
   const validate = () => {
     setError('');
-    if (!amount || Number(amount) < 100) { setError('کم از کم PKR 100 درج کریں'); return false; }
-    if (!method) { setError('ادائیگی کا طریقہ منتخب کریں'); return false; }
-    if (pin.length !== 4 || !/^\d{4}$/.test(pin)) { setError('4 ہندسوں کا درست PIN درج کریں'); return false; }
+    if (!amount || Number(amount) < 100) { setError('Ú©Ù… Ø§Ø² Ú©Ù… PKR 100 Ø¯Ø±Ø¬ Ú©Ø±ÛŒÚº'); return false; }
+    if (!method) { setError('Ø§Ø¯Ø§Ø¦ÛŒÚ¯ÛŒ Ú©Ø§ Ø·Ø±ÛŒÙ‚Û Ù…Ù†ØªØ®Ø¨ Ú©Ø±ÛŒÚº'); return false; }
+    if (pin.length !== 4 || !/^\d{4}$/.test(pin)) { setError('4 ÛÙ†Ø¯Ø³ÙˆÚº Ú©Ø§ Ø¯Ø±Ø³Øª PIN Ø¯Ø±Ø¬ Ú©Ø±ÛŒÚº'); return false; }
     return true;
   };
 
@@ -561,13 +523,12 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
     }
   };
 
-  // --- Render Bank Loading Screen ---
   if (bankStatus !== 'idle' && !loading && bankStatus !== 'success' && bankStatus !== 'failed') {
     return (
       <div className="w-full max-w-sm mx-auto p-8 bg-white rounded-2xl shadow-xl border border-gray-100 text-center">
         {bankStatus === 'connecting' && (
           <div className="flex flex-col items-center animate-pulse">
-            <div className="text-4xl mb-4">🏦</div>
+            <div className="text-4xl mb-4">ðŸ¦</div>
             <h3 className="text-lg font-bold text-gray-800">Connecting to Bank...</h3>
             <p className="text-sm text-gray-500 mt-2">Please wait while we secure your connection.</p>
           </div>
@@ -584,12 +545,11 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
     );
   }
 
-  // --- Render Result Screen ---
   if (bankStatus === 'success') {
     return (
       <div className="w-full max-w-sm mx-auto p-8 bg-white rounded-2xl shadow-xl border border-gray-100 text-center">
         <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <span className="text-3xl">✅</span>
+          <span className="text-3xl">âœ…</span>
         </div>
         <h3 className="text-xl font-bold text-green-700">Payment Successful!</h3>
         <p className="text-gray-600 mt-2">PKR {amount} has been added to your Roziq Wallet.</p>
@@ -602,7 +562,7 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
     return (
       <div className="w-full max-w-sm mx-auto p-8 bg-white rounded-2xl shadow-xl border border-gray-100 text-center">
         <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <span className="text-3xl">❌</span>
+          <span className="text-3xl">âŒ</span>
         </div>
         <h3 className="text-xl font-bold text-red-700">Payment Failed</h3>
         <p className="text-red-500 mt-2 text-sm">{error}</p>
@@ -616,14 +576,13 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
     );
   }
 
-  // --- Render Normal Form ---
   return (
     <div className="w-full max-w-sm mx-auto p-6 bg-white rounded-2xl shadow-xl border border-gray-100">
-      <h2 className="text-xl font-bold mb-5 text-gray-800">💰 ڈیپوزٹ کریں</h2>
+      <h2 className="text-xl font-bold mb-5 text-gray-800">ðŸ’° ÚˆÛŒÙ¾ÙˆØ²Ù¹ Ú©Ø±ÛŒÚº</h2>
       
       {step === 1 && (
         <div className="space-y-4">
-          <label className="block text-sm font-medium text-gray-700">رقم (PKR)</label>
+          <label className="block text-sm font-medium text-gray-700">Ø±Ù‚Ù… (PKR)</label>
           <input
             type="number"
             value={amount}
@@ -632,14 +591,14 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
             className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-green-500 outline-none"
           />
           <button onClick={() => setStep(2)} className="w-full py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 font-medium">
-            آگے بڑھیں
+            Ø¢Ú¯Û’ Ø¨Ú‘Ú¾ÛŒÚº
           </button>
         </div>
       )}
 
       {step === 2 && (
         <div className="space-y-4">
-          <label className="block text-sm font-medium text-gray-700">ادائیگی کا طریقہ</label>
+          <label className="block text-sm font-medium text-gray-700">Ø§Ø¯Ø§Ø¦ÛŒÚ¯ÛŒ Ú©Ø§ Ø·Ø±ÛŒÙ‚Û</label>
           <div className="grid grid-cols-3 gap-3">
             {methods.map((m) => (
               <button
@@ -655,8 +614,8 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
             ))}
           </div>
           <div className="flex gap-2">
-            <button onClick={() => setStep(1)} className="flex-1 py-3 border rounded-xl hover:bg-gray-50">واپس</button>
-            <button onClick={() => setStep(3)} className="flex-1 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700">آگے بڑھیں</button>
+            <button onClick={() => setStep(1)} className="flex-1 py-3 border rounded-xl hover:bg-gray-50">ÙˆØ§Ù¾Ø³</button>
+            <button onClick={() => setStep(3)} className="flex-1 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700">Ø¢Ú¯Û’ Ø¨Ú‘Ú¾ÛŒÚº</button>
           </div>
         </div>
       )}
@@ -664,9 +623,9 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
       {step === 3 && (
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="p-3 bg-yellow-50 rounded-lg text-yellow-800 text-xs text-center mb-2">
-            🔒 Secure connection to {method.toUpperCase()}
+            ðŸ”’ Secure connection to {method.toUpperCase()}
           </div>
-          <label className="block text-sm font-medium text-gray-700">4 ہندسوں کا PIN</label>
+          <label className="block text-sm font-medium text-gray-700">4 ÛÙ†Ø¯Ø³ÙˆÚº Ú©Ø§ PIN</label>
           <input
             type="password"
             inputMode="numeric"
@@ -678,9 +637,9 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
           />
           {error && <p className="text-red-500 text-sm text-center">{error}</p>}
           <div className="flex gap-2">
-            <button type="button" onClick={() => setStep(2)} className="flex-1 py-3 border rounded-xl hover:bg-gray-50">واپس</button>
+            <button type="button" onClick={() => setStep(2)} className="flex-1 py-3 border rounded-xl hover:bg-gray-50">ÙˆØ§Ù¾Ø³</button>
             <button type="submit" disabled={loading} className="flex-1 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 disabled:opacity-50 font-medium">
-              {loading ? 'پروسیس...' : 'تصدیق کریں'}
+              {loading ? 'Ù¾Ø±ÙˆØ³ÛŒØ³...' : 'ØªØµØ¯ÛŒÙ‚ Ú©Ø±ÛŒÚº'}
             </button>
           </div>
         </form>
@@ -688,692 +647,12 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
     </div>
   );
 }
-Update Withdraw Flow
- src/components/WithdrawFlow.tsx similarly (reuse the same payment-sandbox logic but with type: 'withdraw').
-For now, just copy the DepositFlow logic into WithdrawFlow but change the API endpoint to /api/payment/withdraw (which you can create similarly).
-For the hackathon MVP, you can focus on Deposit first. The logic is identical.
 
-Create Mock PSX Data & Screening Engine
-src/lib/halal-stock-data.ts
-export interface Stock {
-  symbol: string;
-  name: string;
-  price: number;
-  change: number; // Daily % change
-  debtToEquity: number; // %
-  interestIncomeRatio: number; // %
-  businessType: string;
-  halalScore: number; // 1-10
-  sector: string;
-}
 
-// Realistic PSX dataset with authentic Shariah metrics
-export const MOCK_PSX_STOCKS: Stock[] = [
-  { symbol: 'LUCK', name: 'Lucky Cement', price: 612.50, change: 2.4, debtToEquity: 18.5, interestIncomeRatio: 2.1, businessType: 'Cement & Power', halalScore: 9.2, sector: 'Cement' },
-  { symbol: 'OGDC', name: 'Oil & Gas Dev Co', price: 84.20, change: -0.8, debtToEquity: 12.3, interestIncomeRatio: 1.5, businessType: 'Oil & Gas', halalScore: 8.8, sector: 'Energy' },
-  { symbol: 'MEBL', name: 'Meezan Bank', price: 145.00, change: 1.2, debtToEquity: 0, interestIncomeRatio: 0, businessType: 'Islamic Banking', halalScore: 9.8, sector: 'Banking' },
-  { symbol: 'FFC', name: 'Fauji Fertilizer', price: 168.40, change: 0.5, debtToEquity: 5.2, interestIncomeRatio: 3.8, businessType: 'Fertilizer', halalScore: 8.5, sector: 'Fertilizer' },
-  { symbol: 'HBL', name: 'Habib Bank Ltd', price: 92.10, change: -1.5, debtToEquity: 45.0, interestIncomeRatio: 28.5, businessType: 'Conventional Banking', halalScore: 2.1, sector: 'Banking' },
-  { symbol: 'ENGRO', name: 'Engro Corp', price: 312.80, change: 3.1, debtToEquity: 22.4, interestIncomeRatio: 4.2, businessType: 'Chemicals', halalScore: 7.9, sector: 'Chemicals' },
-  { symbol: 'TRG', name: 'TRG Pakistan', price: 124.50, change: 5.2, debtToEquity: 8.1, interestIncomeRatio: 1.2, businessType: 'IT Services', halalScore: 9.5, sector: 'Technology' },
-  { symbol: 'BAFL', name: 'Bank Alfalah', price: 48.90, change: -2.1, debtToEquity: 38.2, interestIncomeRatio: 25.4, businessType: 'Conventional Banking', halalScore: 2.5, sector: 'Banking' },
-  { symbol: 'SYS', name: 'Systems Ltd', price: 415.00, change: 1.8, debtToEquity: 4.5, interestIncomeRatio: 0.8, businessType: 'Software', halalScore: 9.1, sector: 'Technology' },
-  { symbol: 'PIOC', name: 'Pioneer Cement', price: 98.30, change: -0.5, debtToEquity: 15.2, interestIncomeRatio: 2.9, businessType: 'Cement', halalScore: 8.7, sector: 'Cement' }
-];
+// ==========================================
+// File: src/components/FinancialHealthScore.tsx
+// ==========================================
 
-// Shariah Screening Filter (AAOIFI Standards)
-export function getHalalStocks() {
-  return MOCK_PSX_STOCKS.filter(s => 
-    s.debtToEquity < 33 && 
-    s.interestIncomeRatio < 5 && 
-    s.halalScore >= 6
-  );
-}
-
-export function getStockBySymbol(symbol: string) {
-  return MOCK_PSX_STOCKS.find(s => s.symbol === symbol);
-}
-
-Build Halal Stock Scanner
-src/components/HalalStockScanner.tsx
-'use client';
-import { useState } from 'react';
-import { getHalalStocks, Stock } from '@/lib/halal-stock-data';
-
-interface HalalStockScannerProps {
-  balance: number;
-  onBuy: (symbol: string, amount: number) => void;
-}
-
-export default function HalalStockScanner({ balance, onBuy }: HalalStockScannerProps) {
-  const [search, setSearch] = useState('');
-  const [selected, setSelected] = useState<Stock | null>(null);
-  const [amount, setAmount] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  const stocks = getHalalStocks().filter(s =>
-    s.symbol.toLowerCase().includes(search.toLowerCase()) ||
-    s.name.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const handleBuy = async () => {
-    if (!selected || !amount) return;
-    const val = parseFloat(amount);
-    if (val > balance) return alert('ناکافی بیلنس');
-    if (val < 100) return alert('کم از کم PKR 100 درج کریں');
-
-    setLoading(true);
-    await new Promise(r => setTimeout(r, 800)); // Simulate exchange processing
-    onBuy(selected.symbol, val);
-    setLoading(false);
-    setSelected(null);
-    setAmount('');
-  };
-
-  return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold text-gray-800">📊 حلال اسٹاک اسکینر</h2>
-        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Shariah Certified</span>
-      </div>
-
-      <input
-        type="text"
-        placeholder="Search symbol or name (e.g. LUCK, Meezan)..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="w-full p-3 border rounded-xl mb-4 focus:ring-2 focus:ring-green-500 outline-none"
-      />
-
-      <div className="space-y-3 max-h-64 overflow-y-auto pr-2">
-        {stocks.map(stock => (
-          <div key={stock.symbol} 
-               className="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-green-50 transition cursor-pointer"
-               onClick={() => setSelected(stock)}>
-            <div>
-              <div className="font-bold text-gray-900">{stock.symbol} <span className="text-sm font-normal text-gray-500">- {stock.name}</span></div>
-              <div className="text-xs text-gray-500">{stock.sector} • Debt: {stock.debtToEquity}% • Int: {stock.interestIncomeRatio}%</div>
-            </div>
-            <div className="text-right">
-              <div className="font-bold text-gray-900">PKR {stock.price}</div>
-              <div className={`text-sm ${stock.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {stock.change >= 0 ? '▲' : '▼'} {stock.change}%
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {selected && (
-        <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-xl animate-fade-in">
-          <h3 className="font-bold text-green-800 mb-2">Buy {selected.symbol}</h3>
-          <div className="flex items-center gap-3">
-            <input
-              type="number"
-              placeholder="PKR Amount (min 100)"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              className="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
-            />
-            <button
-              onClick={handleBuy}
-              disabled={loading}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 font-medium whitespace-nowrap"
-            >
-              {loading ? 'Processing...' : 'Buy Now'}
-            </button>
-          </div>
-          <p className="text-xs text-green-700 mt-2">
-            ✅ Halal Score: {selected.halalScore}/10 | 🕌 Certified | ⚠️ Purification: {(selected.interestIncomeRatio * 0.1).toFixed(2)}%
-          </p>
-        </div>
-      )}
-    </div>
-  );
-}
-
-Build Portfolio Dashboard
-src/components/PortfolioDashboard.tsx
-'use client';
-
-interface Holding {
-  symbol: string;
-  name: string;
-  invested: number;
-  currentPrice: number;
-  units: number;
-  pnl: number;
-}
-
-interface PortfolioDashboardProps {
-  holdings: Holding[];
-  totalValue: number;
-  dailyPnl: number;
-}
-
-export default function PortfolioDashboard({ holdings, totalValue, dailyPnl }: PortfolioDashboardProps) {
-  if (holdings.length === 0) {
-    return (
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center">
-        <div className="text-4xl mb-3">📈</div>
-        <h3 className="text-lg font-bold text-gray-800">No Investments Yet</h3>
-        <p className="text-gray-500 text-sm mt-1">Start investing in Halal stocks to build your portfolio.</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold text-gray-800">💼 My Portfolio</h2>
-        <div className={`text-sm font-semibold px-2 py-1 rounded-lg ${dailyPnl >= 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-          {dailyPnl >= 0 ? '▲' : '▼'} PKR {Math.abs(dailyPnl).toFixed(2)} Today
-        </div>
-      </div>
-
-      {/* Allocation Bar */}
-      <div className="mb-4">
-        <div className="text-xs text-gray-500 mb-1">Asset Allocation</div>
-        <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden flex">
-          {holdings.map((h, i) => {
-            const width = (h.invested / totalValue) * 100;
-            const colors = ['bg-green-500', 'bg-blue-500', 'bg-purple-500', 'bg-orange-500', 'bg-red-500'];
-            return <div key={h.symbol} style={{ width: `${width}%` }} className={`h-full ${colors[i % colors.length]}`} title={`${h.symbol}: ${width.toFixed(1)}%`}></div>;
-          })}
-        </div>
-        <div className="flex justify-between text-xs text-gray-500 mt-1">
-          {holdings.map(h => <span key={h.symbol}>{h.symbol}</span>)}
-        </div>
-      </div>
-
-      {/* Holdings List */}
-      <div className="space-y-2">
-        {holdings.map(h => (
-          <div key={h.symbol} className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
-            <div>
-              <div className="font-bold text-gray-900">{h.symbol}</div>
-              <div className="text-xs text-gray-500">{h.units.toFixed(4)} units @ PKR {h.currentPrice}</div>
-            </div>
-            <div className="text-right">
-              <div className="font-bold text-gray-900">PKR {(h.invested + h.pnl).toFixed(2)}</div>
-              <div className={`text-sm ${h.pnl >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {h.pnl >= 0 ? '+' : ''}{h.pnl.toFixed(2)}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
-        <span className="text-sm text-gray-600">Total Portfolio Value</span>
-        <span className="text-xl font-bold text-gray-900">PKR {totalValue.toFixed(2)}</span>
-      </div>
-    </div>
-  );
-}
-
-Integrate into Main Dashboard
- src/app/dashboard/page.tsx (Replace entire content)
-'use client';
-import { useState, useEffect } from 'react';
-import VoiceAgent from '@/components/VoiceAgent';
-import DepositFlow from '@/components/DepositFlow';
-import WithdrawFlow from '@/components/WithdrawFlow';
-import BalanceCard from '@/components/BalanceCard';
-import HalalStockScanner from '@/components/HalalStockScanner';
-import PortfolioDashboard from '@/components/PortfolioDashboard';
-import { getStockBySymbol } from '@/lib/halal-stock-data';
-
-interface Holding {
-  symbol: string;
-  name: string;
-  invested: number;
-  currentPrice: number;
-  units: number;
-  pnl: number;
-}
-
-export default function Dashboard() {
-  const [balance, setBalance] = useState(0);
-  const [transactions, setTransactions] = useState<any[]>([]);
-  const [modal, setModal] = useState<'deposit' | 'withdraw' | null>(null);
-  const [holdings, setHoldings] = useState<Holding[]>([]);
-
-  const totalPortfolioValue = holdings.reduce((sum, h) => sum + h.invested + h.pnl, 0);
-  const dailyPnl = holdings.reduce((sum, h) => sum + h.pnl, 0);
-
-  useEffect(() => {
-    fetch('/api/transaction').then(r => r.json()).then(d => {
-      setBalance(d.balance);
-      setTransactions(d.transactions);
-    });
-  }, []);
-
-  const handleVoice = (cmd: string) => {
-    if (cmd.includes('deposit') || cmd.includes('ڈیپوزٹ')) setModal('deposit');
-    else if (cmd.includes('withdraw') || cmd.includes('وِڈڈرا')) setModal('withdraw');
-    else if (cmd.includes('buy') || cmd.includes('خریدیں')) {
-      document.getElementById('scanner')?.scrollIntoView({ behavior: 'smooth' });
-    }
-    else if (cmd.includes('balance') || cmd.includes('بیلنس')) {
-      const msg = new SpeechSynthesisUtterance(`آپ کا بیلنس ${balance} روپے ہے`);
-      msg.lang = 'ur-PK';
-      window.speechSynthesis.speak(msg);
-    }
-  };
-
-  const handleTransactionSuccess = async (data: any) => {
-    const res = await fetch('/api/transaction', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    const result = await res.json();
-    if (result.success) {
-      setBalance(result.newBalance);
-      const txRes = await fetch('/api/transaction');
-      setTransactions((await txRes.json()).transactions);
-      setModal(null);
-    }
-  };
-
-  const handleBuyStock = (symbol: string, amount: number) => {
-    const stock = getStockBySymbol(symbol);
-    if (!stock) return;
-
-    setBalance(prev => prev - amount);
-
-    setHoldings(prev => {
-      const existing = prev.find(h => h.symbol === symbol);
-      if (existing) {
-        const newUnits = existing.units + (amount / stock.price);
-        const newInvested = existing.invested + amount;
-        // Simulate realistic PnL fluctuation
-        const fluctuation = (Math.random() * 0.03 - 0.015) * newInvested;
-        return prev.map(h => h.symbol === symbol ? { ...h, invested: newInvested, units: newUnits, pnl: fluctuation } : h);
-      } else {
-        return [...prev, {
-          symbol: stock.symbol,
-          name: stock.name,
-          invested: amount,
-          currentPrice: stock.price,
-          units: amount / stock.price,
-          pnl: (Math.random() * 0.03 - 0.015) * amount
-        }];
-      }
-    });
-
-    setTransactions(prev => [{ id: Date.now(), type: 'buy_stock', symbol, amount, status: 'success', date: new Date().toISOString() }, ...prev]);
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50 p-4 pb-24">
-      <header className="mb-6 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-green-700">🇵🇰 Roziq</h1>
-        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Halal Wealth OS</span>
-      </header>
-
-      <BalanceCard balance={balance} onDeposit={() => setModal('deposit')} onWithdraw={() => setModal('withdraw')} />
-
-      <div id="scanner">
-        <HalalStockScanner balance={balance} onBuy={handleBuyStock} />
-      </div>
-
-      <PortfolioDashboard holdings={holdings} totalValue={totalPortfolioValue} dailyPnl={dailyPnl} />
-
-      <div className="mt-6">
-        <h2 className="text-lg font-semibold mb-3">Recent Activity</h2>
-        <div className="space-y-2">
-          {transactions.length === 0 ? (
-            <p className="text-gray-500 text-center py-4">No activity yet</p>
-          ) : (
-            transactions.map((tx) => (
-              <div key={tx.id} className="flex justify-between p-3 bg-white rounded-xl shadow-sm border border-gray-100">
-                <div>
-                  <div className="font-medium">{tx.type === 'deposit' ? '➕ Deposit' : tx.type === 'withdraw' ? '➖ Withdraw' : `📈 Buy ${tx.symbol}`}</div>
-                  <div className="text-xs text-gray-500">{new Date(tx.date).toLocaleString('ur-PK')}</div>
-                </div>
-                <div className={`font-bold ${tx.type === 'deposit' || tx.type === 'buy_stock' ? 'text-green-600' : 'text-red-600'}`}>
-                  {tx.type === 'deposit' || tx.type === 'buy_stock' ? '-' : '+'}PKR {tx.amount}
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-
-      {modal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="relative w-full max-w-sm">
-            <button onClick={() => setModal(null)} className="absolute -top-10 right-0 text-white text-lg">✕</button>
-            {modal === 'deposit' ? <DepositFlow onSuccess={handleTransactionSuccess} /> : <WithdrawFlow onSuccess={handleTransactionSuccess} />}
-          </div>
-        </div>
-      )}
-
-      <VoiceAgent onCommand={handleVoice} />
-    </div>
-  );
-}
-
-Create Zakat Calculator Component
-src/components/ZakatCalculator.tsx
-'use client';
-import { useState } from 'react';
-
-interface ZakatCalculatorProps {
-  balance: number;
-  portfolioValue: number;
-  onDonate: (amount: number, recipient: string) => void;
-}
-
-const NISAB_THRESHOLD = 300000; // Mock Gold Nisab value
-
-const IMPACT_MAP = [
-  { amount: 500, icon: '💧', text: '50 Liters of Clean Water' },
-  { amount: 1000, icon: '', text: '50 Meals for Families' },
-  { amount: 2000, icon: '📚', text: 'School Supplies for 1 Child' },
-  { amount: 5000, icon: '🏥', text: 'Medical Checkup for 2 People' },
-];
-
-export default function ZakatCalculator({ balance, portfolioValue, onDonate }: ZakatCalculatorProps) {
-  const totalWealth = balance + portfolioValue;
-  const zakatAmount = totalWealth * 0.025;
-  const isEligible = totalWealth >= NISAB_THRESHOLD;
-
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedRecipient, setSelectedRecipient] = useState('');
-  const [pin, setPin] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [donated, setDonated] = useState(false);
-
-  const recipients = ['Edhi Foundation', 'Al-Khidmat', 'Orphan Care', 'Local Masjid'];
-
-  const handleDonate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (pin.length !== 4) return;
-    
-    setLoading(true);
-    await new Promise(r => setTimeout(r, 1500)); // Simulate processing
-    onDonate(zakatAmount, selectedRecipient);
-    setLoading(false);
-    setDonated(true);
-  };
-
-  if (donated) {
-    return (
-      <div className="bg-white rounded-2xl shadow-sm border border-green-100 p-6 text-center mb-6 animate-fade-in">
-        <div className="text-4xl mb-3">🌟</div>
-        <h2 className="text-xl font-bold text-green-700">JazakAllah Khair!</h2>
-        <p className="text-gray-600 mt-2">Your Zakat of PKR {zakatAmount.toFixed(2)} has been distributed.</p>
-        <button onClick={() => { setDonated(false); setModalOpen(false); }} className="mt-4 px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 font-medium">
-          Close
-        </button>
-      </div>
-    );
-  }
-
-  return (
-    <>
-      {/* Main Card */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-bold text-gray-800">🤲 Zakat Calculator</h2>
-          {isEligible && <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Due</span>}
-        </div>
-
-        <div className="space-y-3">
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Cash Balance</span>
-            <span className="font-medium">PKR {balance.toFixed(2)}</span>
-          </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Portfolio Value</span>
-            <span className="font-medium">PKR {portfolioValue.toFixed(2)}</span>
-          </div>
-          <div className="border-t pt-3 flex justify-between font-bold text-lg">
-            <span>Total Wealth</span>
-            <span>PKR {totalWealth.toFixed(2)}</span>
-          </div>
-        </div>
-
-        {isEligible ? (
-          <div className="mt-4 p-4 bg-green-50 rounded-xl border border-green-200">
-            <p className="text-green-800 font-medium">Zakat Due (2.5%)</p>
-            <p className="text-2xl font-bold text-green-700 mt-1">PKR {zakatAmount.toFixed(2)}</p>
-            <button 
-              onClick={() => setModalOpen(true)}
-              className="mt-3 w-full py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium"
-            >
-              Donate Now
-            </button>
-          </div>
-        ) : (
-          <div className="mt-4 p-4 bg-gray-50 rounded-xl text-center">
-            <p className="text-gray-500 text-sm">Nisab threshold is PKR {NISAB_THRESHOLD.toLocaleString()}.<br/>Your wealth is currently below the limit.</p>
-          </div>
-        )}
-      </div>
-
-      {/* Donation Modal */}
-      {modalOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="w-full max-w-sm bg-white rounded-2xl p-6 shadow-xl relative">
-            <button onClick={() => setModalOpen(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">✕</button>
-            
-            <h3 className="text-xl font-bold text-gray-800 mb-4">Select Recipient</h3>
-            
-            <div className="grid grid-cols-2 gap-3 mb-4">
-              {recipients.map(r => (
-                <button
-                  key={r}
-                  onClick={() => setSelectedRecipient(r)}
-                  className={`p-3 border rounded-xl text-sm font-medium transition ${
-                    selectedRecipient === r ? 'border-green-500 bg-green-50 text-green-700 ring-2 ring-green-200' : 'hover:bg-gray-50'
-                  }`}
-                >
-                  {r}
-                </button>
-              ))}
-            </div>
-
-            {selectedRecipient && (
-              <form onSubmit={handleDonate} className="space-y-4">
-                <div className="p-3 bg-yellow-50 rounded-lg text-yellow-800 text-xs text-center">
-                  Impact: Your PKR {zakatAmount.toFixed(2)} will provide meals, water, and education.
-                </div>
-                <label className="block text-sm font-medium text-gray-700">4 Digit PIN</label>
-                <input
-                  type="password"
-                  inputMode="numeric"
-                  maxLength={4}
-                  value={pin}
-                  onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))}
-                  placeholder="****"
-                  className="w-full p-3 border rounded-xl text-center text-xl tracking-widest focus:ring-2 focus:ring-green-500 outline-none"
-                />
-                <button type="submit" disabled={loading} className="w-full py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 disabled:opacity-50 font-medium">
-                  {loading ? 'Processing...' : `Confirm Donation`}
-                </button>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
-    </>
-  );
-}
-
-Integrate into Dashboard
-src/app/dashboard/page.tsx
-'use client';
-import { useState, useEffect } from 'react';
-import VoiceAgent from '@/components/VoiceAgent';
-import DepositFlow from '@/components/DepositFlow';
-import WithdrawFlow from '@/components/WithdrawFlow';
-import BalanceCard from '@/components/BalanceCard';
-import HalalStockScanner from '@/components/HalalStockScanner';
-import PortfolioDashboard from '@/components/PortfolioDashboard';
-import ZakatCalculator from '@/components/ZakatCalculator';
-import { getStockBySymbol } from '@/lib/halal-stock-data';
-
-interface Holding {
-  symbol: string;
-  name: string;
-  invested: number;
-  currentPrice: number;
-  units: number;
-  pnl: number;
-}
-
-interface ZakatRecord {
-  date: string;
-  amount: number;
-  recipient: string;
-}
-
-export default function Dashboard() {
-  const [balance, setBalance] = useState(0);
-  const [transactions, setTransactions] = useState<any[]>([]);
-  const [modal, setModal] = useState<'deposit' | 'withdraw' | null>(null);
-  const [holdings, setHoldings] = useState<Holding[]>([]);
-  const [zakatHistory, setZakatHistory] = useState<ZakatRecord[]>([]);
-
-  const totalPortfolioValue = holdings.reduce((sum, h) => sum + h.invested + h.pnl, 0);
-  const dailyPnl = holdings.reduce((sum, h) => sum + h.pnl, 0);
-
-  useEffect(() => {
-    fetch('/api/transaction').then(r => r.json()).then(d => {
-      setBalance(d.balance);
-      setTransactions(d.transactions);
-    });
-  }, []);
-
-  const handleVoice = (cmd: string) => {
-    if (cmd.includes('deposit') || cmd.includes('ڈیپوزٹ')) setModal('deposit');
-    else if (cmd.includes('withdraw') || cmd.includes('وِڈڈرا')) setModal('withdraw');
-    else if (cmd.includes('zakat') || cmd.includes('زکوٰ')) {
-      document.getElementById('zakat-section')?.scrollIntoView({ behavior: 'smooth' });
-    }
-    else if (cmd.includes('buy') || cmd.includes('خریدیں')) {
-      document.getElementById('scanner')?.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleTransactionSuccess = async ( any) => {
-    const res = await fetch('/api/transaction', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    const result = await res.json();
-    if (result.success) {
-      setBalance(result.newBalance);
-      const txRes = await fetch('/api/transaction');
-      setTransactions((await txRes.json()).transactions);
-      setModal(null);
-    }
-  };
-
-  const handleBuyStock = (symbol: string, amount: number) => {
-    const stock = getStockBySymbol(symbol);
-    if (!stock) return;
-
-    setBalance(prev => prev - amount);
-    setHoldings(prev => {
-      const existing = prev.find(h => h.symbol === symbol);
-      if (existing) {
-        const newUnits = existing.units + (amount / stock.price);
-        const newInvested = existing.invested + amount;
-        return prev.map(h => h.symbol === symbol ? { ...h, invested: newInvested, units: newUnits, pnl: h.pnl } : h);
-      } else {
-        return [...prev, {
-          symbol: stock.symbol, name: stock.name, invested: amount, currentPrice: stock.price, units: amount / stock.price, pnl: 0
-        }];
-      }
-    });
-  };
-
-  const handleZakatDonation = (amount: number, recipient: string) => {
-    setBalance(prev => prev - amount);
-    setZakatHistory(prev => [{ date: new Date().toISOString(), amount, recipient }, ...prev]);
-    setTransactions(prev => [{ id: Date.now(), type: 'zakat', amount, recipient, status: 'success', date: new Date().toISOString() }, ...prev]);
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50 p-4 pb-24">
-      <header className="mb-6 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-green-700">🇵🇰 Roziq</h1>
-        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Halal Wealth OS</span>
-      </header>
-
-      <BalanceCard balance={balance} onDeposit={() => setModal('deposit')} onWithdraw={() => setModal('withdraw')} />
-
-      <div id="zakat-section">
-        <ZakatCalculator balance={balance} portfolioValue={totalPortfolioValue} onDonate={handleZakatDonation} />
-      </div>
-
-      <div id="scanner">
-        <HalalStockScanner balance={balance} onBuy={handleBuyStock} />
-      </div>
-
-      <PortfolioDashboard holdings={holdings} totalValue={totalPortfolioValue} dailyPnl={dailyPnl} />
-
-      {/* Zakat History */}
-      {zakatHistory.length > 0 && (
-        <div className="mt-6 bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
-          <h2 className="text-lg font-bold text-gray-800 mb-3">🤲 Zakat History</h2>
-          <div className="space-y-2">
-            {zakatHistory.map((z, i) => (
-              <div key={i} className="flex justify-between items-center p-3 bg-green-50 rounded-xl">
-                <div>
-                  <div className="font-medium text-green-800">{z.recipient}</div>
-                  <div className="text-xs text-green-600">{new Date(z.date).toLocaleDateString('ur-PK')}</div>
-                </div>
-                <div className="font-bold text-green-700">PKR {z.amount.toFixed(2)}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="mt-6">
-        <h2 className="text-lg font-semibold mb-3">Recent Activity</h2>
-        <div className="space-y-2">
-          {transactions.length === 0 ? (
-            <p className="text-gray-500 text-center py-4">No activity yet</p>
-          ) : (
-            transactions.slice(0, 5).map((tx) => (
-              <div key={tx.id} className="flex justify-between p-3 bg-white rounded-xl shadow-sm border border-gray-100">
-                <div>
-                  <div className="font-medium">{tx.type === 'deposit' ? ' Deposit' : tx.type === 'withdraw' ? '➖ Withdraw' : tx.type === 'zakat' ? '🤲 Zakat Donation' : `📈 Buy ${tx.symbol}`}</div>
-                  <div className="text-xs text-gray-500">{tx.recipient && `To: ${tx.recipient}`} {new Date(tx.date).toLocaleString('ur-PK')}</div>
-                </div>
-                <div className={`font-bold ${tx.type === 'deposit' ? 'text-green-600' : 'text-red-600'}`}>
-                  {tx.type === 'deposit' ? '+' : '-'}PKR {tx.amount}
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-
-      {modal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="relative w-full max-w-sm">
-            <button onClick={() => setModal(null)} className="absolute -top-10 right-0 text-white text-lg">✕</button>
-            {modal === 'deposit' ? <DepositFlow onSuccess={handleTransactionSuccess} /> : <WithdrawFlow onSuccess={handleTransactionSuccess} />}
-          </div>
-        </div>
-      )}
-
-      <VoiceAgent onCommand={handleVoice} />
-    </div>
-  );
-}
-
-Create Financial Health Score Component
-src/components/FinancialHealthScore.tsx
 'use client';
 import { useState, useEffect } from 'react';
 
@@ -1433,19 +712,19 @@ export default function FinancialHealthScore({
 
     // 2. Generate Tips based on weak areas
     const t: string[] = [];
-    if (balance < emergencyTarget) t.push('💡 Add PKR 500 to your emergency fund for +5 points');
-    if (holdings.length < 3) t.push(' Buy 1 more sector (e.g., Tech or Energy) to diversify');
-    if (isZakatEligible && zakatHistory.length === 0) t.push('🤲 Pay Zakat to unlock the "Zakat Champion" badge');
-    if (daysSince > 3) t.push('🔥 Make a small investment or deposit to keep your streak alive');
+    if (balance < emergencyTarget) t.push('ðŸ’¡ Add PKR 500 to your emergency fund for +5 points');
+    if (holdings.length < 3) t.push('ðŸ“Š Buy 1 more sector (e.g., Tech or Energy) to diversify');
+    if (isZakatEligible && zakatHistory.length === 0) t.push('ðŸ¤² Pay Zakat to unlock the "Zakat Champion" badge');
+    if (daysSince > 3) t.push('ðŸ”¥ Make a small investment or deposit to keep your streak alive');
     setTips(t);
 
     // 3. Determine Badges
     const b: Badge[] = [
-      { id: 'first', icon: '🌱', title: 'First Seed', desc: 'Made your first investment', unlocked: transactions.some(t => t.type.includes('buy')) },
-      { id: 'safety', icon: '🛡️', title: 'Safety Net', desc: 'Emergency fund > 20% of portfolio', unlocked: balance >= emergencyTarget },
-      { id: 'diverse', icon: '📊', title: 'Diversifier', desc: 'Hold 3+ different assets', unlocked: holdings.length >= 3 },
-      { id: 'zakat', icon: '🤲', title: 'Zakat Champion', desc: 'Paid Zakat when eligible', unlocked: isZakatEligible && zakatHistory.length > 0 },
-      { id: 'streak', icon: '🔥', title: '7-Day Streak', desc: 'Active for 7 days', unlocked: daysSince <= 1 && transactions.length >= 7 },
+      { id: 'first', icon: 'ðŸŒ±', title: 'First Seed', desc: 'Made your first investment', unlocked: transactions.some(t => t.type.includes('buy')) },
+      { id: 'safety', icon: 'ðŸ›¡ï¸', title: 'Safety Net', desc: 'Emergency fund > 20% of portfolio', unlocked: balance >= emergencyTarget },
+      { id: 'diverse', icon: 'ðŸ“Š', title: 'Diversifier', desc: 'Hold 3+ different assets', unlocked: holdings.length >= 3 },
+      { id: 'zakat', icon: 'ðŸ¤²', title: 'Zakat Champion', desc: 'Paid Zakat when eligible', unlocked: isZakatEligible && zakatHistory.length > 0 },
+      { id: 'streak', icon: 'ðŸ”¥', title: '7-Day Streak', desc: 'Active for 7 days', unlocked: daysSince <= 1 && transactions.length >= 7 },
     ];
     setBadges(b);
     setStreak(Math.min(7, Math.floor(transactions.length / 2))); // Mock streak for demo
@@ -1463,7 +742,7 @@ export default function FinancialHealthScore({
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold text-gray-800"> Financial Health</h2>
+        <h2 className="text-lg font-bold text-gray-800">ðŸ“ˆ Financial Health</h2>
         <span className={`text-xs px-2 py-1 rounded-full font-medium ${
           score >= 80 ? 'bg-green-100 text-green-800' : score >= 60 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'
         }`}>
@@ -1495,7 +774,7 @@ export default function FinancialHealthScore({
 
         <div className="text-right">
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-2xl">🔥</span>
+            <span className="text-2xl">ðŸ”¥</span>
             <span className="text-xl font-bold text-orange-600">{streak} Day Streak</span>
           </div>
           <p className="text-xs text-gray-500">Keep investing daily to grow your streak</p>
@@ -1518,13 +797,13 @@ export default function FinancialHealthScore({
         </div>
         <div className="p-3 bg-gray-50 rounded-xl">
           <div className="text-xs text-gray-500">Zakat Status</div>
-          <div className="font-semibold text-gray-800">{(!isZakatEligible || zakatHistory.length > 0) ? '✅ Compliant' : '⏳ Pending'}</div>
+          <div className="font-semibold text-gray-800">{(!isZakatEligible || zakatHistory.length > 0) ? 'âœ… Compliant' : 'â³ Pending'}</div>
         </div>
       </div>
 
       {/* Badges */}
       <div className="mb-4">
-        <h3 className="text-sm font-semibold text-gray-700 mb-2">🏆 Badges</h3>
+        <h3 className="text-sm font-semibold text-gray-700 mb-2">ðŸ† Badges</h3>
         <div className="flex gap-2 overflow-x-auto pb-2">
           {badges.map(b => (
             <div key={b.id} className={`flex-shrink-0 w-20 p-2 rounded-xl text-center border-2 transition ${
@@ -1540,11 +819,11 @@ export default function FinancialHealthScore({
       {/* Actionable Tips */}
       {tips.length > 0 && (
         <div className="p-3 bg-blue-50 border border-blue-100 rounded-xl">
-          <h4 className="text-xs font-bold text-blue-800 mb-1">💡 How to Improve</h4>
+          <h4 className="text-xs font-bold text-blue-800 mb-1">ðŸ’¡ How to Improve</h4>
           <ul className="space-y-1">
             {tips.map((tip, i) => (
               <li key={i} className="text-xs text-blue-700 flex items-start gap-1">
-                <span>•</span> {tip}
+                <span>â€¢</span> {tip}
               </li>
             ))}
           </ul>
@@ -1554,284 +833,112 @@ export default function FinancialHealthScore({
   );
 }
 
-Integrate into Dashboard
-src/app/dashboard/page.tsx (Replace entire content
-'use client';
-import { useState, useEffect } from 'react';
-import VoiceAgent from '@/components/VoiceAgent';
-import DepositFlow from '@/components/DepositFlow';
-import WithdrawFlow from '@/components/WithdrawFlow';
-import BalanceCard from '@/components/BalanceCard';
-import HalalStockScanner from '@/components/HalalStockScanner';
-import PortfolioDashboard from '@/components/PortfolioDashboard';
-import ZakatCalculator from '@/components/ZakatCalculator';
-import FinancialHealthScore from '@/components/FinancialHealthScore';
-import { getStockBySymbol } from '@/lib/halal-stock-data';
 
-interface Holding {
-  symbol: string;
-  name: string;
-  invested: number;
-  currentPrice: number;
-  units: number;
-  pnl: number;
-}
+// ==========================================
+// File: src/components/HalalStockScanner.tsx
+// ==========================================
 
-interface ZakatRecord {
-  date: string;
-  amount: number;
-  recipient: string;
-}
-
-export default function Dashboard() {
-  const [balance, setBalance] = useState(0);
-  const [transactions, setTransactions] = useState<any[]>([]);
-  const [modal, setModal] = useState<'deposit' | 'withdraw' | null>(null);
-  const [holdings, setHoldings] = useState<Holding[]>([]);
-  const [zakatHistory, setZakatHistory] = useState<ZakatRecord[]>([]);
-
-  const totalPortfolioValue = holdings.reduce((sum, h) => sum + h.invested + h.pnl, 0);
-  const dailyPnl = holdings.reduce((sum, h) => sum + h.pnl, 0);
-  const isZakatEligible = (balance + totalPortfolioValue) >= 300000;
-
-  useEffect(() => {
-    fetch('/api/transaction').then(r => r.json()).then(d => {
-      setBalance(d.balance);
-      setTransactions(d.transactions);
-    });
-  }, []);
-
-  const handleVoice = (cmd: string) => {
-    if (cmd.includes('deposit') || cmd.includes('ڈیپوزٹ')) setModal('deposit');
-    else if (cmd.includes('withdraw') || cmd.includes('وِڈڈرا')) setModal('withdraw');
-    else if (cmd.includes('health') || cmd.includes('صحت')) {
-      document.getElementById('health-section')?.scrollIntoView({ behavior: 'smooth' });
-    }
-    else if (cmd.includes('zakat') || cmd.includes('زکوٰ')) {
-      document.getElementById('zakat-section')?.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleTransactionSuccess = async ( any) => {
-    const res = await fetch('/api/transaction', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    const result = await res.json();
-    if (result.success) {
-      setBalance(result.newBalance);
-      const txRes = await fetch('/api/transaction');
-      setTransactions((await txRes.json()).transactions);
-      setModal(null);
-    }
-  };
-
-  const handleBuyStock = (symbol: string, amount: number) => {
-    const stock = getStockBySymbol(symbol);
-    if (!stock) return;
-
-    setBalance(prev => prev - amount);
-    setHoldings(prev => {
-      const existing = prev.find(h => h.symbol === symbol);
-      if (existing) {
-        const newUnits = existing.units + (amount / stock.price);
-        const newInvested = existing.invested + amount;
-        return prev.map(h => h.symbol === symbol ? { ...h, invested: newInvested, units: newUnits, pnl: h.pnl } : h);
-      } else {
-        return [...prev, {
-          symbol: stock.symbol, name: stock.name, invested: amount, currentPrice: stock.price, units: amount / stock.price, pnl: 0
-        }];
-      }
-    });
-    setTransactions(prev => [{ id: Date.now(), type: 'buy_stock', symbol, amount, status: 'success', date: new Date().toISOString() }, ...prev]);
-  };
-
-  const handleZakatDonation = (amount: number, recipient: string) => {
-    setBalance(prev => prev - amount);
-    setZakatHistory(prev => [{ date: new Date().toISOString(), amount, recipient }, ...prev]);
-    setTransactions(prev => [{ id: Date.now(), type: 'zakat', amount, recipient, status: 'success', date: new Date().toISOString() }, ...prev]);
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50 p-4 pb-24">
-      <header className="mb-6 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-green-700">🇵🇰 Roziq</h1>
-        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Halal Wealth OS</span>
-      </header>
-
-      <BalanceCard balance={balance} onDeposit={() => setModal('deposit')} onWithdraw={() => setModal('withdraw')} />
-
-      <div id="health-section">
-        <FinancialHealthScore 
-          balance={balance} 
-          portfolioValue={totalPortfolioValue} 
-          holdings={holdings} 
-          transactions={transactions} 
-          zakatHistory={zakatHistory} 
-          isZakatEligible={isZakatEligible} 
-        />
-      </div>
-
-      <div id="zakat-section">
-        <ZakatCalculator balance={balance} portfolioValue={totalPortfolioValue} onDonate={handleZakatDonation} />
-      </div>
-
-      <div id="scanner">
-        <HalalStockScanner balance={balance} onBuy={handleBuyStock} />
-      </div>
-
-      <PortfolioDashboard holdings={holdings} totalValue={totalPortfolioValue} dailyPnl={dailyPnl} />
-
-      {/* Zakat History */}
-      {zakatHistory.length > 0 && (
-        <div className="mt-6 bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
-          <h2 className="text-lg font-bold text-gray-800 mb-3">🤲 Zakat History</h2>
-          <div className="space-y-2">
-            {zakatHistory.map((z, i) => (
-              <div key={i} className="flex justify-between items-center p-3 bg-green-50 rounded-xl">
-                <div>
-                  <div className="font-medium text-green-800">{z.recipient}</div>
-                  <div className="text-xs text-green-600">{new Date(z.date).toLocaleDateString('ur-PK')}</div>
-                </div>
-                <div className="font-bold text-green-700">PKR {z.amount.toFixed(2)}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="mt-6">
-        <h2 className="text-lg font-semibold mb-3">Recent Activity</h2>
-        <div className="space-y-2">
-          {transactions.length === 0 ? (
-            <p className="text-gray-500 text-center py-4">No activity yet</p>
-          ) : (
-            transactions.slice(0, 5).map((tx) => (
-              <div key={tx.id} className="flex justify-between p-3 bg-white rounded-xl shadow-sm border border-gray-100">
-                <div>
-                  <div className="font-medium">{tx.type === 'deposit' ? ' Deposit' : tx.type === 'withdraw' ? '➖ Withdraw' : tx.type === 'zakat' ? '🤲 Zakat' : `📈 Buy ${tx.symbol}`}</div>
-                  <div className="text-xs text-gray-500">{tx.recipient && `To: ${tx.recipient}`} {new Date(tx.date).toLocaleString('ur-PK')}</div>
-                </div>
-                <div className={`font-bold ${tx.type === 'deposit' ? 'text-green-600' : 'text-red-600'}`}>
-                  {tx.type === 'deposit' ? '+' : '-'}PKR {tx.amount}
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-
-      {modal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="relative w-full max-w-sm">
-            <button onClick={() => setModal(null)} className="absolute -top-10 right-0 text-white text-lg">✕</button>
-            {modal === 'deposit' ? <DepositFlow onSuccess={handleTransactionSuccess} /> : <WithdrawFlow onSuccess={handleTransactionSuccess} />}
-          </div>
-        </div>
-      )}
-
-      <VoiceAgent onCommand={handleVoice} />
-    </div>
-  );
-}
-
-Create Community Challenges
-src/components/CommunityChallenges.tsx
-tsx
 'use client';
 import { useState } from 'react';
+import { getHalalStocks, Stock } from '@/lib/halal-stock-data';
 
-interface Challenge {
-  id: number;
-  title: string;
-  target: number;
-  current: number;
-  reward: string;
-  icon: string;
+interface HalalStockScannerProps {
+  balance: number;
+  onBuy: (symbol: string, amount: number) => void;
 }
 
-const INITIAL_CHALLENGES: Challenge[] = [
-  { id: 1, title: '100,000 Pakistanis Invest PKR 1,000', target: 100000, current: 84231, reward: 'Platform donates PKR 10M to Flood Relief', icon: '🇵🇰' },
-  { id: 2, title: 'Collective PKR 1B in Green Sukuk', target: 1000000000, current: 650000000, reward: 'Platform plants 1 Million Trees', icon: '🌱' },
-  { id: 3, title: '10,000 Users Complete Financial Course', target: 10000, current: 8940, reward: 'Free Hajj Draw for 10 Participants', icon: '📚' },
-];
+export default function HalalStockScanner({ balance, onBuy }: HalalStockScannerProps) {
+  const [search, setSearch] = useState('');
+  const [selected, setSelected] = useState<Stock | null>(null);
+  const [amount, setAmount] = useState('');
+  const [loading, setLoading] = useState(false);
 
-export default function CommunityChallenges() {
-  const [challenges, setChallenges] = useState<Challenge[]>(INITIAL_CHALLENGES);
-  const [joined, setJoined] = useState<Set<number>>(new Set());
+  const stocks = getHalalStocks().filter(s =>
+    s.symbol.toLowerCase().includes(search.toLowerCase()) ||
+    s.name.toLowerCase().includes(search.toLowerCase())
+  );
 
-  const handleJoin = (id: number) => {
-    if (joined.has(id)) return;
-    setJoined(prev => new Set([...prev, id]));
-    setChallenges(prev =>
-      prev.map(c => c.id === id ? { ...c, current: c.current + 1 } : c)
-    );
-  };
+  const handleBuy = async () => {
+    if (!selected || !amount) return;
+    const val = parseFloat(amount);
+    if (val > balance) return alert('Ù†Ø§Ú©Ø§ÙÛŒ Ø¨ÛŒÙ„Ù†Ø³');
+    if (val < 100) return alert('Ú©Ù… Ø§Ø² Ú©Ù… PKR 100 Ø¯Ø±Ø¬ Ú©Ø±ÛŒÚº');
 
-  const formatNumber = (n: number) => {
-    if (n >= 1000000000) return `${(n / 1000000000).toFixed(1)}B`;
-    if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`;
-    return n.toLocaleString();
+    setLoading(true);
+    await new Promise(r => setTimeout(r, 800)); // Simulate exchange processing
+    onBuy(selected.symbol, val);
+    setLoading(false);
+    setSelected(null);
+    setAmount('');
   };
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold text-gray-800">🤝 Community Challenges</h2>
-        <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Nation Building</span>
+        <h2 className="text-lg font-bold text-gray-800">ðŸ“Š Ø­Ù„Ø§Ù„ Ø§Ø³Ù¹Ø§Ú© Ø§Ø³Ú©ÛŒÙ†Ø±</h2>
+        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Shariah Certified</span>
       </div>
 
-      <div className="space-y-4">
-        {challenges.map((c) => {
-          const progress = Math.min(100, (c.current / c.target) * 100);
-          const isJoined = joined.has(c.id);
-          return (
-            <div key={c.id} className={`p-4 rounded-xl border transition ${isJoined ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200 hover:border-blue-300'}`}>
-              <div className="flex items-start gap-3">
-                <span className="text-2xl">{c.icon}</span>
-                <div className="flex-1">
-                  <h3 className="font-bold text-gray-800 text-sm md:text-base">{c.title}</h3>
-                  <p className="text-xs text-gray-500 mt-1"> Reward: {c.reward}</p>
-                  
-                  <div className="mt-3">
-                    <div className="flex justify-between text-xs mb-1">
-                      <span className="text-gray-600">{formatNumber(c.current)} / {formatNumber(c.target)}</span>
-                      <span className="font-bold text-blue-600">{progress.toFixed(1)}%</span>
-                    </div>
-                    <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                      <div 
-                        className={`h-full rounded-full transition-all duration-1000 ${isJoined ? 'bg-green-500' : 'bg-blue-500'}`} 
-                        style={{ width: `${progress}%` }}
-                      ></div>
-                    </div>
-                  </div>
+      <input
+        type="text"
+        placeholder="Search symbol or name (e.g. LUCK, Meezan)..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="w-full p-3 border rounded-xl mb-4 focus:ring-2 focus:ring-green-500 outline-none"
+      />
 
-                  {!isJoined && (
-                    <button 
-                      onClick={() => handleJoin(c.id)}
-                      className="mt-3 w-full py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition"
-                    >
-                      Join This Challenge
-                    </button>
-                  )}
-                  {isJoined && (
-                    <div className="mt-2 text-center text-green-700 text-xs font-semibold">
-                      ✅ You Joined! Together we grow.
-                    </div>
-                  )}
-                </div>
+      <div className="space-y-3 max-h-64 overflow-y-auto pr-2">
+        {stocks.map(stock => (
+          <div key={stock.symbol} 
+               className="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-green-50 transition cursor-pointer"
+               onClick={() => setSelected(stock)}>
+            <div>
+              <div className="font-bold text-gray-900">{stock.symbol} <span className="text-sm font-normal text-gray-500">- {stock.name}</span></div>
+              <div className="text-xs text-gray-500">{stock.sector} â€¢ Debt: {stock.debtToEquity}% â€¢ Int: {stock.interestIncomeRatio}%</div>
+            </div>
+            <div className="text-right">
+              <div className="font-bold text-gray-900">PKR {stock.price}</div>
+              <div className={`text-sm ${stock.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                {stock.change >= 0 ? 'â–²' : 'â–¼'} {stock.change}%
               </div>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
+
+      {selected && (
+        <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-xl animate-fade-in">
+          <h3 className="font-bold text-green-800 mb-2">Buy {selected.symbol}</h3>
+          <div className="flex items-center gap-3">
+            <input
+              type="number"
+              placeholder="PKR Amount (min 100)"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              className="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+            />
+            <button
+              onClick={handleBuy}
+              disabled={loading}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 font-medium whitespace-nowrap"
+            >
+              {loading ? 'Processing...' : 'Buy Now'}
+            </button>
+          </div>
+          <p className="text-xs text-green-700 mt-2">
+            âœ… Halal Score: {selected.halalScore}/10 | ðŸ•Œ Certified | âš ï¸ Purification: {(selected.interestIncomeRatio * 0.1).toFixed(2)}%
+          </p>
+        </div>
+      )}
     </div>
   );
 }
 
- Create Local Impact Map
-src/components/LocalImpactMap.tsx
+
+// ==========================================
+// File: src/components/LocalImpactMap.tsx
+// ==========================================
+
 'use client';
 import { useState } from 'react';
 
@@ -1845,14 +952,14 @@ interface Project {
 }
 
 const PROJECTS: Project[] = [
-  { city: 'Bahawalpur', type: 'Solar Park', amount: 'PKR 50M', icon: '☀️', x: 55, y: 45 },
-  { city: 'Karachi', type: 'Desalination Plant', amount: 'PKR 120M', icon: '💧', x: 30, y: 65 },
-  { city: 'Lahore', type: 'Tech Hub', amount: 'PKR 80M', icon: '💻', x: 40, y: 30 },
-  { city: 'Peshawar', type: 'Agriculture Fund', amount: 'PKR 30M', icon: '🌾', x: 35, y: 15 },
-  { city: 'Quetta', type: 'Cold Storage', amount: 'PKR 20M', icon: '❄️', x: 15, y: 35 },
-  { city: 'Islamabad', type: 'Headquarters', amount: 'HQ', icon: '🏢', x: 45, y: 20 },
-  { city: 'Thatta', type: 'Clean Water', amount: 'PKR 5M', icon: '🚰', x: 35, y: 60 },
-  { city: 'Multan', type: 'Mango Export', amount: 'PKR 15M', icon: '🥭', x: 50, y: 40 },
+  { city: 'Bahawalpur', type: 'Solar Park', amount: 'PKR 50M', icon: 'â˜€ï¸', x: 55, y: 45 },
+  { city: 'Karachi', type: 'Desalination Plant', amount: 'PKR 120M', icon: 'ðŸ’§', x: 30, y: 65 },
+  { city: 'Lahore', type: 'Tech Hub', amount: 'PKR 80M', icon: 'ðŸ’»', x: 40, y: 30 },
+  { city: 'Peshawar', type: 'Agriculture Fund', amount: 'PKR 30M', icon: 'ðŸŒ¾', x: 35, y: 15 },
+  { city: 'Quetta', type: 'Cold Storage', amount: 'PKR 20M', icon: 'â„ï¸', x: 15, y: 35 },
+  { city: 'Islamabad', type: 'Headquarters', amount: 'HQ', icon: 'ðŸ¢', x: 45, y: 20 },
+  { city: 'Thatta', type: 'Clean Water', amount: 'PKR 5M', icon: 'ðŸš°', x: 35, y: 60 },
+  { city: 'Multan', type: 'Mango Export', amount: 'PKR 15M', icon: 'ðŸ¥­', x: 50, y: 40 },
 ];
 
 export default function LocalImpactMap() {
@@ -1861,7 +968,7 @@ export default function LocalImpactMap() {
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold text-gray-800">📍 Local Impact Map</h2>
+        <h2 className="text-lg font-bold text-gray-800">ðŸ“ Local Impact Map</h2>
         <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">Real Projects</span>
       </div>
 
@@ -1930,22 +1037,12 @@ export default function LocalImpactMap() {
   );
 }
 
-Integrate into Dashboard
-src/app/dashboard/page.tsx (Replace entire content)
-tsx
+
+// ==========================================
+// File: src/components/PortfolioDashboard.tsx
+// ==========================================
+
 'use client';
-import { useState, useEffect } from 'react';
-import VoiceAgent from '@/components/VoiceAgent';
-import DepositFlow from '@/components/DepositFlow';
-import WithdrawFlow from '@/components/WithdrawFlow';
-import BalanceCard from '@/components/BalanceCard';
-import HalalStockScanner from '@/components/HalalStockScanner';
-import PortfolioDashboard from '@/components/PortfolioDashboard';
-import ZakatCalculator from '@/components/ZakatCalculator';
-import FinancialHealthScore from '@/components/FinancialHealthScore';
-import CommunityChallenges from '@/components/CommunityChallenges';
-import LocalImpactMap from '@/components/LocalImpactMap';
-import { getStockBySymbol } from '@/lib/halal-stock-data';
 
 interface Holding {
   symbol: string;
@@ -1956,173 +1053,454 @@ interface Holding {
   pnl: number;
 }
 
-interface ZakatRecord {
-  date: string;
-  amount: number;
-  recipient: string;
+interface PortfolioDashboardProps {
+  holdings: Holding[];
+  totalValue: number;
+  dailyPnl: number;
 }
 
-export default function Dashboard() {
-  const [balance, setBalance] = useState(0);
-  const [transactions, setTransactions] = useState<any[]>([]);
-  const [modal, setModal] = useState<'deposit' | 'withdraw' | null>(null);
-  const [holdings, setHoldings] = useState<Holding[]>([]);
-  const [zakatHistory, setZakatHistory] = useState<ZakatRecord[]>([]);
-
-  const totalPortfolioValue = holdings.reduce((sum, h) => sum + h.invested + h.pnl, 0);
-  const dailyPnl = holdings.reduce((sum, h) => sum + h.pnl, 0);
-  const isZakatEligible = (balance + totalPortfolioValue) >= 300000;
-
-  useEffect(() => {
-    fetch('/api/transaction').then(r => r.json()).then(d => {
-      setBalance(d.balance);
-      setTransactions(d.transactions);
-    });
-  }, []);
-
-  const handleVoice = (cmd: string) => {
-    if (cmd.includes('deposit') || cmd.includes('ڈیپوزٹ')) setModal('deposit');
-    else if (cmd.includes('withdraw') || cmd.includes('وِڈڈرا')) setModal('withdraw');
-    else if (cmd.includes('health') || cmd.includes('صحت')) {
-      document.getElementById('health-section')?.scrollIntoView({ behavior: 'smooth' });
-    }
-    else if (cmd.includes('challenge') || cmd.includes('چیلنج')) {
-      document.getElementById('challenge-section')?.scrollIntoView({ behavior: 'smooth' });
-    }
-    else if (cmd.includes('map') || cmd.includes('نقشہ')) {
-      document.getElementById('map-section')?.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleTransactionSuccess = async ( any) => {
-    const res = await fetch('/api/transaction', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    const result = await res.json();
-    if (result.success) {
-      setBalance(result.newBalance);
-      const txRes = await fetch('/api/transaction');
-      setTransactions((await txRes.json()).transactions);
-      setModal(null);
-    }
-  };
-
-  const handleBuyStock = (symbol: string, amount: number) => {
-    const stock = getStockBySymbol(symbol);
-    if (!stock) return;
-
-    setBalance(prev => prev - amount);
-    setHoldings(prev => {
-      const existing = prev.find(h => h.symbol === symbol);
-      if (existing) {
-        const newUnits = existing.units + (amount / stock.price);
-        const newInvested = existing.invested + amount;
-        return prev.map(h => h.symbol === symbol ? { ...h, invested: newInvested, units: newUnits, pnl: h.pnl } : h);
-      } else {
-        return [...prev, {
-          symbol: stock.symbol, name: stock.name, invested: amount, currentPrice: stock.price, units: amount / stock.price, pnl: 0
-        }];
-      }
-    });
-    setTransactions(prev => [{ id: Date.now(), type: 'buy_stock', symbol, amount, status: 'success', date: new Date().toISOString() }, ...prev]);
-  };
-
-  const handleZakatDonation = (amount: number, recipient: string) => {
-    setBalance(prev => prev - amount);
-    setZakatHistory(prev => [{ date: new Date().toISOString(), amount, recipient }, ...prev]);
-    setTransactions(prev => [{ id: Date.now(), type: 'zakat', amount, recipient, status: 'success', date: new Date().toISOString() }, ...prev]);
-  };
+export default function PortfolioDashboard({ holdings, totalValue, dailyPnl }: PortfolioDashboardProps) {
+  if (holdings.length === 0) {
+    return (
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center mb-6">
+        <div className="text-4xl mb-3">ðŸ“ˆ</div>
+        <h3 className="text-lg font-bold text-gray-800">No Investments Yet</h3>
+        <p className="text-gray-500 text-sm mt-1">Start investing in Halal stocks to build your portfolio.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 pb-24">
-      <header className="mb-6 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-green-700">🇵🇰 Roziq</h1>
-        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Halal Wealth OS</span>
-      </header>
-
-      <BalanceCard balance={balance} onDeposit={() => setModal('deposit')} onWithdraw={() => setModal('withdraw')} />
-
-      <div id="health-section">
-        <FinancialHealthScore 
-          balance={balance} 
-          portfolioValue={totalPortfolioValue} 
-          holdings={holdings} 
-          transactions={transactions} 
-          zakatHistory={zakatHistory} 
-          isZakatEligible={isZakatEligible} 
-        />
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-bold text-gray-800">ðŸ’¼ My Portfolio</h2>
+        <div className={`text-sm font-semibold px-2 py-1 rounded-lg ${dailyPnl >= 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+          {dailyPnl >= 0 ? 'â–²' : 'â–¼'} PKR {Math.abs(dailyPnl).toFixed(2)} Today
+        </div>
       </div>
 
-      <div id="challenge-section">
-        <CommunityChallenges />
+      {/* Allocation Bar */}
+      <div className="mb-4">
+        <div className="text-xs text-gray-500 mb-1">Asset Allocation</div>
+        <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden flex">
+          {holdings.map((h, i) => {
+            const width = (h.invested / totalValue) * 100;
+            const colors = ['bg-green-500', 'bg-blue-500', 'bg-purple-500', 'bg-orange-500', 'bg-red-500'];
+            return <div key={h.symbol} style={{ width: `${width}%` }} className={`h-full ${colors[i % colors.length]}`} title={`${h.symbol}: ${width.toFixed(1)}%`}></div>;
+          })}
+        </div>
+        <div className="flex justify-between text-xs text-gray-500 mt-1">
+          {holdings.map(h => <span key={h.symbol}>{h.symbol}</span>)}
+        </div>
       </div>
 
-      <div id="map-section">
-        <LocalImpactMap />
-      </div>
-
-      <div id="zakat-section">
-        <ZakatCalculator balance={balance} portfolioValue={totalPortfolioValue} onDonate={handleZakatDonation} />
-      </div>
-
-      <div id="scanner">
-        <HalalStockScanner balance={balance} onBuy={handleBuyStock} />
-      </div>
-
-      <PortfolioDashboard holdings={holdings} totalValue={totalPortfolioValue} dailyPnl={dailyPnl} />
-
-      {/* Zakat History */}
-      {zakatHistory.length > 0 && (
-        <div className="mt-6 bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
-          <h2 className="text-lg font-bold text-gray-800 mb-3">🤲 Zakat History</h2>
-          <div className="space-y-2">
-            {zakatHistory.map((z, i) => (
-              <div key={i} className="flex justify-between items-center p-3 bg-green-50 rounded-xl">
-                <div>
-                  <div className="font-medium text-green-800">{z.recipient}</div>
-                  <div className="text-xs text-green-600">{new Date(z.date).toLocaleDateString('ur-PK')}</div>
-                </div>
-                <div className="font-bold text-green-700">PKR {z.amount.toFixed(2)}</div>
+      {/* Holdings List */}
+      <div className="space-y-2">
+        {holdings.map(h => (
+          <div key={h.symbol} className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
+            <div>
+              <div className="font-bold text-gray-900">{h.symbol}</div>
+              <div className="text-xs text-gray-500">{h.units.toFixed(4)} units @ PKR {h.currentPrice}</div>
+            </div>
+            <div className="text-right">
+              <div className="font-bold text-gray-900">PKR {(h.invested + h.pnl).toFixed(2)}</div>
+              <div className={`text-sm ${h.pnl >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                {h.pnl >= 0 ? '+' : ''}{h.pnl.toFixed(2)}
               </div>
-            ))}
+            </div>
           </div>
-        </div>
-      )}
-
-      <div className="mt-6">
-        <h2 className="text-lg font-semibold mb-3">Recent Activity</h2>
-        <div className="space-y-2">
-          {transactions.length === 0 ? (
-            <p className="text-gray-500 text-center py-4">No activity yet</p>
-          ) : (
-            transactions.slice(0, 5).map((tx) => (
-              <div key={tx.id} className="flex justify-between p-3 bg-white rounded-xl shadow-sm border border-gray-100">
-                <div>
-                  <div className="font-medium">{tx.type === 'deposit' ? ' Deposit' : tx.type === 'withdraw' ? '➖ Withdraw' : tx.type === 'zakat' ? '🤲 Zakat' : `📈 Buy ${tx.symbol}`}</div>
-                  <div className="text-xs text-gray-500">{tx.recipient && `To: ${tx.recipient}`} {new Date(tx.date).toLocaleString('ur-PK')}</div>
-                </div>
-                <div className={`font-bold ${tx.type === 'deposit' ? 'text-green-600' : 'text-red-600'}`}>
-                  {tx.type === 'deposit' ? '+' : '-'}PKR {tx.amount}
-                </div>
-              </div>
-            ))
-          )}
-        </div>
+        ))}
       </div>
 
-      {modal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="relative w-full max-w-sm">
-            <button onClick={() => setModal(null)} className="absolute -top-10 right-0 text-white text-lg">✕</button>
-            {modal === 'deposit' ? <DepositFlow onSuccess={handleTransactionSuccess} /> : <WithdrawFlow onSuccess={handleTransactionSuccess} />}
-          </div>
-        </div>
-      )}
-
-      <VoiceAgent onCommand={handleVoice} />
+      <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
+        <span className="text-sm text-gray-600">Total Portfolio Value</span>
+        <span className="text-xl font-bold text-gray-900">PKR {totalValue.toFixed(2)}</span>
+      </div>
     </div>
   );
 }
 
+
+// ==========================================
+// File: src/components/VoiceAgent.tsx
+// ==========================================
+
+'use client';
+import { useState, useEffect, useRef } from 'react';
+
+interface VoiceAgentProps {
+  onCommand: (cmd: string) => void;
+}
+
+export default function VoiceAgent({ onCommand }: VoiceAgentProps) {
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.lang = 'ur-PK';
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+
+      recognitionRef.current.onresult = (event: any) => {
+        const text = event.results[0][0].transcript.toLowerCase();
+        onCommand(text);
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onerror = () => setIsListening(false);
+      recognitionRef.current.onend = () => setIsListening(false);
+    }
+  }, [onCommand]);
+
+  const speak = (text: string) => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'ur-PK';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  const toggleListening = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+    } else {
+      speak('Ø¨ÙˆÙ„ÛŒÚºÛ” ÚˆÛŒÙ¾ÙˆØ²Ù¹ØŒ ÙˆÙÚˆÚˆØ±Ø§ØŒ ÛŒØ§ Ø¨ÛŒÙ„Ù†Ø³ØŸ');
+      recognitionRef.current?.start();
+      setIsListening(true);
+    }
+  };
+
+  return (
+    <div className="fixed bottom-6 right-6 z-50">
+      <button
+        onClick={toggleListening}
+        className={`p-4 rounded-full shadow-lg transition-all duration-300 ${
+          isListening ? 'bg-red-500 scale-110' : 'bg-green-600 hover:bg-green-700'
+        }`}
+      >
+        {isListening ? 'ðŸ”´ Ø³Ù† Ø±ÛØ§ ÛÛ’...' : 'ðŸŽ¤ Ø¢ÙˆØ§Ø² Ø³Û’ Ú©Ù†Ù¹Ø±ÙˆÙ„'}
+      </button>
+    </div>
+  );
+}
+
+
+// ==========================================
+// File: src/components/WithdrawFlow.tsx
+// ==========================================
+
+'use client';
+import { useState } from 'react';
+
+export default function WithdrawFlow({ onSuccess }: { onSuccess: (data: any) => void }) {
+  const [step, setStep] = useState(1);
+  const [amount, setAmount] = useState('');
+  const [method, setMethod] = useState('');
+  const [pin, setPin] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const methods = [
+    { id: 'jazzcash', name: 'JazzCash', icon: 'ðŸ“±' },
+    { id: 'easypaisa', name: 'EasyPaisa', icon: 'ðŸŸ¢' },
+    { id: 'bank', name: 'Bank Account', icon: 'ðŸ¦' }
+  ];
+
+  const validate = () => {
+    setError('');
+    if (!amount || Number(amount) < 100) return setError('Ú©Ù… Ø§Ø² Ú©Ù… PKR 100 Ø¯Ø±Ø¬ Ú©Ø±ÛŒÚº');
+    if (!method) return setError('Ø±Ù‚Ù… ÙˆØµÙˆÙ„ÛŒ Ú©Ø§ Ø·Ø±ÛŒÙ‚Û Ù…Ù†ØªØ®Ø¨ Ú©Ø±ÛŒÚº');
+    if (pin.length !== 4 || !/^\d{4}$/.test(pin)) return setError('4 ÛÙ†Ø¯Ø³ÙˆÚº Ú©Ø§ Ø¯Ø±Ø³Øª PIN Ø¯Ø±Ø¬ Ú©Ø±ÛŒÚº');
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validate()) return;
+    setLoading(true);
+    await new Promise(r => setTimeout(r, 1200));
+    onSuccess({ type: 'withdraw', amount: Number(amount), method, pin: '****' });
+    setLoading(false);
+  };
+
+  return (
+    <div className="w-full max-w-sm mx-auto p-6 bg-white rounded-2xl shadow-xl border border-gray-100">
+      <h2 className="text-xl font-bold mb-5 text-gray-800">ðŸ’¸ ÙˆÙÚˆÚˆØ±Ø§ Ú©Ø±ÛŒÚº</h2>
+      {step === 1 && (
+        <div className="space-y-4">
+          <label className="block text-sm font-medium text-gray-700">Ø±Ù‚Ù… (PKR)</label>
+          <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="e.g. 2000" className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-green-500 outline-none" />
+          <button onClick={() => setStep(2)} className="w-full py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 font-medium">Ø¢Ú¯Û’ Ø¨Ú‘Ú¾ÛŒÚº</button>
+        </div>
+      )}
+      {step === 2 && (
+        <div className="space-y-4">
+          <label className="block text-sm font-medium text-gray-700">Ø±Ù‚Ù… ÙˆØµÙˆÙ„ÛŒ Ú©Ø§ Ø·Ø±ÛŒÙ‚Û</label>
+          <div className="grid grid-cols-3 gap-3">
+            {methods.map((m) => (
+              <button key={m.id} onClick={() => setMethod(m.id)} className={`p-3 border rounded-xl text-center transition ${method === m.id ? 'border-green-500 bg-green-50 ring-2 ring-green-200' : 'hover:bg-gray-50'}`}>
+                <div className="text-2xl mb-1">{m.icon}</div><div className="text-xs font-medium">{m.name}</div>
+              </button>
+            ))}
+          </div>
+          <div className="flex gap-2">
+            <button onClick={() => setStep(1)} className="flex-1 py-3 border rounded-xl hover:bg-gray-50">ÙˆØ§Ù¾Ø³</button>
+            <button onClick={() => setStep(3)} className="flex-1 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700">Ø¢Ú¯Û’ Ø¨Ú‘Ú¾ÛŒÚº</button>
+          </div>
+        </div>
+      )}
+      {step === 3 && (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <label className="block text-sm font-medium text-gray-700">4 ÛÙ†Ø¯Ø³ÙˆÚº Ú©Ø§ PIN</label>
+          <input type="password" inputMode="numeric" maxLength={4} value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))} placeholder="****" className="w-full p-3 border rounded-xl text-center text-xl tracking-widest focus:ring-2 focus:ring-green-500 outline-none" />
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+          <div className="flex gap-2">
+            <button type="button" onClick={() => setStep(2)} className="flex-1 py-3 border rounded-xl hover:bg-gray-50">ÙˆØ§Ù¾Ø³</button>
+            <button type="submit" disabled={loading} className="flex-1 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 disabled:opacity-50 font-medium">{loading ? 'Ù¾Ø±ÙˆØ³ÛŒØ³...' : 'ØªØµØ¯ÛŒÙ‚ Ú©Ø±ÛŒÚº'}</button>
+          </div>
+        </form>
+      )}
+    </div>
+  );
+}
+
+
+// ==========================================
+// File: src/components/ZakatCalculator.tsx
+// ==========================================
+
+'use client';
+import { useState } from 'react';
+
+interface ZakatCalculatorProps {
+  balance: number;
+  portfolioValue: number;
+  onDonate: (amount: number, recipient: string) => void;
+}
+
+const NISAB_THRESHOLD = 300000; // Mock Gold Nisab value
+
+export default function ZakatCalculator({ balance, portfolioValue, onDonate }: ZakatCalculatorProps) {
+  const totalWealth = balance + portfolioValue;
+  const zakatAmount = totalWealth * 0.025;
+  const isEligible = totalWealth >= NISAB_THRESHOLD;
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedRecipient, setSelectedRecipient] = useState('');
+  const [pin, setPin] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [donated, setDonated] = useState(false);
+
+  const recipients = ['Edhi Foundation', 'Al-Khidmat', 'Orphan Care', 'Local Masjid'];
+
+  const handleDonate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (pin.length !== 4) return;
+    
+    setLoading(true);
+    await new Promise(r => setTimeout(r, 1500)); // Simulate processing
+    onDonate(zakatAmount, selectedRecipient);
+    setLoading(false);
+    setDonated(true);
+  };
+
+  if (donated) {
+    return (
+      <div className="bg-white rounded-2xl shadow-sm border border-green-100 p-6 text-center mb-6 animate-fade-in">
+        <div className="text-4xl mb-3">ðŸŒŸ</div>
+        <h2 className="text-xl font-bold text-green-700">JazakAllah Khair!</h2>
+        <p className="text-gray-600 mt-2">Your Zakat of PKR {zakatAmount.toFixed(2)} has been distributed.</p>
+        <button onClick={() => { setDonated(false); setModalOpen(false); }} className="mt-4 px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 font-medium">
+          Close
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-bold text-gray-800">ðŸ¤² Zakat Calculator</h2>
+          {isEligible && <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Due</span>}
+        </div>
+
+        <div className="space-y-3">
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-500">Cash Balance</span>
+            <span className="font-medium">PKR {balance.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-500">Portfolio Value</span>
+            <span className="font-medium">PKR {portfolioValue.toFixed(2)}</span>
+          </div>
+          <div className="border-t pt-3 flex justify-between font-bold text-lg">
+            <span>Total Wealth</span>
+            <span>PKR {totalWealth.toFixed(2)}</span>
+          </div>
+        </div>
+
+        {isEligible ? (
+          <div className="mt-4 p-4 bg-green-50 rounded-xl border border-green-200">
+            <p className="text-green-800 font-medium">Zakat Due (2.5%)</p>
+            <p className="text-2xl font-bold text-green-700 mt-1">PKR {zakatAmount.toFixed(2)}</p>
+            <button 
+              onClick={() => setModalOpen(true)}
+              className="mt-3 w-full py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium"
+            >
+              Donate Now
+            </button>
+          </div>
+        ) : (
+          <div className="mt-4 p-4 bg-gray-50 rounded-xl text-center">
+            <p className="text-gray-500 text-sm">Nisab threshold is PKR {NISAB_THRESHOLD.toLocaleString()}.<br/>Your wealth is currently below the limit.</p>
+          </div>
+        )}
+      </div>
+
+      {modalOpen && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="w-full max-w-sm bg-white rounded-2xl p-6 shadow-xl relative">
+            <button onClick={() => setModalOpen(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">âœ•</button>
+            
+            <h3 className="text-xl font-bold text-gray-800 mb-4">Select Recipient</h3>
+            
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              {recipients.map(r => (
+                <button
+                  key={r}
+                  onClick={() => setSelectedRecipient(r)}
+                  className={`p-3 border rounded-xl text-sm font-medium transition ${
+                    selectedRecipient === r ? 'border-green-500 bg-green-50 text-green-700 ring-2 ring-green-200' : 'hover:bg-gray-50'
+                  }`}
+                >
+                  {r}
+                </button>
+              ))}
+            </div>
+
+            {selectedRecipient && (
+              <form onSubmit={handleDonate} className="space-y-4">
+                <div className="p-3 bg-yellow-50 rounded-lg text-yellow-800 text-xs text-center">
+                  Impact: Your PKR {zakatAmount.toFixed(2)} will provide meals, water, and education.
+                </div>
+                <label className="block text-sm font-medium text-gray-700">4 Digit PIN</label>
+                <input
+                  type="password"
+                  inputMode="numeric"
+                  maxLength={4}
+                  value={pin}
+                  onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))}
+                  placeholder="****"
+                  className="w-full p-3 border rounded-xl text-center text-xl tracking-widest focus:ring-2 focus:ring-green-500 outline-none"
+                />
+                <button type="submit" disabled={loading} className="w-full py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 disabled:opacity-50 font-medium">
+                  {loading ? 'Processing...' : `Confirm Donation`}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+
+// ==========================================
+// File: src/lib/halal-stock-data.ts
+// ==========================================
+
+export interface Stock {
+  symbol: string;
+  name: string;
+  price: number;
+  change: number; // Daily % change
+  debtToEquity: number; // %
+  interestIncomeRatio: number; // %
+  businessType: string;
+  halalScore: number; // 1-10
+  sector: string;
+}
+
+// Realistic PSX dataset with authentic Shariah metrics
+export const MOCK_PSX_STOCKS: Stock[] = [
+  { symbol: 'LUCK', name: 'Lucky Cement', price: 612.50, change: 2.4, debtToEquity: 18.5, interestIncomeRatio: 2.1, businessType: 'Cement & Power', halalScore: 9.2, sector: 'Cement' },
+  { symbol: 'OGDC', name: 'Oil & Gas Dev Co', price: 84.20, change: -0.8, debtToEquity: 12.3, interestIncomeRatio: 1.5, businessType: 'Oil & Gas', halalScore: 8.8, sector: 'Energy' },
+  { symbol: 'MEBL', name: 'Meezan Bank', price: 145.00, change: 1.2, debtToEquity: 0, interestIncomeRatio: 0, businessType: 'Islamic Banking', halalScore: 9.8, sector: 'Banking' },
+  { symbol: 'FFC', name: 'Fauji Fertilizer', price: 168.40, change: 0.5, debtToEquity: 5.2, interestIncomeRatio: 3.8, businessType: 'Fertilizer', halalScore: 8.5, sector: 'Fertilizer' },
+  { symbol: 'HBL', name: 'Habib Bank Ltd', price: 92.10, change: -1.5, debtToEquity: 45.0, interestIncomeRatio: 28.5, businessType: 'Conventional Banking', halalScore: 2.1, sector: 'Banking' },
+  { symbol: 'ENGRO', name: 'Engro Corp', price: 312.80, change: 3.1, debtToEquity: 22.4, interestIncomeRatio: 4.2, businessType: 'Chemicals', halalScore: 7.9, sector: 'Chemicals' },
+  { symbol: 'TRG', name: 'TRG Pakistan', price: 124.50, change: 5.2, debtToEquity: 8.1, interestIncomeRatio: 1.2, businessType: 'IT Services', halalScore: 9.5, sector: 'Technology' },
+  { symbol: 'BAFL', name: 'Bank Alfalah', price: 48.90, change: -2.1, debtToEquity: 38.2, interestIncomeRatio: 25.4, businessType: 'Conventional Banking', halalScore: 2.5, sector: 'Banking' },
+  { symbol: 'SYS', name: 'Systems Ltd', price: 415.00, change: 1.8, debtToEquity: 4.5, interestIncomeRatio: 0.8, businessType: 'Software', halalScore: 9.1, sector: 'Technology' },
+  { symbol: 'PIOC', name: 'Pioneer Cement', price: 98.30, change: -0.5, debtToEquity: 15.2, interestIncomeRatio: 2.9, businessType: 'Cement', halalScore: 8.7, sector: 'Cement' }
+];
+
+// Shariah Screening Filter (AAOIFI Standards)
+export function getHalalStocks() {
+  return MOCK_PSX_STOCKS.filter(s => 
+    s.debtToEquity < 33 && 
+    s.interestIncomeRatio < 5 && 
+    s.halalScore >= 6
+  );
+}
+
+export function getStockBySymbol(symbol: string) {
+  return MOCK_PSX_STOCKS.find(s => s.symbol === symbol);
+}
+
+
+// ==========================================
+// File: src/lib/payment-sandbox.ts
+// ==========================================
+
+// src/lib/payment-sandbox.ts
+
+export interface SandboxRequest {
+  orderId: string;
+  amount: number;
+  method: 'jazzcash' | 'easypaisa' | 'bank';
+  pin: string; // In real life, this goes directly to the bank, never to your server
+}
+
+export interface SandboxResponse {
+  success: boolean;
+  message: string;
+  bankReference: string;
+  transactionId: string;
+}
+
+// Simulates the external Bank API
+export async function processSandboxPayment(data: SandboxRequest): Promise<SandboxResponse> {
+  return new Promise((resolve) => {
+    console.log(`[SANDBOX] Processing ${data.method} request for PKR ${data.amount}...`);
+
+    // Simulate network delay (3 seconds)
+    setTimeout(() => {
+      // 90% Success rate for demo, 10% Failure to show error handling
+      const isSuccess = Math.random() > 0.1;
+
+      if (isSuccess) {
+        resolve({
+          success: true,
+          message: 'Transaction Successful',
+          bankReference: `REF-${Math.floor(Math.random() * 1000000)}`,
+          transactionId: `TXN-${Date.now()}`
+        });
+      } else {
+        resolve({
+          success: false,
+          message: 'Transaction Failed: Insufficient Balance or Invalid PIN',
+          bankReference: '',
+          transactionId: ''
+        });
+      }
+    }, 3000);
+  });
+}
