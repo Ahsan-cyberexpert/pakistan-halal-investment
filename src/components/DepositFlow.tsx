@@ -8,30 +8,112 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
   const [pin, setPin] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [bankStatus, setBankStatus] = useState<'idle' | 'connecting' | 'processing' | 'success' | 'failed'>('idle');
 
   const methods = [
-    { id: 'jazzcash', name: 'JazzCash', icon: '📱' },
-    { id: 'easypaisa', name: 'EasyPaisa', icon: '🟢' },
-    { id: 'bank', name: 'Bank Account', icon: '🏦' }
+    { id: 'jazzcash', name: 'JazzCash', color: 'bg-red-50 border-red-200', icon: '📱' },
+    { id: 'easypaisa', name: 'EasyPaisa', color: 'bg-green-50 border-green-200', icon: '🟢' },
+    { id: 'bank', name: 'Bank Transfer', color: 'bg-blue-50 border-blue-200', icon: '🏦' }
   ];
 
   const validate = () => {
     setError('');
-    if (!amount || Number(amount) < 100) return setError('کم از کم PKR 100 درج کریں');
-    if (!method) return setError('ادائیگی کا طریقہ منتخب کریں');
-    if (pin.length !== 4 || !/^\d{4}$/.test(pin)) return setError('4 ہندسوں کا درست PIN درج کریں');
+    if (!amount || Number(amount) < 100) { setError('کم از کم PKR 100 درج کریں'); return false; }
+    if (!method) { setError('ادائیگی کا طریقہ منتخب کریں'); return false; }
+    if (pin.length !== 4 || !/^\d{4}$/.test(pin)) { setError('4 ہندسوں کا درست PIN درج کریں'); return false; }
     return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    
+
     setLoading(true);
-    await new Promise(r => setTimeout(r, 1200));
-    onSuccess({ type: 'deposit', amount: Number(amount), method, pin: '****' });
-    setLoading(false);
+    setBankStatus('connecting');
+
+    try {
+      // Simulate Bank Connection Phase
+      setTimeout(() => setBankStatus('processing'), 1000);
+
+      // Call our API
+      const response = await fetch('/api/payment/deposit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: Number(amount), method, pin })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setBankStatus('success');
+        // Wait 1 second then close modal and update parent
+        setTimeout(() => {
+          onSuccess({ type: 'deposit', amount: Number(amount), method, ref: result.ref });
+        }, 1500);
+      } else {
+        setBankStatus('failed');
+        setError(result.message || 'Transaction Failed');
+      }
+    } catch (err) {
+      setBankStatus('failed');
+      setError('Network Error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
+
+  if (bankStatus !== 'idle' && !loading && bankStatus !== 'success' && bankStatus !== 'failed') {
+    return (
+      <div className="w-full max-w-sm mx-auto p-8 bg-white rounded-2xl shadow-xl border border-gray-100 text-center">
+        {bankStatus === 'connecting' && (
+          <div className="flex flex-col items-center animate-pulse">
+            <div className="text-4xl mb-4">🏦</div>
+            <h3 className="text-lg font-bold text-gray-800">Connecting to Bank...</h3>
+            <p className="text-sm text-gray-500 mt-2">Please wait while we secure your connection.</p>
+          </div>
+        )}
+        {bankStatus === 'processing' && (
+          <div className="flex flex-col items-center">
+            <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <h3 className="text-lg font-bold text-gray-800">Processing Payment...</h3>
+            <p className="text-sm text-gray-500 mt-2">Confirming PKR {amount} via {method}</p>
+            <p className="text-xs text-gray-400 mt-1">Do not close this window</p>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (bankStatus === 'success') {
+    return (
+      <div className="w-full max-w-sm mx-auto p-8 bg-white rounded-2xl shadow-xl border border-gray-100 text-center">
+        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <span className="text-3xl">✅</span>
+        </div>
+        <h3 className="text-xl font-bold text-green-700">Payment Successful!</h3>
+        <p className="text-gray-600 mt-2">PKR {amount} has been added to your Roziq Wallet.</p>
+        <p className="text-xs text-gray-400 mt-4">Redirecting...</p>
+      </div>
+    );
+  }
+
+  if (bankStatus === 'failed') {
+    return (
+      <div className="w-full max-w-sm mx-auto p-8 bg-white rounded-2xl shadow-xl border border-gray-100 text-center">
+        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <span className="text-3xl">❌</span>
+        </div>
+        <h3 className="text-xl font-bold text-red-700">Payment Failed</h3>
+        <p className="text-red-500 mt-2 text-sm">{error}</p>
+        <button 
+          onClick={() => { setBankStatus('idle'); setError(''); }}
+          className="mt-6 px-6 py-2 bg-gray-100 rounded-xl hover:bg-gray-200 font-medium"
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-sm mx-auto p-6 bg-white rounded-2xl shadow-xl border border-gray-100">
@@ -62,7 +144,7 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
                 key={m.id}
                 onClick={() => setMethod(m.id)}
                 className={`p-3 border rounded-xl text-center transition ${
-                  method === m.id ? 'border-green-500 bg-green-50 ring-2 ring-green-200' : 'hover:bg-gray-50'
+                  method === m.id ? `${m.color} ring-2 ring-green-500` : 'hover:bg-gray-50'
                 }`}
               >
                 <div className="text-2xl mb-1">{m.icon}</div>
@@ -79,6 +161,9 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
 
       {step === 3 && (
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="p-3 bg-yellow-50 rounded-lg text-yellow-800 text-xs text-center mb-2">
+            🔒 Secure connection to {method.toUpperCase()}
+          </div>
           <label className="block text-sm font-medium text-gray-700">4 ہندسوں کا PIN</label>
           <input
             type="password"
