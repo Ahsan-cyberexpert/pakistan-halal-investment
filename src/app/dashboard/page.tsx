@@ -16,6 +16,11 @@ import FractionalSukuk from '@/components/FractionalSukuk';
 import DigitalCommittee from '@/components/DigitalCommittee';
 import AgriFinancing from '@/components/AgriFinancing';
 import LearnToEarn from '@/components/LearnToEarn';
+import HajjVault from '@/components/HajjVault';
+import GlobalHalalETFs from '@/components/GlobalHalalETFs';
+import FreelancerAutoInvest from '@/components/FreelancerAutoInvest';
+import WirasatCalculator from '@/components/WirasatCalculator';
+import MicroTakaful from '@/components/MicroTakaful';
 import { getStockBySymbol } from '@/lib/halal-stock-data';
 
 interface Holding {
@@ -131,7 +136,7 @@ export default function Dashboard() {
 
       <BalanceCard balance={balance} onDeposit={() => setModal('deposit')} onWithdraw={() => setModal('withdraw')} />
 
-      <div id="health-section">
+      <div id="health-section" className="space-y-4">
         <FinancialHealthScore 
           balance={balance} 
           portfolioValue={totalPortfolioValue} 
@@ -140,6 +145,7 @@ export default function Dashboard() {
           zakatHistory={zakatHistory} 
           isZakatEligible={isZakatEligible} 
         />
+        <MicroTakaful />
       </div>
 
       <div id="challenge-section" className="space-y-4 mt-6">
@@ -155,15 +161,21 @@ export default function Dashboard() {
       <div id="zakat-section" className="space-y-4">
         <ZakatCalculator balance={balance} portfolioValue={totalPortfolioValue} onDonate={handleZakatDonation} />
         <PurificationTracker onPurify={(amount) => handleZakatDonation(amount, 'Dividend Purification')} />
+        <WirasatCalculator />
       </div>
 
       <div id="scanner" className="space-y-4 mt-6">
         <HalalStockScanner balance={balance} onBuy={handleBuyStock} />
         <FractionalSukuk balance={balance} onBuy={handleBuySukuk} />
+        <GlobalHalalETFs />
         <AgriFinancing />
+        <FreelancerAutoInvest />
       </div>
 
       <PortfolioDashboard holdings={holdings} totalValue={totalPortfolioValue} dailyPnl={dailyPnl} />
+      <div className="mt-6">
+        <HajjVault />
+      </div>
 
       {/* Zakat History */}
       {zakatHistory.length > 0 && (
