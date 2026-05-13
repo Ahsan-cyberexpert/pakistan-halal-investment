@@ -44,6 +44,7 @@ export default function Dashboard() {
   const [modal, setModal] = useState<'deposit' | 'withdraw' | null>(null);
   const [holdings, setHoldings] = useState<Holding[]>([]);
   const [zakatHistory, setZakatHistory] = useState<ZakatRecord[]>([]);
+  const [activeTab, setActiveTab] = useState<'home' | 'invest' | 'impact' | 'learn'>('home');
 
   const totalPortfolioValue = holdings.reduce((sum, h) => sum + h.invested + h.pnl, 0);
   const dailyPnl = holdings.reduce((sum, h) => sum + h.pnl, 0);
@@ -59,21 +60,11 @@ export default function Dashboard() {
   const handleVoice = (cmd: string) => {
     if (cmd.includes('deposit') || cmd.includes('ڈیپوزٹ')) setModal('deposit');
     else if (cmd.includes('withdraw') || cmd.includes('وِڈڈرا')) setModal('withdraw');
-    else if (cmd.includes('health') || cmd.includes('صحت')) {
-      document.getElementById('health-section')?.scrollIntoView({ behavior: 'smooth' });
-    }
-    else if (cmd.includes('challenge') || cmd.includes('چیلنج')) {
-      document.getElementById('challenge-section')?.scrollIntoView({ behavior: 'smooth' });
-    }
-    else if (cmd.includes('map') || cmd.includes('نقشہ')) {
-      document.getElementById('map-section')?.scrollIntoView({ behavior: 'smooth' });
-    }
-    else if (cmd.includes('zakat') || cmd.includes('زکوٰ')) {
-      document.getElementById('zakat-section')?.scrollIntoView({ behavior: 'smooth' });
-    }
-    else if (cmd.includes('buy') || cmd.includes('خریدیں')) {
-      document.getElementById('scanner')?.scrollIntoView({ behavior: 'smooth' });
-    }
+    else if (cmd.includes('health') || cmd.includes('صحت')) setActiveTab('impact');
+    else if (cmd.includes('challenge') || cmd.includes('چیلنج')) setActiveTab('learn');
+    else if (cmd.includes('map') || cmd.includes('نقشہ')) setActiveTab('impact');
+    else if (cmd.includes('zakat') || cmd.includes('زکوٰ')) setActiveTab('impact');
+    else if (cmd.includes('buy') || cmd.includes('خریدیں')) setActiveTab('invest');
     else if (cmd.includes('balance') || cmd.includes('بیلنس')) {
       const msg = new SpeechSynthesisUtterance(`آپ کا بیلنس ${balance} روپے ہے`);
       msg.lang = 'ur-PK';
@@ -128,107 +119,139 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 pb-24">
-      <header className="mb-6 flex justify-between items-center">
+    <div className="min-h-screen bg-gray-50 pb-28">
+      {/* Top Header */}
+      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-100 p-4 flex justify-between items-center shadow-sm">
         <h1 className="text-2xl font-bold text-green-700">🇵🇰 Roziq</h1>
-        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Halal Wealth OS</span>
+        <div className="flex items-center space-x-2">
+          <span className="text-xs bg-green-100 text-green-800 px-3 py-1.5 rounded-full font-bold">Halal Wealth OS</span>
+        </div>
       </header>
 
-      <BalanceCard balance={balance} onDeposit={() => setModal('deposit')} onWithdraw={() => setModal('withdraw')} />
-
-      <div id="health-section" className="space-y-4">
-        <FinancialHealthScore 
-          balance={balance} 
-          portfolioValue={totalPortfolioValue} 
-          holdings={holdings} 
-          transactions={transactions} 
-          zakatHistory={zakatHistory} 
-          isZakatEligible={isZakatEligible} 
-        />
-        <MicroTakaful />
-      </div>
-
-      <div id="challenge-section" className="space-y-4 mt-6">
-        <LearnToEarn />
-        <DigitalCommittee />
-        <CommunityChallenges />
-      </div>
-
-      <div id="map-section">
-        <LocalImpactMap />
-      </div>
-
-      <div id="zakat-section" className="space-y-4">
-        <ZakatCalculator balance={balance} portfolioValue={totalPortfolioValue} onDonate={handleZakatDonation} />
-        <PurificationTracker onPurify={(amount) => handleZakatDonation(amount, 'Dividend Purification')} />
-        <WirasatCalculator />
-      </div>
-
-      <div id="scanner" className="space-y-4 mt-6">
-        <HalalStockScanner balance={balance} onBuy={handleBuyStock} />
-        <FractionalSukuk balance={balance} onBuy={handleBuySukuk} />
-        <GlobalHalalETFs />
-        <AgriFinancing />
-        <FreelancerAutoInvest />
-      </div>
-
-      <PortfolioDashboard holdings={holdings} totalValue={totalPortfolioValue} dailyPnl={dailyPnl} />
-      <div className="mt-6">
-        <HajjVault />
-      </div>
-
-      {/* Zakat History */}
-      {zakatHistory.length > 0 && (
-        <div className="mt-6 bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
-          <h2 className="text-lg font-bold text-gray-800 mb-3">🤲 Zakat History</h2>
-          <div className="space-y-2">
-            {zakatHistory.map((z, i) => (
-              <div key={i} className="flex justify-between items-center p-3 bg-green-50 rounded-xl">
-                <div>
-                  <div className="font-medium text-green-800">{z.recipient}</div>
-                  <div className="text-xs text-green-600">{new Date(z.date).toLocaleDateString('ur-PK')}</div>
-                </div>
-                <div className="font-bold text-green-700">PKR {z.amount.toFixed(2)}</div>
+      {/* Main Content Area */}
+      <main className="p-4 max-w-md mx-auto space-y-6 transition-all duration-300">
+        
+        {/* HOME TAB */}
+        {activeTab === 'home' && (
+          <div className="space-y-6">
+            <BalanceCard balance={balance} onDeposit={() => setModal('deposit')} onWithdraw={() => setModal('withdraw')} />
+            <PortfolioDashboard holdings={holdings} totalValue={totalPortfolioValue} dailyPnl={dailyPnl} />
+            <HajjVault />
+            <div className="mt-6">
+              <h2 className="text-lg font-bold text-gray-800 mb-3">Recent Activity</h2>
+              <div className="space-y-2">
+                {transactions.length === 0 ? (
+                  <p className="text-gray-500 text-center py-4 bg-white rounded-2xl border border-gray-100">No activity yet</p>
+                ) : (
+                  transactions.slice(0, 5).map((tx) => (
+                    <div key={tx.id} className="flex justify-between p-3 bg-white rounded-xl shadow-sm border border-gray-100">
+                      <div>
+                        <div className="font-bold text-sm text-gray-800">
+                          {tx.type === 'deposit' ? '➕ Deposit' : tx.type === 'withdraw' ? '➖ Withdraw' : tx.type === 'zakat' ? '🤲 Zakat' : `📈 Buy ${tx.symbol || 'Asset'}`}
+                        </div>
+                        <div className="text-xs text-gray-500 mt-1">{tx.recipient && `To: ${tx.recipient}`} {new Date(tx.date).toLocaleString('ur-PK')}</div>
+                      </div>
+                      <div className={`font-black ${tx.type === 'deposit' ? 'text-green-600' : 'text-gray-800'}`}>
+                        {tx.type === 'deposit' ? '+' : '-'}PKR {tx.amount.toLocaleString()}
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
-            ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <div className="mt-6">
-        <h2 className="text-lg font-semibold mb-3">Recent Activity</h2>
-        <div className="space-y-2">
-          {transactions.length === 0 ? (
-            <p className="text-gray-500 text-center py-4">No activity yet</p>
-          ) : (
-            transactions.slice(0, 5).map((tx) => (
-              <div key={tx.id} className="flex justify-between p-3 bg-white rounded-xl shadow-sm border border-gray-100">
-                <div>
-                  <div className="font-medium">
-                    {tx.type === 'deposit' ? '➕ Deposit' : tx.type === 'withdraw' ? '➖ Withdraw' : tx.type === 'zakat' ? '🤲 Zakat' : `📈 Buy ${tx.symbol}`}
-                  </div>
-                  <div className="text-xs text-gray-500">{tx.recipient && `To: ${tx.recipient}`} {new Date(tx.date).toLocaleString('ur-PK')}</div>
-                </div>
-                <div className={`font-bold ${tx.type === 'deposit' ? 'text-green-600' : 'text-red-600'}`}>
-                  {tx.type === 'deposit' ? '+' : '-'}PKR {tx.amount}
+        {/* INVEST TAB */}
+        {activeTab === 'invest' && (
+          <div className="space-y-6">
+            <HalalStockScanner balance={balance} onBuy={handleBuyStock} />
+            <FractionalSukuk balance={balance} onBuy={handleBuySukuk} />
+            <GlobalHalalETFs />
+            <AgriFinancing />
+            <FreelancerAutoInvest />
+          </div>
+        )}
+
+        {/* IMPACT TAB */}
+        {activeTab === 'impact' && (
+          <div className="space-y-6">
+            <FinancialHealthScore 
+              balance={balance} 
+              portfolioValue={totalPortfolioValue} 
+              holdings={holdings} 
+              transactions={transactions} 
+              zakatHistory={zakatHistory} 
+              isZakatEligible={isZakatEligible} 
+            />
+            <ZakatCalculator balance={balance} portfolioValue={totalPortfolioValue} onDonate={handleZakatDonation} />
+            <PurificationTracker onPurify={(amount) => handleZakatDonation(amount, 'Dividend Purification')} />
+            <WirasatCalculator />
+            <MicroTakaful />
+            <LocalImpactMap />
+            {zakatHistory.length > 0 && (
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
+                <h2 className="text-lg font-bold text-gray-800 mb-3">🤲 Zakat History</h2>
+                <div className="space-y-2">
+                  {zakatHistory.map((z, i) => (
+                    <div key={i} className="flex justify-between items-center p-3 bg-green-50 rounded-xl">
+                      <div>
+                        <div className="font-bold text-green-800 text-sm">{z.recipient}</div>
+                        <div className="text-xs text-green-600">{new Date(z.date).toLocaleDateString('ur-PK')}</div>
+                      </div>
+                      <div className="font-black text-green-700">PKR {z.amount.toLocaleString()}</div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            ))
-          )}
-        </div>
-      </div>
+            )}
+          </div>
+        )}
 
+        {/* LEARN TAB */}
+        {activeTab === 'learn' && (
+          <div className="space-y-6">
+            <LearnToEarn />
+            <DigitalCommittee />
+            <CommunityChallenges />
+          </div>
+        )}
+      </main>
+
+      {/* Modals */}
       {modal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="relative w-full max-w-sm">
-            <button onClick={() => setModal(null)} className="absolute -top-10 right-0 text-white text-lg">✕</button>
+            <button onClick={() => setModal(null)} className="absolute -top-12 right-0 bg-white/20 hover:bg-white/40 rounded-full w-10 h-10 flex items-center justify-center text-white text-xl backdrop-blur-md">✕</button>
             {modal === 'deposit' ? <DepositFlow onSuccess={handleTransactionSuccess} /> : <WithdrawFlow onSuccess={handleTransactionSuccess} />}
           </div>
         </div>
       )}
 
+      {/* Floating Utilities */}
       <VoiceAgent onCommand={handleVoice} />
       <AiMuftiChatbot />
+
+      {/* Bottom Navigation Bar */}
+      <nav className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-gray-200 px-6 py-2 pb-6 flex justify-between items-center z-40 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] max-w-md mx-auto rounded-t-3xl">
+        {[
+          { id: 'home', icon: '🏠', label: 'Home' },
+          { id: 'invest', icon: '📈', label: 'Invest' },
+          { id: 'impact', icon: '🌱', label: 'Impact' },
+          { id: 'learn', icon: '📚', label: 'Learn' },
+        ].map((tab) => (
+          <button 
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id as any)}
+            className={`flex flex-col items-center p-2 rounded-xl transition-all duration-300 ${activeTab === tab.id ? 'text-green-700 scale-110' : 'text-gray-400 hover:text-gray-500 hover:scale-105'}`}
+          >
+            <span className="text-2xl mb-1">{tab.icon}</span>
+            <span className={`text-[10px] font-bold transition-all duration-300 ${activeTab === tab.id ? 'opacity-100 max-h-4' : 'opacity-0 max-h-0 overflow-hidden'}`}>
+              {tab.label}
+            </span>
+          </button>
+        ))}
+      </nav>
     </div>
   );
 }
