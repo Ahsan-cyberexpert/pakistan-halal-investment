@@ -10,6 +10,12 @@ import ZakatCalculator from '@/components/ZakatCalculator';
 import FinancialHealthScore from '@/components/FinancialHealthScore';
 import CommunityChallenges from '@/components/CommunityChallenges';
 import LocalImpactMap from '@/components/LocalImpactMap';
+import AiMuftiChatbot from '@/components/AiMuftiChatbot';
+import PurificationTracker from '@/components/PurificationTracker';
+import FractionalSukuk from '@/components/FractionalSukuk';
+import DigitalCommittee from '@/components/DigitalCommittee';
+import AgriFinancing from '@/components/AgriFinancing';
+import LearnToEarn from '@/components/LearnToEarn';
 import { getStockBySymbol } from '@/lib/halal-stock-data';
 
 interface Holding {
@@ -105,6 +111,11 @@ export default function Dashboard() {
     setTransactions(prev => [{ id: Date.now(), type: 'buy_stock', symbol, amount, status: 'success', date: new Date().toISOString() }, ...prev]);
   };
 
+  const handleBuySukuk = (amount: number) => {
+    setBalance(prev => prev - amount);
+    setTransactions(prev => [{ id: Date.now(), type: 'buy_sukuk', amount, status: 'success', date: new Date().toISOString() }, ...prev]);
+  };
+
   const handleZakatDonation = (amount: number, recipient: string) => {
     setBalance(prev => prev - amount);
     setZakatHistory(prev => [{ date: new Date().toISOString(), amount, recipient }, ...prev]);
@@ -131,7 +142,9 @@ export default function Dashboard() {
         />
       </div>
 
-      <div id="challenge-section">
+      <div id="challenge-section" className="space-y-4 mt-6">
+        <LearnToEarn />
+        <DigitalCommittee />
         <CommunityChallenges />
       </div>
 
@@ -139,12 +152,15 @@ export default function Dashboard() {
         <LocalImpactMap />
       </div>
 
-      <div id="zakat-section">
+      <div id="zakat-section" className="space-y-4">
         <ZakatCalculator balance={balance} portfolioValue={totalPortfolioValue} onDonate={handleZakatDonation} />
+        <PurificationTracker onPurify={(amount) => handleZakatDonation(amount, 'Dividend Purification')} />
       </div>
 
-      <div id="scanner">
+      <div id="scanner" className="space-y-4 mt-6">
         <HalalStockScanner balance={balance} onBuy={handleBuyStock} />
+        <FractionalSukuk balance={balance} onBuy={handleBuySukuk} />
+        <AgriFinancing />
       </div>
 
       <PortfolioDashboard holdings={holdings} totalValue={totalPortfolioValue} dailyPnl={dailyPnl} />
@@ -200,6 +216,7 @@ export default function Dashboard() {
       )}
 
       <VoiceAgent onCommand={handleVoice} />
+      <AiMuftiChatbot />
     </div>
   );
 }
