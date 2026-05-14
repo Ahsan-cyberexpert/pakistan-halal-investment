@@ -3,20 +3,37 @@ import { useState, useEffect } from 'react';
 
 export default function RoziqAI() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isListening, setIsListening] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [prompt, setPrompt] = useState('');
   const [transcript, setTranscript] = useState('');
   const [response, setResponse] = useState('اسلام وعلیکم! میں آپ کی کیسے مدد کر سکتا ہوں؟');
 
-  const startListening = () => {
-    setIsListening(true);
-    setTranscript('Listening... / سن رہا ہوں...');
+  const lang = typeof window !== 'undefined' ? (localStorage.getItem('roziq_lang') || 'en') : 'en';
+
+  const sendPrompt = async (text: string) => {
+    if (!text.trim()) return;
+    setIsProcessing(true);
+    setTranscript(text);
+    setPrompt('');
     
-    // Simulate Voice AI Response
-    setTimeout(() => {
-      setIsListening(false);
-      setTranscript('میری زکوٰۃ کتنی ہے؟');
-      setResponse('آپ کے موجودہ بیلنس کے مطابق آپ کی زکوٰۃ 6,417 روپے بنتی ہے۔ کیا آپ اسے ادا کرنا چاہتے ہیں؟');
-    }, 3000);
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: text, lang }),
+      });
+      const data = await res.json();
+      if (data.reply) setResponse(data.reply);
+      else setResponse(lang === 'ur' ? 'معذرت، ایک خرابی پیش آ گئی۔' : 'Sorry, an error occurred.');
+    } catch {
+      setResponse(lang === 'ur' ? 'نیٹ ورک کا مسئلہ ہے۔' : 'Network error.');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') sendPrompt(prompt);
   };
 
   return (
@@ -56,27 +73,39 @@ export default function RoziqAI() {
 
             <div className="p-8">
               <div className="flex flex-col items-center gap-6">
-                <div 
-                  className={`w-24 h-24 rounded-full flex items-center justify-center text-4xl cursor-pointer transition-all ${
-                    isListening ? 'bg-red-50 text-red-500 scale-110' : 'bg-emerald-50 text-emerald-600'
-                  }`}
-                  onClick={startListening}
-                >
-                  {isListening ? (
-                    <div className="relative flex items-center justify-center">
-                      <div className="absolute inset-0 bg-red-500 rounded-full animate-ping opacity-20"></div>
-                      🛑
-                    </div>
-                  ) : '🎤'}
+                <div className="flex w-full gap-2 mb-4">
+                  <input
+                    type="text"
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder={lang === 'ur' ? 'سوال پوچھیں...' : 'Ask a question...'}
+                    className="flex-1 bg-emerald-700/20 text-white placeholder-emerald-200/50 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-white/30"
+                    dir={lang === 'ur' ? 'rtl' : 'ltr'}
+                  />
+                  <button 
+                    onClick={() => sendPrompt(prompt)}
+                    disabled={isProcessing || !prompt.trim()}
+                    className="w-12 h-12 bg-white text-emerald-600 rounded-2xl flex items-center justify-center text-xl hover:bg-emerald-50 active:scale-95 transition-all disabled:opacity-50"
+                  >
+                    {isProcessing ? '⏳' : '↑'}
+                  </button>
                 </div>
                 
                 <p className="text-sm font-bold text-slate-400 text-center">
-                  {isListening ? 'AI is listening to your Urdu request...' : 'Tap to speak / بولنے کے لیے دبائیں'}
+                  {lang === 'ur' ? 'یا ذیل میں سے انتخاب کریں:' : 'Or choose from below:'}
                 </p>
 
-                <div className="w-full flex flex-wrap gap-2 justify-center">
-                  {['کتنی زکوٰۃ ہے؟', 'سرمایہ کاری کہاں کروں؟', 'میرا بیلنس کیا ہے؟'].map(t => (
-                    <button key={t} className="px-4 py-2 bg-slate-50 rounded-xl text-[10px] font-black text-slate-500 hover:bg-emerald-50 hover:text-emerald-600 transition-colors">
+                <div className="w-full flex flex-wrap gap-2 justify-center" dir={lang === 'ur' ? 'rtl' : 'ltr'}>
+                  {(lang === 'ur' 
+                    ? ['زکوٰۃ کیسے ادا کروں؟', 'حلال اسٹاکس بتائیں', 'میرا بیلنس کیا ہے؟']
+                    : ['How to pay Zakat?', 'Show Halal Stocks', 'What is my balance?']
+                  ).map(t => (
+                    <button 
+                      key={t} 
+                      onClick={() => sendPrompt(t)}
+                      className="px-4 py-2 bg-slate-50 rounded-xl text-[10px] font-black text-slate-500 hover:bg-emerald-50 hover:text-emerald-600 transition-colors"
+                    >
                       {t}
                     </button>
                   ))}
