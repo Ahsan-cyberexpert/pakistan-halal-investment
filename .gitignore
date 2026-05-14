@@ -16,3 +16,6 @@ yarn-error.log
 *.swp
 *.swo
 *~
+
+# Sovereign Wallet Data (private user data - never commit)
+/data/

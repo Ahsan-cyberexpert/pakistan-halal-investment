@@ -56,39 +56,32 @@ export default function Dashboard() {
   const [isScanning, setIsScanning] = useState(false);
   const [pendingTx, setPendingTx] = useState<any>(null);
 
-  // Persistence Engine - Load Data
+  // Sovereign Persistence Engine — Load from server on mount
   useEffect(() => {
-    const savedBalance = localStorage.getItem('roziq_balance');
-    const savedHoldings = localStorage.getItem('roziq_holdings');
-    const savedTransactions = localStorage.getItem('roziq_transactions');
-    const savedZakat = localStorage.getItem('roziq_zakat');
-
-    if (savedBalance) setBalance(parseFloat(savedBalance));
-    if (savedHoldings) setHoldings(JSON.parse(savedHoldings));
-    if (savedTransactions) setTransactions(JSON.parse(savedTransactions));
-    if (savedZakat) setZakatHistory(JSON.parse(savedZakat));
+    fetch('/api/transaction')
+      .then(r => r.json())
+      .then(d => {
+        if (d.balance !== undefined) setBalance(d.balance);
+        if (d.transactions) setTransactions(d.transactions);
+        if (d.holdings) setHoldings(d.holdings);
+        if (d.zakatHistory) setZakatHistory(d.zakatHistory);
+      })
+      .catch(() => {
+        // Fallback: load from localStorage if server unreachable
+        const savedBalance = localStorage.getItem('roziq_balance');
+        const savedHoldings = localStorage.getItem('roziq_holdings');
+        const savedTransactions = localStorage.getItem('roziq_transactions');
+        const savedZakat = localStorage.getItem('roziq_zakat');
+        if (savedBalance) setBalance(parseFloat(savedBalance));
+        if (savedHoldings) setHoldings(JSON.parse(savedHoldings));
+        if (savedTransactions) setTransactions(JSON.parse(savedTransactions));
+        if (savedZakat) setZakatHistory(JSON.parse(savedZakat));
+      });
   }, []);
-
-  // Persistence Engine - Save Data
-  useEffect(() => {
-    localStorage.setItem('roziq_balance', balance.toString());
-    localStorage.setItem('roziq_holdings', JSON.stringify(holdings));
-    localStorage.setItem('roziq_transactions', JSON.stringify(transactions));
-    localStorage.setItem('roziq_zakat', JSON.stringify(zakatHistory));
-  }, [balance, holdings, transactions, zakatHistory]);
 
   const totalPortfolioValue = holdings.reduce((sum, h) => sum + h.invested + h.pnl, 0);
   const dailyPnl = holdings.reduce((sum, h) => sum + h.pnl, 0);
   const isZakatEligible = (balance + totalPortfolioValue) >= 300000;
-
-  useEffect(() => {
-    fetch('/api/transaction').then(r => r.json()).then(d => {
-      setBalance(d.balance);
-      setTransactions(d.transactions);
-      setHoldings(d.holdings || []);
-      setZakatHistory(d.zakatHistory || []);
-    });
-  }, []);
 
   const handleVoice = (cmd: string) => {
     const lowerCmd = cmd.toLowerCase();
