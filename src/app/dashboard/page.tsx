@@ -27,6 +27,9 @@ import ShariahScreener from '@/components/ShariahScreener';
 import ZakatDistribution from '@/components/ZakatDistribution';
 import RoziqAI from '@/components/RoziqAI';
 import PinSecurity from '@/components/PinSecurity';
+import LanguageSelect from '@/components/LanguageSelect';
+import Onboarding from '@/components/Onboarding';
+import SettingsTab from '@/components/SettingsTab';
 import { getStockBySymbol } from '@/lib/halal-stock-data';
 
 interface Holding {
@@ -51,13 +54,29 @@ export default function Dashboard() {
   const [modal, setModal] = useState<'deposit' | 'withdraw' | null>(null);
   const [holdings, setHoldings] = useState<Holding[]>([]);
   const [zakatHistory, setZakatHistory] = useState<ZakatRecord[]>([]);
-  const [activeTab, setActiveTab] = useState<'home' | 'invest' | 'impact' | 'learn'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'invest' | 'impact' | 'learn' | 'settings'>('home');
+  const [lang, setLangState] = useState<'en' | 'ur'>('en');
+  const [showLangSelect, setShowLangSelect] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   const [isScanning, setIsScanning] = useState(false);
   const [pendingTx, setPendingTx] = useState<any>(null);
 
+  const t = (en: string, ur: string) => lang === 'ur' ? ur : en;
+
   // Sovereign Persistence Engine — Load from server on mount
   useEffect(() => {
+    // Check language & onboarding state
+    const savedLang = localStorage.getItem('roziq_lang') as 'en' | 'ur';
+    const hasOnboarded = localStorage.getItem('roziq_onboarded');
+    if (!savedLang) {
+      setShowLangSelect(true);
+    } else {
+      setLangState(savedLang);
+      if (!hasOnboarded) setShowOnboarding(true);
+    }
+
+    // Load wallet data
     fetch('/api/transaction')
       .then(r => r.json())
       .then(d => {
@@ -67,7 +86,6 @@ export default function Dashboard() {
         if (d.zakatHistory) setZakatHistory(d.zakatHistory);
       })
       .catch(() => {
-        // Fallback: load from localStorage if server unreachable
         const savedBalance = localStorage.getItem('roziq_balance');
         const savedHoldings = localStorage.getItem('roziq_holdings');
         const savedTransactions = localStorage.getItem('roziq_transactions');
@@ -78,6 +96,19 @@ export default function Dashboard() {
         if (savedZakat) setZakatHistory(JSON.parse(savedZakat));
       });
   }, []);
+
+  const handleLangSelect = (l: 'en' | 'ur') => {
+    localStorage.setItem('roziq_lang', l);
+    setLangState(l);
+    setShowLangSelect(false);
+    const hasOnboarded = localStorage.getItem('roziq_onboarded');
+    if (!hasOnboarded) setShowOnboarding(true);
+  };
+
+  const handleLangChange = (l: 'en' | 'ur') => {
+    localStorage.setItem('roziq_lang', l);
+    setLangState(l);
+  };
 
   const totalPortfolioValue = holdings.reduce((sum, h) => sum + h.invested + h.pnl, 0);
   const dailyPnl = holdings.reduce((sum, h) => sum + h.pnl, 0);
@@ -165,9 +196,15 @@ export default function Dashboard() {
 
   return (
     <>
-      {!isAuthorized && <PinSecurity onSuccess={() => setIsAuthorized(true)} />}
+      {showLangSelect && <LanguageSelect onSelect={handleLangSelect} />}
+      {showOnboarding && !showLangSelect && (
+        <Onboarding lang={lang} onComplete={() => setShowOnboarding(false)} />
+      )}
+      {!isAuthorized && !showLangSelect && !showOnboarding && (
+        <PinSecurity onSuccess={() => setIsAuthorized(true)} />
+      )}
       <RoziqAI />
-      <div className="min-h-screen pb-32">
+      <div className="min-h-screen pb-32" dir={lang === 'ur' ? 'rtl' : 'ltr'}>
       {/* Top Header - Glassmorphic */}
       <header className="sticky top-0 z-50 glass border-b border-white/20 px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-3">
@@ -193,7 +230,7 @@ export default function Dashboard() {
           <div className="space-y-8">
             <BalanceCard balance={balance} onDeposit={() => setModal('deposit')} onWithdraw={() => setModal('withdraw')} />
             
-            <PortfolioChart />
+            <PortfolioChart balance={balance} holdings={holdings} totalValue={totalPortfolioValue} />
 
             <section>
               <PortfolioDashboard holdings={holdings} totalValue={totalPortfolioValue} dailyPnl={dailyPnl} />
@@ -288,12 +325,23 @@ export default function Dashboard() {
         {activeTab === 'learn' && (
           <div className="space-y-8 animate-in fade-in slide-in-from-right-4">
             <div className="mb-8">
-              <h2 className="text-3xl font-black text-slate-800 tracking-tighter">Knowledge</h2>
-              <p className="text-slate-500 font-medium">Master the principles of Halal finance.</p>
+              <h2 className="text-3xl font-black text-slate-800 tracking-tighter">{t('Knowledge', 'علم')}</h2>
+              <p className="text-slate-500 font-medium">{t('Master the principles of Halal finance.', 'حلال مالیات کے اصول سیکھیں۔')}</p>
             </div>
             <LearnToEarn />
             <DigitalCommittee />
             <CommunityChallenges />
+          </div>
+        )}
+
+        {/* SETTINGS TAB */}
+        {activeTab === 'settings' && (
+          <div className="animate-in fade-in slide-in-from-right-4">
+            <SettingsTab
+              lang={lang}
+              onLangChange={handleLangChange}
+              onLock={() => setIsAuthorized(false)}
+            />
           </div>
         )}
       </main>
@@ -317,18 +365,19 @@ export default function Dashboard() {
       <AiMuftiChatbot />
 
       {/* Bottom Navigation Bar - Floating Island */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-50">
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[95%] max-w-md z-50">
         <nav className="glass-dark rounded-[2.5rem] p-2 flex justify-between items-center shadow-2xl border-white/10 overflow-hidden">
           {[
-            { id: 'home', icon: '🏠', label: 'Home' },
-            { id: 'invest', icon: '📈', label: 'Invest' },
-            { id: 'impact', icon: '🌱', label: 'Impact' },
-            { id: 'learn', icon: '📚', label: 'Learn' },
+            { id: 'home', icon: '🏠', labelEn: 'Home', labelUr: 'ہوم' },
+            { id: 'invest', icon: '📈', labelEn: 'Invest', labelUr: 'سرمایہ' },
+            { id: 'impact', icon: '🌱', labelEn: 'Impact', labelUr: 'اثر' },
+            { id: 'learn', icon: '📚', labelEn: 'Learn', labelUr: 'سیکھیں' },
+            { id: 'settings', icon: '⚙️', labelEn: 'Settings', labelUr: 'ترتیبات' },
           ].map((tab) => (
             <button 
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`relative flex flex-col items-center justify-center py-3 px-6 rounded-3xl transition-all duration-500 group ${
+              className={`relative flex flex-col items-center justify-center py-3 px-4 rounded-3xl transition-all duration-500 group ${
                 activeTab === tab.id ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/20' : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -338,7 +387,7 @@ export default function Dashboard() {
               <span className={`text-[10px] font-black uppercase tracking-widest absolute transition-all duration-500 ${
                 activeTab === tab.id ? 'opacity-100 translate-y-3' : 'opacity-0 translate-y-6'
               }`}>
-                {tab.label}
+                {lang === 'ur' ? tab.labelUr : tab.labelEn}
               </span>
               {activeTab === tab.id && (
                 <div className="absolute inset-0 bg-white/20 rounded-3xl blur-md"></div>
