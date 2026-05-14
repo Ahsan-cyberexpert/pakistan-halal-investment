@@ -21,6 +21,7 @@ import GlobalHalalETFs from '@/components/GlobalHalalETFs';
 import FreelancerAutoInvest from '@/components/FreelancerAutoInvest';
 import WirasatCalculator from '@/components/WirasatCalculator';
 import MicroTakaful from '@/components/MicroTakaful';
+import SovereignScan from '@/components/SovereignScan';
 import { getStockBySymbol } from '@/lib/halal-stock-data';
 
 interface Holding {
@@ -45,6 +46,10 @@ export default function Dashboard() {
   const [holdings, setHoldings] = useState<Holding[]>([]);
   const [zakatHistory, setZakatHistory] = useState<ZakatRecord[]>([]);
   const [activeTab, setActiveTab] = useState<'home' | 'invest' | 'impact' | 'learn'>('home');
+
+  // Biometric State
+  const [isScanning, setIsScanning] = useState(false);
+  const [pendingTx, setPendingTx] = useState<any>(null);
 
   const totalPortfolioValue = holdings.reduce((sum, h) => sum + h.invested + h.pnl, 0);
   const dailyPnl = holdings.reduce((sum, h) => sum + h.pnl, 0);
@@ -76,6 +81,18 @@ export default function Dashboard() {
   };
 
   const handleTransactionSuccess = async (data: any) => {
+    // Trigger biometric scan for outflows
+    if (['buy_stock', 'buy_sukuk', 'zakat', 'withdraw'].includes(data.type)) {
+      setPendingTx(data);
+      setIsScanning(true);
+      return;
+    }
+    
+    // Direct processing for deposits
+    await processTransaction(data);
+  };
+
+  const processTransaction = async (data: any) => {
     const res = await fetch('/api/transaction', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -88,6 +105,14 @@ export default function Dashboard() {
       setHoldings(result.holdings);
       setZakatHistory(result.zakatHistory);
       setModal(null);
+      setIsScanning(false);
+      setPendingTx(null);
+    }
+  };
+
+  const onScanComplete = () => {
+    if (pendingTx) {
+      processTransaction(pendingTx);
     }
   };
 
@@ -296,6 +321,11 @@ export default function Dashboard() {
           ))}
         </nav>
       </div>
+      {/* Sovereign Biometrics */}
+      <SovereignScan 
+        isOpen={isScanning} 
+        onComplete={onScanComplete} 
+      />
     </div>
   );
 }

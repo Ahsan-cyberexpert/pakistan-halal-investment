@@ -9,6 +9,12 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const { type, amount, symbol, name, units, recipient } = await req.json();
+    
+    // Security: Prevent negative or zero amounts
+    if (typeof amount !== 'number' || amount <= 0) {
+      return NextResponse.json({ error: 'Invalid amount' }, { status: 400 });
+    }
+
     const db = getDb();
 
     // 1. Validate Balance for outflows
