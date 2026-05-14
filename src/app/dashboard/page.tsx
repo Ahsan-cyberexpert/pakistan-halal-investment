@@ -52,9 +52,29 @@ export default function Dashboard() {
   const [zakatHistory, setZakatHistory] = useState<ZakatRecord[]>([]);
   const [activeTab, setActiveTab] = useState<'home' | 'invest' | 'impact' | 'learn'>('home');
 
-  // Biometric State
   const [isScanning, setIsScanning] = useState(false);
   const [pendingTx, setPendingTx] = useState<any>(null);
+
+  // Persistence Engine - Load Data
+  useEffect(() => {
+    const savedBalance = localStorage.getItem('roziq_balance');
+    const savedHoldings = localStorage.getItem('roziq_holdings');
+    const savedTransactions = localStorage.getItem('roziq_transactions');
+    const savedZakat = localStorage.getItem('roziq_zakat');
+
+    if (savedBalance) setBalance(parseFloat(savedBalance));
+    if (savedHoldings) setHoldings(JSON.parse(savedHoldings));
+    if (savedTransactions) setTransactions(JSON.parse(savedTransactions));
+    if (savedZakat) setZakatHistory(JSON.parse(savedZakat));
+  }, []);
+
+  // Persistence Engine - Save Data
+  useEffect(() => {
+    localStorage.setItem('roziq_balance', balance.toString());
+    localStorage.setItem('roziq_holdings', JSON.stringify(holdings));
+    localStorage.setItem('roziq_transactions', JSON.stringify(transactions));
+    localStorage.setItem('roziq_zakat', JSON.stringify(zakatHistory));
+  }, [balance, holdings, transactions, zakatHistory]);
 
   const totalPortfolioValue = holdings.reduce((sum, h) => sum + h.invested + h.pnl, 0);
   const dailyPnl = holdings.reduce((sum, h) => sum + h.pnl, 0);
