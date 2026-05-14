@@ -26,6 +26,7 @@ import PortfolioChart from '@/components/PortfolioChart';
 import ShariahScreener from '@/components/ShariahScreener';
 import ZakatDistribution from '@/components/ZakatDistribution';
 import RoziqAI from '@/components/RoziqAI';
+import PinSecurity from '@/components/PinSecurity';
 import { getStockBySymbol } from '@/lib/halal-stock-data';
 
 interface Holding {

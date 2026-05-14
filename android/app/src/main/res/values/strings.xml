@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Roziq</string>
+    <string name="title_activity_main">Roziq</string>
+    <string name="package_name">com.roziq.wealth</string>
+    <string name="custom_url_scheme">com.roziq.wealth</string>
+</resources>
