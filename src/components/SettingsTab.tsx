@@ -3,11 +3,13 @@ import { useState } from 'react';
 
 interface SettingsTabProps {
   lang: 'en' | 'ur';
+  darkMode: boolean;
   onLangChange: (l: 'en' | 'ur') => void;
+  onDarkToggle: (val: boolean) => void;
   onLock: () => void;
 }
 
-export default function SettingsTab({ lang, onLangChange, onLock }: SettingsTabProps) {
+export default function SettingsTab({ lang, darkMode, onLangChange, onDarkToggle, onLock }: SettingsTabProps) {
   const isRtl = lang === 'ur';
   const t = (en: string, ur: string) => isRtl ? ur : en;
 
@@ -48,6 +50,16 @@ export default function SettingsTab({ lang, onLangChange, onLock }: SettingsTabP
           descUr: lang === 'ur' ? 'اردو (موجودہ)' : 'English (Current)',
           action: () => onLangChange(lang === 'en' ? 'ur' : 'en'),
           badge: lang === 'en' ? '🇬🇧 EN' : '🇵🇰 UR',
+          toggle: null,
+        },
+        {
+          icon: darkMode ? '🌙' : '☀️',
+          labelEn: 'Dark Mode', labelUr: 'ڈارک موڈ',
+          descEn: darkMode ? 'Dark theme active' : 'Light theme active',
+          descUr: darkMode ? 'ڈارک تھیم فعال ہے' : 'لائٹ تھیم فعال ہے',
+          action: null,
+          badge: null,
+          toggle: { value: darkMode, onToggle: () => onDarkToggle(!darkMode) },
         },
       ],
     },
@@ -121,10 +133,10 @@ export default function SettingsTab({ lang, onLangChange, onLock }: SettingsTabP
             {section.items.map((item) => (
               <div key={item.labelEn}>
                 <button
-                  onClick={item.action || undefined}
-                  disabled={!item.action}
+                  onClick={item.action || item.toggle?.onToggle || undefined}
+                  disabled={!item.action && !item.toggle}
                   className={`w-full flex items-center gap-4 p-5 bg-white rounded-3xl border border-slate-100 transition-all duration-200 text-left ${
-                    item.action ? 'hover:border-emerald-200 hover:shadow-lg hover:shadow-emerald-900/5 active:scale-[0.98] cursor-pointer' : 'cursor-default'
+                    item.action || item.toggle ? 'hover:border-emerald-200 hover:shadow-lg hover:shadow-emerald-900/5 active:scale-[0.98] cursor-pointer' : 'cursor-default'
                   }`}
                 >
                   <div className="w-11 h-11 rounded-2xl bg-slate-50 flex items-center justify-center text-xl flex-shrink-0">
@@ -139,7 +151,16 @@ export default function SettingsTab({ lang, onLangChange, onLock }: SettingsTabP
                       {item.badge}
                     </span>
                   )}
-                  {item.action && !item.badge && (
+                  {item.toggle && (
+                    <div className={`w-12 h-6 rounded-full transition-colors flex items-center px-1 flex-shrink-0 ${
+                      item.toggle.value ? 'bg-emerald-500' : 'bg-slate-200'
+                    }`}>
+                      <div className={`w-4 h-4 rounded-full bg-white transition-transform ${
+                        item.toggle.value ? 'translate-x-6' : 'translate-x-0'
+                      }`} />
+                    </div>
+                  )}
+                  {item.action && !item.badge && !item.toggle && (
                     <span className="text-slate-300 text-lg flex-shrink-0">{isRtl ? '←' : '→'}</span>
                   )}
                 </button>

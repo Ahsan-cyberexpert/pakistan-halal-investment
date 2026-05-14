@@ -30,6 +30,7 @@ import PinSecurity from '@/components/PinSecurity';
 import LanguageSelect from '@/components/LanguageSelect';
 import Onboarding from '@/components/Onboarding';
 import SettingsTab from '@/components/SettingsTab';
+import MarketAlerts from '@/components/MarketAlerts';
 import { getStockBySymbol } from '@/lib/halal-stock-data';
 
 interface Holding {
@@ -58,22 +59,35 @@ export default function Dashboard() {
   const [lang, setLangState] = useState<'en' | 'ur'>('en');
   const [showLangSelect, setShowLangSelect] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
 
   const [isScanning, setIsScanning] = useState(false);
   const [pendingTx, setPendingTx] = useState<any>(null);
 
   const t = (en: string, ur: string) => lang === 'ur' ? ur : en;
 
+  const toggleDark = (val: boolean) => {
+    setDarkMode(val);
+    localStorage.setItem('roziq_dark', val ? '1' : '0');
+    if (val) document.documentElement.classList.add('dark');
+    else document.documentElement.classList.remove('dark');
+  };
+
   // Sovereign Persistence Engine — Load from server on mount
   useEffect(() => {
     // Check language & onboarding state
     const savedLang = localStorage.getItem('roziq_lang') as 'en' | 'ur';
     const hasOnboarded = localStorage.getItem('roziq_onboarded');
+    const savedDark = localStorage.getItem('roziq_dark');
     if (!savedLang) {
       setShowLangSelect(true);
     } else {
       setLangState(savedLang);
       if (!hasOnboarded) setShowOnboarding(true);
+    }
+    if (savedDark === '1') {
+      setDarkMode(true);
+      document.documentElement.classList.add('dark');
     }
 
     // Load wallet data
@@ -289,6 +303,7 @@ export default function Dashboard() {
               <p className="text-slate-500 font-medium">Strictly Shariah-compliant opportunities.</p>
             </div>
             <ShariahScreener />
+            <MarketAlerts />
             <HalalStockScanner balance={balance} onBuy={handleBuyStock} />
             <FractionalSukuk balance={balance} onBuy={handleBuySukuk} />
             <GlobalHalalETFs />
@@ -339,7 +354,9 @@ export default function Dashboard() {
           <div className="animate-in fade-in slide-in-from-right-4">
             <SettingsTab
               lang={lang}
+              darkMode={darkMode}
               onLangChange={handleLangChange}
+              onDarkToggle={toggleDark}
               onLock={() => setIsAuthorized(false)}
             />
           </div>
