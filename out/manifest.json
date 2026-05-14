@@ -1,0 +1,17 @@
+{
+  "name": "Roziq: Halal Wealth OS",
+  "short_name": "Roziq",
+  "description": "The sovereign financial operating system for the modern Muslim.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#059669",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
