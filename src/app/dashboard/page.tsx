@@ -22,6 +22,10 @@ import FreelancerAutoInvest from '@/components/FreelancerAutoInvest';
 import WirasatCalculator from '@/components/WirasatCalculator';
 import MicroTakaful from '@/components/MicroTakaful';
 import SovereignScan from '@/components/SovereignScan';
+import PortfolioChart from '@/components/PortfolioChart';
+import ShariahScreener from '@/components/ShariahScreener';
+import ZakatDistribution from '@/components/ZakatDistribution';
+import RoziqAI from '@/components/RoziqAI';
 import { getStockBySymbol } from '@/lib/halal-stock-data';
 
 interface Holding {
@@ -40,6 +44,7 @@ interface ZakatRecord {
 }
 
 export default function Dashboard() {
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const [balance, setBalance] = useState(0);
   const [transactions, setTransactions] = useState<any[]>([]);
   const [modal, setModal] = useState<'deposit' | 'withdraw' | null>(null);
@@ -145,7 +150,10 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen pb-32">
+    <>
+      {!isAuthorized && <PinSecurity onSuccess={() => setIsAuthorized(true)} />}
+      <RoziqAI />
+      <div className="min-h-screen pb-32">
       {/* Top Header - Glassmorphic */}
       <header className="sticky top-0 z-50 glass border-b border-white/20 px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-3">
@@ -171,6 +179,8 @@ export default function Dashboard() {
           <div className="space-y-8">
             <BalanceCard balance={balance} onDeposit={() => setModal('deposit')} onWithdraw={() => setModal('withdraw')} />
             
+            <PortfolioChart />
+
             <section>
               <PortfolioDashboard holdings={holdings} totalValue={totalPortfolioValue} dailyPnl={dailyPnl} />
             </section>
@@ -227,6 +237,7 @@ export default function Dashboard() {
               <h2 className="text-3xl font-black text-slate-800 tracking-tighter">Marketplace</h2>
               <p className="text-slate-500 font-medium">Strictly Shariah-compliant opportunities.</p>
             </div>
+            <ShariahScreener />
             <HalalStockScanner balance={balance} onBuy={handleBuyStock} />
             <FractionalSukuk balance={balance} onBuy={handleBuySukuk} />
             <GlobalHalalETFs />
@@ -242,6 +253,7 @@ export default function Dashboard() {
               <h2 className="text-3xl font-black text-slate-800 tracking-tighter">Social Impact</h2>
               <p className="text-slate-500 font-medium">Purify wealth and empower the Ummah.</p>
             </div>
+            <ZakatDistribution balance={balance} portfolioValue={totalPortfolioValue} />
             <FinancialHealthScore 
               balance={balance} 
               portfolioValue={totalPortfolioValue} 
@@ -327,5 +339,6 @@ export default function Dashboard() {
         onComplete={onScanComplete} 
       />
     </div>
+    </>
   );
 }
