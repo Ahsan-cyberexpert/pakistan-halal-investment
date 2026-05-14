@@ -36,3 +36,15 @@ export function getHalalStocks() {
 export function getStockBySymbol(symbol: string) {
   return MOCK_PSX_STOCKS.find(s => s.symbol === symbol);
 }
+
+export async function fetchLivePrice(symbol: string) {
+  try {
+    const formattedSymbol = symbol.endsWith('.KA') ? symbol : `${symbol}.KA`;
+    const response = await fetch(`/api/psx?symbol=${formattedSymbol}`);
+    if (!response.ok) throw new Error('Failed to fetch');
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching live price:', error);
+    return null;
+  }
+}

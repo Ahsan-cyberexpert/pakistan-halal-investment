@@ -1,5 +1,6 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { fetchLivePrice } from '@/lib/halal-stock-data';
 
 const mockStocks = [
   { symbol: 'SYS', name: 'Systems Limited', status: 'Halal', debt: '2.5%', income: '0.1%', shariah: 'Compliant' },
@@ -12,6 +13,16 @@ const mockStocks = [
 export default function ShariahScreener() {
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState<any>(null);
+  const [livePrice, setLivePrice] = useState<any>(null);
+
+  useEffect(() => {
+    if (selected) {
+      setLivePrice(null);
+      fetchLivePrice(selected.symbol).then(data => {
+        if (data) setLivePrice(data);
+      });
+    }
+  }, [selected]);
 
   const filtered = mockStocks.filter(s => 
     s.symbol.toLowerCase().includes(query.toLowerCase()) || 
@@ -61,9 +72,16 @@ export default function ShariahScreener() {
           <div className="flex justify-between items-start mb-6">
             <div>
               <h4 className="text-xl font-black tracking-tighter">{selected.name}</h4>
-              <p className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Compliance Audit</p>
+              <div className="flex items-center gap-2">
+                <p className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Compliance Audit</p>
+                {livePrice && (
+                  <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold">
+                    LIVE: PKR {livePrice.price.toLocaleString()} ({livePrice.changePercent.toFixed(2)}%)
+                  </span>
+                )}
+              </div>
             </div>
-            <button onClick={() => setSelected(null)} className="text-slate-500 hover:text-white transition-colors">✕</button>
+            <button onClick={() => setSelected(null)} className="text-slate-500 hover:text-white text-2xl">✕</button>
           </div>
           
           <div className="grid grid-cols-2 gap-4">
