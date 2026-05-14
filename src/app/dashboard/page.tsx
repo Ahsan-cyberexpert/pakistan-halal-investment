@@ -54,18 +54,21 @@ export default function Dashboard() {
     fetch('/api/transaction').then(r => r.json()).then(d => {
       setBalance(d.balance);
       setTransactions(d.transactions);
+      setHoldings(d.holdings || []);
+      setZakatHistory(d.zakatHistory || []);
     });
   }, []);
 
   const handleVoice = (cmd: string) => {
-    if (cmd.includes('deposit') || cmd.includes('ڈیپوزٹ')) setModal('deposit');
-    else if (cmd.includes('withdraw') || cmd.includes('وِڈڈرا')) setModal('withdraw');
-    else if (cmd.includes('health') || cmd.includes('صحت')) setActiveTab('impact');
-    else if (cmd.includes('challenge') || cmd.includes('چیلنج')) setActiveTab('learn');
-    else if (cmd.includes('map') || cmd.includes('نقشہ')) setActiveTab('impact');
-    else if (cmd.includes('zakat') || cmd.includes('زکوٰ')) setActiveTab('impact');
-    else if (cmd.includes('buy') || cmd.includes('خریدیں')) setActiveTab('invest');
-    else if (cmd.includes('balance') || cmd.includes('بیلنس')) {
+    const lowerCmd = cmd.toLowerCase();
+    if (lowerCmd.includes('deposit') || lowerCmd.includes('ڈیپوزٹ')) setModal('deposit');
+    else if (lowerCmd.includes('withdraw') || lowerCmd.includes('وِڈڈرا')) setModal('withdraw');
+    else if (lowerCmd.includes('health') || lowerCmd.includes('صحت')) setActiveTab('impact');
+    else if (lowerCmd.includes('challenge') || lowerCmd.includes('چیلنج')) setActiveTab('learn');
+    else if (lowerCmd.includes('map') || lowerCmd.includes('نقشہ')) setActiveTab('impact');
+    else if (lowerCmd.includes('zakat') || lowerCmd.includes('زکوٰ')) setActiveTab('impact');
+    else if (lowerCmd.includes('buy') || lowerCmd.includes('خریدیں')) setActiveTab('invest');
+    else if (lowerCmd.includes('balance') || lowerCmd.includes('بیلنس')) {
       const msg = new SpeechSynthesisUtterance(`آپ کا بیلنس ${balance} روپے ہے`);
       msg.lang = 'ur-PK';
       window.speechSynthesis.speak(msg);
@@ -80,91 +83,125 @@ export default function Dashboard() {
     });
     const result = await res.json();
     if (result.success) {
-      setBalance(result.newBalance);
-      const txRes = await fetch('/api/transaction');
-      setTransactions((await txRes.json()).transactions);
+      setBalance(result.balance);
+      setTransactions(result.transactions);
+      setHoldings(result.holdings);
+      setZakatHistory(result.zakatHistory);
       setModal(null);
     }
   };
 
-  const handleBuyStock = (symbol: string, amount: number) => {
+  const handleBuyStock = async (symbol: string, amount: number) => {
     const stock = getStockBySymbol(symbol);
     if (!stock) return;
 
-    setBalance(prev => prev - amount);
-    setHoldings(prev => {
-      const existing = prev.find(h => h.symbol === symbol);
-      if (existing) {
-        const newUnits = existing.units + (amount / stock.price);
-        const newInvested = existing.invested + amount;
-        return prev.map(h => h.symbol === symbol ? { ...h, invested: newInvested, units: newUnits, pnl: h.pnl } : h);
-      } else {
-        return [...prev, {
-          symbol: stock.symbol, name: stock.name, invested: amount, currentPrice: stock.price, units: amount / stock.price, pnl: 0
-        }];
-      }
+    await handleTransactionSuccess({
+      type: 'buy_stock',
+      amount,
+      symbol: stock.symbol,
+      name: stock.name,
+      units: amount / stock.price
     });
-    setTransactions(prev => [{ id: Date.now(), type: 'buy_stock', symbol, amount, status: 'success', date: new Date().toISOString() }, ...prev]);
   };
 
-  const handleBuySukuk = (amount: number) => {
-    setBalance(prev => prev - amount);
-    setTransactions(prev => [{ id: Date.now(), type: 'buy_sukuk', amount, status: 'success', date: new Date().toISOString() }, ...prev]);
+  const handleBuySukuk = async (amount: number) => {
+    await handleTransactionSuccess({
+      type: 'buy_sukuk',
+      amount
+    });
   };
 
-  const handleZakatDonation = (amount: number, recipient: string) => {
-    setBalance(prev => prev - amount);
-    setZakatHistory(prev => [{ date: new Date().toISOString(), amount, recipient }, ...prev]);
-    setTransactions(prev => [{ id: Date.now(), type: 'zakat', amount, recipient, status: 'success', date: new Date().toISOString() }, ...prev]);
+  const handleZakatDonation = async (amount: number, recipient: string) => {
+    await handleTransactionSuccess({
+      type: 'zakat',
+      amount,
+      recipient
+    });
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-28">
-      {/* Top Header */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-100 p-4 flex justify-between items-center shadow-sm">
-        <h1 className="text-2xl font-bold text-green-700">🇵🇰 Roziq</h1>
-        <div className="flex items-center space-x-2">
-          <span className="text-xs bg-green-100 text-green-800 px-3 py-1.5 rounded-full font-bold">Halal Wealth OS</span>
+    <div className="min-h-screen pb-32">
+      {/* Top Header - Glassmorphic */}
+      <header className="sticky top-0 z-50 glass border-b border-white/20 px-6 py-4 flex justify-between items-center">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-emerald-600 rounded-2xl flex items-center justify-center text-xl shadow-lg shadow-emerald-200">🇵🇰</div>
+          <div>
+            <h1 className="text-xl font-black text-slate-800 leading-none">Roziq</h1>
+            <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mt-1">Wealth OS</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <button className="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center border border-slate-100 hover:bg-white hover:shadow-lg transition-all">
+            <span className="text-xl">🔔</span>
+          </button>
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 border-2 border-white shadow-md"></div>
         </div>
       </header>
 
       {/* Main Content Area */}
-      <main className="p-4 max-w-md mx-auto space-y-6 transition-all duration-300">
+      <main className="px-6 py-8 max-w-lg mx-auto transition-all duration-500 animate-in fade-in slide-in-from-bottom-4">
         
         {/* HOME TAB */}
         {activeTab === 'home' && (
-          <div className="space-y-6">
+          <div className="space-y-8">
             <BalanceCard balance={balance} onDeposit={() => setModal('deposit')} onWithdraw={() => setModal('withdraw')} />
-            <PortfolioDashboard holdings={holdings} totalValue={totalPortfolioValue} dailyPnl={dailyPnl} />
-            <HajjVault />
-            <div className="mt-6">
-              <h2 className="text-lg font-bold text-gray-800 mb-3">Recent Activity</h2>
-              <div className="space-y-2">
+            
+            <section>
+              <PortfolioDashboard holdings={holdings} totalValue={totalPortfolioValue} dailyPnl={dailyPnl} />
+            </section>
+
+            <section>
+              <HajjVault />
+            </section>
+
+            <section>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-lg font-black text-slate-800 tracking-tight">Recent Activity</h2>
+                <button className="text-xs font-bold text-emerald-600 hover:underline">View All</button>
+              </div>
+              <div className="space-y-3">
                 {transactions.length === 0 ? (
-                  <p className="text-gray-500 text-center py-4 bg-white rounded-2xl border border-gray-100">No activity yet</p>
+                  <div className="premium-card p-12 text-center">
+                    <p className="text-slate-400 text-sm font-medium">No activity recorded yet.</p>
+                  </div>
                 ) : (
                   transactions.slice(0, 5).map((tx) => (
-                    <div key={tx.id} className="flex justify-between p-3 bg-white rounded-xl shadow-sm border border-gray-100">
-                      <div>
-                        <div className="font-bold text-sm text-gray-800">
-                          {tx.type === 'deposit' ? '➕ Deposit' : tx.type === 'withdraw' ? '➖ Withdraw' : tx.type === 'zakat' ? '🤲 Zakat' : `📈 Buy ${tx.symbol || 'Asset'}`}
+                    <div key={tx.id} className="group flex justify-between items-center p-4 bg-white rounded-3xl border border-slate-100 hover:border-emerald-100 hover:shadow-xl hover:shadow-emerald-900/5 transition-all duration-300">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-sm ${
+                          tx.type === 'deposit' ? 'bg-emerald-50 text-emerald-600' : 
+                          tx.type === 'withdraw' ? 'bg-slate-50 text-slate-600' : 
+                          tx.type === 'zakat' ? 'bg-amber-50 text-amber-600' : 'bg-blue-50 text-blue-600'
+                        }`}>
+                          {tx.type === 'deposit' ? '➕' : tx.type === 'withdraw' ? '➖' : tx.type === 'zakat' ? '🤲' : '📈'}
                         </div>
-                        <div className="text-xs text-gray-500 mt-1">{tx.recipient && `To: ${tx.recipient}`} {new Date(tx.date).toLocaleString('ur-PK')}</div>
+                        <div>
+                          <div className="font-black text-slate-800 text-sm tracking-tight">
+                            {tx.type === 'deposit' ? 'Deposit' : tx.type === 'withdraw' ? 'Withdraw' : tx.type === 'zakat' ? 'Zakat Al-Mal' : `Invested in ${tx.symbol || 'Asset'}`}
+                          </div>
+                          <div className="text-[10px] font-bold text-slate-400 uppercase mt-0.5">
+                            {new Date(tx.date).toLocaleDateString('ur-PK', { day: 'numeric', month: 'short' })} • {tx.status}
+                          </div>
+                        </div>
                       </div>
-                      <div className={`font-black ${tx.type === 'deposit' ? 'text-green-600' : 'text-gray-800'}`}>
-                        {tx.type === 'deposit' ? '+' : '-'}PKR {tx.amount.toLocaleString()}
+                      <div className={`font-black text-sm ${tx.type === 'deposit' ? 'text-emerald-600' : 'text-slate-800'}`}>
+                        {tx.type === 'deposit' ? '+' : '-'} {tx.amount.toLocaleString()}
                       </div>
                     </div>
                   ))
                 )}
               </div>
-            </div>
+            </section>
           </div>
         )}
 
         {/* INVEST TAB */}
         {activeTab === 'invest' && (
-          <div className="space-y-6">
+          <div className="space-y-8 animate-in fade-in slide-in-from-right-4">
+            <div className="mb-8">
+              <h2 className="text-3xl font-black text-slate-800 tracking-tighter">Marketplace</h2>
+              <p className="text-slate-500 font-medium">Strictly Shariah-compliant opportunities.</p>
+            </div>
             <HalalStockScanner balance={balance} onBuy={handleBuyStock} />
             <FractionalSukuk balance={balance} onBuy={handleBuySukuk} />
             <GlobalHalalETFs />
@@ -175,7 +212,11 @@ export default function Dashboard() {
 
         {/* IMPACT TAB */}
         {activeTab === 'impact' && (
-          <div className="space-y-6">
+          <div className="space-y-8 animate-in fade-in slide-in-from-right-4">
+             <div className="mb-8">
+              <h2 className="text-3xl font-black text-slate-800 tracking-tighter">Social Impact</h2>
+              <p className="text-slate-500 font-medium">Purify wealth and empower the Ummah.</p>
+            </div>
             <FinancialHealthScore 
               balance={balance} 
               portfolioValue={totalPortfolioValue} 
@@ -189,28 +230,16 @@ export default function Dashboard() {
             <WirasatCalculator />
             <MicroTakaful />
             <LocalImpactMap />
-            {zakatHistory.length > 0 && (
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
-                <h2 className="text-lg font-bold text-gray-800 mb-3">🤲 Zakat History</h2>
-                <div className="space-y-2">
-                  {zakatHistory.map((z, i) => (
-                    <div key={i} className="flex justify-between items-center p-3 bg-green-50 rounded-xl">
-                      <div>
-                        <div className="font-bold text-green-800 text-sm">{z.recipient}</div>
-                        <div className="text-xs text-green-600">{new Date(z.date).toLocaleDateString('ur-PK')}</div>
-                      </div>
-                      <div className="font-black text-green-700">PKR {z.amount.toLocaleString()}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         )}
 
         {/* LEARN TAB */}
         {activeTab === 'learn' && (
-          <div className="space-y-6">
+          <div className="space-y-8 animate-in fade-in slide-in-from-right-4">
+            <div className="mb-8">
+              <h2 className="text-3xl font-black text-slate-800 tracking-tighter">Knowledge</h2>
+              <p className="text-slate-500 font-medium">Master the principles of Halal finance.</p>
+            </div>
             <LearnToEarn />
             <DigitalCommittee />
             <CommunityChallenges />
@@ -218,12 +247,16 @@ export default function Dashboard() {
         )}
       </main>
 
-      {/* Modals */}
+      {/* Modals - Premium Blur */}
       {modal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="relative w-full max-w-sm">
-            <button onClick={() => setModal(null)} className="absolute -top-12 right-0 bg-white/20 hover:bg-white/40 rounded-full w-10 h-10 flex items-center justify-center text-white text-xl backdrop-blur-md">✕</button>
-            {modal === 'deposit' ? <DepositFlow onSuccess={handleTransactionSuccess} /> : <WithdrawFlow onSuccess={handleTransactionSuccess} />}
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4 z-[60] animate-in fade-in">
+          <div className="relative w-full max-w-md bg-white rounded-t-[3rem] sm:rounded-[3rem] p-8 shadow-2xl animate-in slide-in-from-bottom-full duration-500">
+            <button onClick={() => setModal(null)} className="absolute top-6 right-8 text-slate-400 hover:text-slate-600 transition-colors">
+              <span className="text-2xl font-light">✕</span>
+            </button>
+            <div className="mt-4">
+              {modal === 'deposit' ? <DepositFlow onSuccess={handleTransactionSuccess} /> : <WithdrawFlow onSuccess={handleTransactionSuccess} />}
+            </div>
           </div>
         </div>
       )}
@@ -232,26 +265,37 @@ export default function Dashboard() {
       <VoiceAgent onCommand={handleVoice} />
       <AiMuftiChatbot />
 
-      {/* Bottom Navigation Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-gray-200 px-6 py-2 pb-6 flex justify-between items-center z-40 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] max-w-md mx-auto rounded-t-3xl">
-        {[
-          { id: 'home', icon: '🏠', label: 'Home' },
-          { id: 'invest', icon: '📈', label: 'Invest' },
-          { id: 'impact', icon: '🌱', label: 'Impact' },
-          { id: 'learn', icon: '📚', label: 'Learn' },
-        ].map((tab) => (
-          <button 
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
-            className={`flex flex-col items-center p-2 rounded-xl transition-all duration-300 ${activeTab === tab.id ? 'text-green-700 scale-110' : 'text-gray-400 hover:text-gray-500 hover:scale-105'}`}
-          >
-            <span className="text-2xl mb-1">{tab.icon}</span>
-            <span className={`text-[10px] font-bold transition-all duration-300 ${activeTab === tab.id ? 'opacity-100 max-h-4' : 'opacity-0 max-h-0 overflow-hidden'}`}>
-              {tab.label}
-            </span>
-          </button>
-        ))}
-      </nav>
+      {/* Bottom Navigation Bar - Floating Island */}
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-50">
+        <nav className="glass-dark rounded-[2.5rem] p-2 flex justify-between items-center shadow-2xl border-white/10 overflow-hidden">
+          {[
+            { id: 'home', icon: '🏠', label: 'Home' },
+            { id: 'invest', icon: '📈', label: 'Invest' },
+            { id: 'impact', icon: '🌱', label: 'Impact' },
+            { id: 'learn', icon: '📚', label: 'Learn' },
+          ].map((tab) => (
+            <button 
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`relative flex flex-col items-center justify-center py-3 px-6 rounded-3xl transition-all duration-500 group ${
+                activeTab === tab.id ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/20' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <span className={`text-xl transition-transform duration-500 ${activeTab === tab.id ? 'scale-110 -translate-y-1' : 'group-hover:scale-110'}`}>
+                {tab.icon}
+              </span>
+              <span className={`text-[10px] font-black uppercase tracking-widest absolute transition-all duration-500 ${
+                activeTab === tab.id ? 'opacity-100 translate-y-3' : 'opacity-0 translate-y-6'
+              }`}>
+                {tab.label}
+              </span>
+              {activeTab === tab.id && (
+                <div className="absolute inset-0 bg-white/20 rounded-3xl blur-md"></div>
+              )}
+            </button>
+          ))}
+        </nav>
+      </div>
     </div>
   );
 }

@@ -18,59 +18,75 @@ interface PortfolioDashboardProps {
 export default function PortfolioDashboard({ holdings, totalValue, dailyPnl }: PortfolioDashboardProps) {
   if (holdings.length === 0) {
     return (
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center mb-6">
-        <div className="text-4xl mb-3">📈</div>
-        <h3 className="text-lg font-bold text-gray-800">No Investments Yet</h3>
-        <p className="text-gray-500 text-sm mt-1">Start investing in Halal stocks to build your portfolio.</p>
+      <div className="premium-card p-10 text-center mb-6 overflow-hidden relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/50 to-transparent pointer-events-none"></div>
+        <div className="relative z-10">
+          <div className="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-3xl flex items-center justify-center text-4xl mx-auto mb-6 shadow-inner">📈</div>
+          <h3 className="text-xl font-black text-slate-800 mb-2">Grow Your Halal Wealth</h3>
+          <p className="text-slate-500 text-sm max-w-[240px] mx-auto leading-relaxed">Start investing in Shariah-compliant assets to see your portfolio here.</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold text-gray-800">💼 My Portfolio</h2>
-        <div className={`text-sm font-semibold px-2 py-1 rounded-lg ${dailyPnl >= 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-          {dailyPnl >= 0 ? '▲' : '▼'} PKR {Math.abs(dailyPnl).toFixed(2)} Today
+    <div className="premium-card p-6 mb-6">
+      <div className="flex justify-between items-end mb-8">
+        <div>
+          <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">Portfolio Value</h2>
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-black text-slate-800">PKR {totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+          </div>
+        </div>
+        <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-2xl font-bold text-xs ${dailyPnl >= 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+          {dailyPnl >= 0 ? '↗' : '↘'} {Math.abs((dailyPnl / totalValue) * 100).toFixed(2)}%
         </div>
       </div>
 
-      {/* Allocation Bar */}
-      <div className="mb-4">
-        <div className="text-xs text-gray-500 mb-1">Asset Allocation</div>
-        <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden flex">
+      {/* Asset Allocation Bar */}
+      <div className="mb-10">
+        <div className="flex justify-between text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2">
+          <span>Asset Allocation</span>
+          <span>{holdings.length} Assets</span>
+        </div>
+        <div className="w-full h-4 bg-slate-50 rounded-full overflow-hidden flex shadow-inner border border-slate-100 p-0.5">
           {holdings.map((h, i) => {
             const width = (h.invested / totalValue) * 100;
-            const colors = ['bg-green-500', 'bg-blue-500', 'bg-purple-500', 'bg-orange-500', 'bg-red-500'];
-            return <div key={h.symbol} style={{ width: `${width}%` }} className={`h-full ${colors[i % colors.length]}`} title={`${h.symbol}: ${width.toFixed(1)}%`}></div>;
+            const colors = ['bg-emerald-500', 'bg-teal-500', 'bg-cyan-500', 'bg-blue-500', 'bg-indigo-500'];
+            return (
+              <div 
+                key={h.symbol} 
+                style={{ width: `${width}%` }} 
+                className={`h-full ${colors[i % colors.length]} rounded-full transition-all duration-700 hover:scale-y-125 cursor-pointer first:ml-0 -ml-1 border-2 border-white`}
+                title={`${h.symbol}: ${width.toFixed(1)}%`}
+              ></div>
+            );
           })}
-        </div>
-        <div className="flex justify-between text-xs text-gray-500 mt-1">
-          {holdings.map(h => <span key={h.symbol}>{h.symbol}</span>)}
         </div>
       </div>
 
       {/* Holdings List */}
-      <div className="space-y-2">
+      <div className="space-y-4">
+        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Top Holdings</h3>
         {holdings.map(h => (
-          <div key={h.symbol} className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
-            <div>
-              <div className="font-bold text-gray-900">{h.symbol}</div>
-              <div className="text-xs text-gray-500">{h.units.toFixed(4)} units @ PKR {h.currentPrice}</div>
+          <div key={h.symbol} className="group flex justify-between items-center p-4 bg-slate-50 rounded-2xl border border-slate-100/50 hover:bg-white hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-900/5 transition-all duration-300">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-lg font-black text-emerald-700 shadow-sm border border-slate-100 group-hover:scale-110 transition-transform">
+                {h.symbol[0]}
+              </div>
+              <div>
+                <div className="font-black text-slate-800 tracking-tight">{h.symbol}</div>
+                <div className="text-[10px] font-bold text-slate-400 uppercase">{h.units.toFixed(2)} Units</div>
+              </div>
             </div>
             <div className="text-right">
-              <div className="font-bold text-gray-900">PKR {(h.invested + h.pnl).toFixed(2)}</div>
-              <div className={`text-sm ${h.pnl >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {h.pnl >= 0 ? '+' : ''}{h.pnl.toFixed(2)}
+              <div className="font-black text-slate-800">PKR {(h.invested + h.pnl).toLocaleString()}</div>
+              <div className={`text-[10px] font-black uppercase tracking-wider ${h.pnl >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                {h.pnl >= 0 ? '+' : '-'}{Math.abs(h.pnl).toLocaleString()}
               </div>
             </div>
           </div>
         ))}
-      </div>
-
-      <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
-        <span className="text-sm text-gray-600">Total Portfolio Value</span>
-        <span className="text-xl font-bold text-gray-900">PKR {totalValue.toFixed(2)}</span>
       </div>
     </div>
   );
