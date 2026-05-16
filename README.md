@@ -1,80 +1,66 @@
-# Roziq | Halal Wealth OS 🕌🇵🇰
+# 🇵🇰 Roziq: The Halal Wealth OS
 
-The sovereign financial operating system for the modern Pakistani investor. Built with a premium glassmorphic design, Shariah-compliant auditing, and AI-powered voice control.
+**Roziq** is Pakistan's first Sovereign Financial Operating System, designed exclusively to empower the modern Muslim to grow wealth without compromising faith. It is a complete, mobile-first ecosystem that merges cutting-edge AI with strict Islamic finance principles (AAOIFI standards).
 
-## 🌟 Sovereign Features
+![Roziq Hero](public/icons/icon-512x512.png)
 
-### 🛡️ Secure Gate
-- **PIN-Based Security**: Premium glassmorphic PIN entry system for wealth protection.
-- **Biometric Ready**: PWA support for mobile integration.
+## 🚀 The Sovereign Mission
+To build a financial future where technology respects the soul, and every Pakistani can grow their wealth without fear of Riba (interest) or Gharar (uncertainty).
 
-### 📈 Wealth Analytics
-- **Live Portfolio Charts**: Animated SVG growth visualization.
-- **Sovereign Dashboard**: Unified view of Halal Stocks, Sukuks, and Agri-Financing.
+## 💎 Core Features
 
-### 🕋 Shariah Core
-- **Live Shariah Screener**: Real-time compliance auditing for PSX stocks (Debt/Income ratios).
-- **Zakat Distribution**: Automated calculation and routing to verified charities (Edhi, Shaukat Khanum, etc.).
-- **Bay' Al-Salam**: Advance funding for Pakistani agriculture with Shariah certification.
+### 1. ⚖️ Shariah Screener (Liquid Stocks)
+Real-time algorithmic filtering of the Pakistan Stock Exchange (PSX). Roziq strictly removes any company with >33% debt or >5% non-compliant (haram) income. If an asset falls out of compliance, you are alerted instantly.
 
-### 🎤 Roziq AI (Urdu Assistant)
-- **Voice Control**: Manage your wealth using Urdu voice commands.
-- **Smart Responses**: Ask about Zakat, Balance, and Investment tips in your native language.
+### 2. 🤖 Wali Autopilot (Elite AI Guardian)
+An elite, autonomous trading engine. **Wali AI** only unlocks for users who reach the Sovereign Tier (25 Crore Invested / 50 Crore Profit). Once unlocked, it manages your portfolio intelligently, taking a strict, Mudarabah-compliant 1.5% "Success Share" *only* on realized profits.
 
-## 🚀 Tech Stack
+### 3. 🕋 Zakat National Vault & Purification
+Automate your spiritual obligations. Roziq calculates exactly how much Zakat you owe based on your liquid assets. Additionally, the **Auto-Purification Router** automatically identifies and routes impure dividend income to verified charities (like Edhi and Shaukat Khanum).
 
-- **Framework**: Next.js 14 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS (Premium Glassmorphic Theme)
-- **Persistence**: JSON-based sovereign database
-- **Deployment**: PWA Ready (Mobile-First)
+### 4. 🚜 Sovereign Assets (Illiquid Wealth)
+A dedicated ecosystem for long-term growth:
+*   **Agri-Financing:** Invest directly in Halal agricultural land yields.
+*   **Hajj Vault:** Save for your pilgrimage while earning Riba-free yields via Shariah-compliant Sukuk bonds.
 
-## 🛠️ Getting Started
+### 5. 🤝 Social Finance (Family Wealth)
+*   **Digital Kameti:** A 0% fee platform for sovereign family ROSCAs (Rotating Savings and Credit Associations).
+*   **Wirasat Engine:** An inheritance calculator that strictly partitions net wealth after debt/Wasiyyat deductions according to Islamic law, visually secured with CNIC heir-locks.
 
-### Prerequisites
-- Node.js 18+ 
-- npm
+### 6. 👳🏽‍♂️ Mufti AI
+An integrated voice-activated AI advisor powered by the Google Generative AI SDK. Instantly answers queries about Islamic finance, complete with haptic feedback and dynamic waveform animations.
 
-### Installation & Launch
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/Ahsan-cyberexpert/pakistan-halal-investment.git
-   cd pakistan-halal-investment
-   ```
-
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
-
-3. **Start the Sovereign OS**:
-   ```bash
-   npm run dev
-   ```
-
-4. **Access on Mobile**:
-   Run the tunnel command to test on your phone:
-   ```bash
-   npx --y cloudflared tunnel --url http://localhost:3000
-   ```
-
-## 📂 Project Structure
-
-- `src/app/`: Core application logic and routing.
-- `src/components/`: Premium glassmorphic UI components.
-- `src/lib/`: Shariah screening logic and data management.
-- `public/`: Sovereign assets and PWA manifest.
-
-## 📜 Shariah Compliance
-
-Roziq is built on the principles of **Tathir** (Purification) and **Adl** (Justice). Every investment opportunity is screened for:
-- ✅ No Riba (Interest)
-- ✅ Debt-to-Asset ratio < 33%
-- ✅ Impure Income < 5%
-- ✅ Halal Business Activities only
+### 7. 🔐 Military-Grade Security
+*   **Mandatory 1234 PIN:** Every single app launch requires PIN authorization. No data is stored in clear-text.
+*   **Biometric Fallbacks:** Secure hardware-level WebAuthn integration for seamless transactions.
 
 ---
 
-**Made with ❤️ for the Ummah.**
-Assalamu Alaikum! اس ہالال سرمایہ کاری پلیٹ فارم کو استعمال کریں۔
+## 🛠️ Tech Stack
+*   **Framework:** Next.js 16 (App Router)
+*   **Language:** TypeScript
+*   **Styling:** Tailwind CSS + Framer Motion (Glassmorphic Sovereign Design)
+*   **AI Engine:** Google Generative AI SDK (`@google/generative-ai`)
+*   **Architecture:** Mobile-first PWA (Progressive Web App)
+
+## 💻 Running Locally
+
+1. Install dependencies:
+```bash
+npm install
+```
+
+2. Set up environment variables in `.env.local`:
+```env
+GEMINI_API_KEY=your_google_ai_key
+```
+
+3. Run the development server:
+```bash
+npm run dev
+```
+
+4. Open [http://localhost:3000](http://localhost:3000) in your browser. Use the Master PIN `1234` to access the dashboard.
+
+---
+*Built with pride for Pakistan.* 🕌
