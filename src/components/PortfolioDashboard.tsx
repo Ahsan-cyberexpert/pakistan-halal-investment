@@ -7,6 +7,7 @@ interface Holding {
   currentPrice: number;
   units: number;
   pnl: number;
+  isWali?: boolean;
 }
 
 interface PortfolioDashboardProps {
@@ -38,8 +39,13 @@ export default function PortfolioDashboard({ holdings, totalValue, dailyPnl }: P
             <span className="text-3xl font-black text-slate-800">PKR {totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
           </div>
         </div>
-        <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-2xl font-bold text-xs ${dailyPnl >= 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
-          {dailyPnl >= 0 ? '↗' : '↘'} {Math.abs((dailyPnl / totalValue) * 100).toFixed(2)}%
+        <div className={`flex flex-col items-end gap-1 px-4 py-2 rounded-2xl font-bold text-xs ${dailyPnl >= 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+          <div className="flex items-center gap-1.5">
+            {dailyPnl >= 0 ? '↗' : '↘'} {Math.abs((dailyPnl / totalValue) * 100).toFixed(2)}%
+          </div>
+          <div className="text-[8px] font-black uppercase tracking-tighter opacity-60">
+            1.5% Success Share Applies on Profit
+          </div>
         </div>
       </div>
 
@@ -75,7 +81,15 @@ export default function PortfolioDashboard({ holdings, totalValue, dailyPnl }: P
                 {h.symbol[0]}
               </div>
               <div>
-                <div className="font-black text-slate-800 tracking-tight">{h.symbol}</div>
+                <div className="flex items-center gap-2">
+                  <div className="font-black text-slate-800 tracking-tight">{h.symbol}</div>
+                  {h.isWali && (
+                    <span className="bg-emerald-500 text-white text-[7px] font-black uppercase px-1.5 py-0.5 rounded-full flex items-center gap-0.5 shadow-sm">
+                      <span className="w-1 h-1 bg-white rounded-full animate-pulse"></span>
+                      Guardian
+                    </span>
+                  )}
+                </div>
                 <div className="text-[10px] font-bold text-slate-400 uppercase">{h.units.toFixed(2)} Units</div>
               </div>
             </div>

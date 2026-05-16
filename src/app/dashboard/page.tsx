@@ -31,6 +31,8 @@ import LanguageSelect from '@/components/LanguageSelect';
 import Onboarding from '@/components/Onboarding';
 import SettingsTab from '@/components/SettingsTab';
 import MarketAlerts from '@/components/MarketAlerts';
+import WaliAutopilot from '@/components/WaliAutopilot';
+import MuftiAI from '@/components/MuftiAI';
 import { getStockBySymbol } from '@/lib/halal-stock-data';
 
 interface Holding {
@@ -55,7 +57,7 @@ export default function Dashboard() {
   const [modal, setModal] = useState<'deposit' | 'withdraw' | null>(null);
   const [holdings, setHoldings] = useState<Holding[]>([]);
   const [zakatHistory, setZakatHistory] = useState<ZakatRecord[]>([]);
-  const [activeTab, setActiveTab] = useState<'home' | 'invest' | 'impact' | 'learn' | 'settings'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'portfolio' | 'zakat' | 'kameti' | 'consult' | 'settings'>('home');
   const [lang, setLangState] = useState<'en' | 'ur'>('en');
   const [showLangSelect, setShowLangSelect] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -128,6 +130,10 @@ export default function Dashboard() {
   const dailyPnl = holdings.reduce((sum, h) => sum + h.pnl, 0);
   const isZakatEligible = (balance + totalPortfolioValue) >= 300000;
 
+  const totalInvestedHistory = holdings.reduce((sum, h) => sum + h.invested, 0);
+  const totalRealizedProfit = transactions.reduce((sum, t) => sum + (t.profit || 0), 0);
+  const isPremium = totalInvestedHistory >= 250000000 && totalRealizedProfit >= 500000000;
+
   const handleVoice = (cmd: string) => {
     const lowerCmd = cmd.toLowerCase();
     if (lowerCmd.includes('deposit') || lowerCmd.includes('ڈیپوزٹ')) setModal('deposit');
@@ -137,6 +143,12 @@ export default function Dashboard() {
     else if (lowerCmd.includes('map') || lowerCmd.includes('نقشہ')) setActiveTab('impact');
     else if (lowerCmd.includes('zakat') || lowerCmd.includes('زکوٰ')) setActiveTab('impact');
     else if (lowerCmd.includes('buy') || lowerCmd.includes('خریدیں')) setActiveTab('invest');
+    else if (lowerCmd.includes('autopilot') || lowerCmd.includes('آٹو پائلٹ')) {
+      const msg = new SpeechSynthesisUtterance(lang === 'ur' ? 'ولی آٹو پائلٹ اب تیار ہے' : 'Wali Autopilot is now ready for your command');
+      msg.lang = lang === 'ur' ? 'ur-PK' : 'en-US';
+      window.speechSynthesis.speak(msg);
+      setActiveTab('home');
+    }
     else if (lowerCmd.includes('balance') || lowerCmd.includes('بیلنس')) {
       const msg = new SpeechSynthesisUtterance(`آپ کا بیلنس ${balance} روپے ہے`);
       msg.lang = 'ur-PK';
@@ -218,51 +230,50 @@ export default function Dashboard() {
         <PinSecurity onSuccess={() => setIsAuthorized(true)} />
       )}
       <RoziqAI />
-      <div className="min-h-screen pb-32" dir={lang === 'ur' ? 'rtl' : 'ltr'}>
-      {/* Top Header - Glassmorphic */}
-      <header className="sticky top-0 z-50 glass border-b border-white/20 px-6 py-4 flex justify-between items-center">
+      <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-emerald-100 selection:text-emerald-900 overflow-x-hidden pb-32" dir={lang === 'ur' ? 'rtl' : 'ltr'}>
+      {/* Mobile Top Bar */}
+      <header className="sticky top-0 z-50 bg-slate-50/80 backdrop-blur-xl border-b border-slate-200/50 px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-emerald-600 rounded-2xl flex items-center justify-center text-xl shadow-lg shadow-emerald-200">🇵🇰</div>
+          <div className="w-10 h-10 bg-emerald-600 rounded-2xl flex items-center justify-center text-xl shadow-lg shadow-emerald-900/20">🟢</div>
           <div>
-            <h1 className="text-xl font-black text-slate-800 leading-none">Roziq</h1>
-            <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mt-1">Wealth OS</p>
+            <h1 className="text-lg font-black tracking-tighter text-slate-900">ROZIQ</h1>
+            <p className="text-[8px] font-black text-emerald-600 uppercase tracking-[0.2em]">{t('Wealth OS', 'ویلتھ او ایس')}</p>
           </div>
         </div>
-        <div className="flex items-center gap-4">
-          <button className="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center border border-slate-100 hover:bg-white hover:shadow-lg transition-all">
-            <span className="text-xl">🔔</span>
+        <div className="flex items-center gap-3">
+          <button className="w-10 h-10 rounded-2xl bg-white flex items-center justify-center border border-slate-200 hover:bg-slate-50 transition-all active:scale-90">
+            <span className="text-lg">🔔</span>
           </button>
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 border-2 border-white shadow-md"></div>
+          <button 
+            onClick={() => setActiveTab('settings')}
+            className={`w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 border-2 shadow-md transition-all active:scale-90 ${activeTab === 'settings' ? 'border-emerald-400 scale-110 shadow-emerald-500/30' : 'border-white'}`}
+          >
+            <div className="w-full h-full rounded-2xl border border-black/10"></div>
+          </button>
         </div>
       </header>
 
-      {/* Main Content Area */}
-      <main className="px-6 py-8 max-w-lg mx-auto transition-all duration-500 animate-in fade-in slide-in-from-bottom-4">
+      {/* App Content */}
+      <main className="px-5 py-6 max-w-md mx-auto animate-in fade-in duration-500">
         
         {/* HOME TAB */}
         {activeTab === 'home' && (
-          <div className="space-y-8">
+          <div className="space-y-8 pb-32">
             <BalanceCard balance={balance} onDeposit={() => setModal('deposit')} onWithdraw={() => setModal('withdraw')} />
             
+            {isPremium && <WaliAutopilot lang={lang} />}
+
             <PortfolioChart balance={balance} holdings={holdings} totalValue={totalPortfolioValue} />
 
             <section>
-              <PortfolioDashboard holdings={holdings} totalValue={totalPortfolioValue} dailyPnl={dailyPnl} />
-            </section>
-
-            <section>
-              <HajjVault />
-            </section>
-
-            <section>
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-lg font-black text-slate-800 tracking-tight">Recent Activity</h2>
-                <button className="text-xs font-bold text-emerald-600 hover:underline">View All</button>
+                <h2 className="text-lg font-black text-slate-800 tracking-tight">{t('Recent Activity', 'حالیہ سرگرمی')}</h2>
+                <button className="text-xs font-bold text-emerald-600 hover:underline">{t('View All', 'سب دیکھیں')}</button>
               </div>
               <div className="space-y-3">
                 {transactions.length === 0 ? (
                   <div className="premium-card p-12 text-center">
-                    <p className="text-slate-400 text-sm font-medium">No activity recorded yet.</p>
+                    <p className="text-slate-400 text-sm font-medium">{t('No activity recorded yet.', 'ابھی تک کوئی سرگرمی ریکارڈ نہیں ہوئی۔')}</p>
                   </div>
                 ) : (
                   transactions.slice(0, 5).map((tx) => (
@@ -271,16 +282,16 @@ export default function Dashboard() {
                         <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-sm ${
                           tx.type === 'deposit' ? 'bg-emerald-50 text-emerald-600' : 
                           tx.type === 'withdraw' ? 'bg-slate-50 text-slate-600' : 
-                          tx.type === 'zakat' ? 'bg-amber-50 text-amber-600' : 'bg-blue-50 text-blue-600'
+                          tx.type === 'zakat_vault' ? 'bg-amber-50 text-amber-600' : 'bg-blue-50 text-blue-600'
                         }`}>
-                          {tx.type === 'deposit' ? '➕' : tx.type === 'withdraw' ? '➖' : tx.type === 'zakat' ? '🤲' : '📈'}
+                          {tx.type === 'deposit' ? '➕' : tx.type === 'withdraw' ? '➖' : tx.type === 'zakat_vault' ? '🏛️' : '📈'}
                         </div>
                         <div>
                           <div className="font-black text-slate-800 text-sm tracking-tight">
-                            {tx.type === 'deposit' ? 'Deposit' : tx.type === 'withdraw' ? 'Withdraw' : tx.type === 'zakat' ? 'Zakat Al-Mal' : `Invested in ${tx.symbol || 'Asset'}`}
+                            {tx.type === 'deposit' ? t('Deposit', 'ڈیپازٹ') : tx.type === 'withdraw' ? t('Withdraw', 'نکالنا') : tx.type === 'zakat_vault' ? t('National Vault', 'قومی والٹ') : tx.symbol}
                           </div>
                           <div className="text-[10px] font-bold text-slate-400 uppercase mt-0.5">
-                            {new Date(tx.date).toLocaleDateString('ur-PK', { day: 'numeric', month: 'short' })} • {tx.status}
+                            {new Date(tx.date).toLocaleDateString(lang === 'ur' ? 'ur-PK' : 'en-US', { day: 'numeric', month: 'short' })}
                           </div>
                         </div>
                       </div>
@@ -295,29 +306,46 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* INVEST TAB */}
-        {activeTab === 'invest' && (
-          <div className="space-y-8 animate-in fade-in slide-in-from-right-4">
-            <div className="mb-8">
-              <h2 className="text-3xl font-black text-slate-800 tracking-tighter">Marketplace</h2>
-              <p className="text-slate-500 font-medium">Strictly Shariah-compliant opportunities.</p>
+        {/* ASSETS TAB (AGRI, HAJJ, SUKUKS) */}
+        {activeTab === 'assets' && (
+          <div className="space-y-8 pb-32 animate-in fade-in slide-in-from-right-4 duration-500">
+             <div className="mb-8">
+              <h2 className="text-3xl font-black text-slate-800 tracking-tighter">{t('Sovereign Assets', 'خود مختار اثاثے')}</h2>
+              <p className="text-slate-500 font-medium">{t('Invest in land, Hajj, and Sukuk bonds.', 'زمین، حج، اور سکوک بانڈز میں سرمایہ کاری کریں۔')}</p>
             </div>
-            <ShariahScreener />
-            <MarketAlerts />
-            <HalalStockScanner balance={balance} onBuy={handleBuyStock} />
+            <HajjVault />
+            <AgriFinancing balance={balance} onInvest={(amount) => { setBalance(prev => prev - amount); handleTransactionSuccess(); }} />
             <FractionalSukuk balance={balance} onBuy={handleBuySukuk} />
             <GlobalHalalETFs />
-            <AgriFinancing />
-            <FreelancerAutoInvest />
           </div>
         )}
 
-        {/* IMPACT TAB */}
-        {activeTab === 'impact' && (
-          <div className="space-y-8 animate-in fade-in slide-in-from-right-4">
+        {/* PORTFOLIO TAB */}
+        {activeTab === 'portfolio' && (
+          <div className="space-y-8 pb-32 animate-in fade-in slide-in-from-right-4 duration-500">
+            <div className="mb-8">
+              <h2 className="text-3xl font-black text-slate-800 tracking-tighter">{t('My Portfolio', 'میرا پورٹ فولیو')}</h2>
+              <p className="text-slate-500 font-medium">{t('Real-time tracking of your Halal wealth.', 'آپ کی حلال دولت کی اصل وقت میں ٹریکنگ۔')}</p>
+            </div>
+            
+            <PortfolioDashboard holdings={holdings} totalValue={totalPortfolioValue} dailyPnl={dailyPnl} />
+            <PortfolioChart balance={balance} holdings={holdings} totalValue={totalPortfolioValue} />
+            
+            <div className="space-y-4">
+              <div className="flex justify-between items-center px-1">
+                <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('Halal Marketplace', 'حلال مارکیٹ پلیس')}</h3>
+              </div>
+              <HalalStockScanner balance={balance} onBuy={handleBuyStock} />
+            </div>
+          </div>
+        )}
+
+        {/* ZAKAT TAB */}
+        {activeTab === 'zakat' && (
+          <div className="space-y-8 pb-32 animate-in fade-in slide-in-from-right-4 duration-500">
              <div className="mb-8">
-              <h2 className="text-3xl font-black text-slate-800 tracking-tighter">Social Impact</h2>
-              <p className="text-slate-500 font-medium">Purify wealth and empower the Ummah.</p>
+              <h2 className="text-3xl font-black text-slate-800 tracking-tighter">{t('Social Impact', 'سماجی اثر')}</h2>
+              <p className="text-slate-500 font-medium">{t('Purify wealth and empower the Ummah.', 'دولت کو پاک کریں اور امت کو بااختیار بنائیں۔')}</p>
             </div>
             <ZakatDistribution balance={balance} portfolioValue={totalPortfolioValue} />
             <FinancialHealthScore 
@@ -328,42 +356,46 @@ export default function Dashboard() {
               zakatHistory={zakatHistory} 
               isZakatEligible={isZakatEligible} 
             />
-            <ZakatCalculator balance={balance} portfolioValue={totalPortfolioValue} onDonate={handleZakatDonation} />
             <PurificationTracker onPurify={(amount) => handleZakatDonation(amount, 'Dividend Purification')} />
-            <WirasatCalculator />
-            <MicroTakaful />
-            <LocalImpactMap />
           </div>
         )}
 
-        {/* LEARN TAB */}
-        {activeTab === 'learn' && (
-          <div className="space-y-8 animate-in fade-in slide-in-from-right-4">
-            <div className="mb-8">
-              <h2 className="text-3xl font-black text-slate-800 tracking-tighter">{t('Knowledge', 'علم')}</h2>
-              <p className="text-slate-500 font-medium">{t('Master the principles of Halal finance.', 'حلال مالیات کے اصول سیکھیں۔')}</p>
-            </div>
-            <LearnToEarn />
+        {/* KAMETI TAB */}
+        {activeTab === 'kameti' && (
+          <div className="space-y-8 pb-32 animate-in fade-in slide-in-from-right-4 duration-500">
             <DigitalCommittee />
-            <CommunityChallenges />
+            <WirasatCalculator />
+          </div>
+        )}
+
+        {/* CONSULT TAB */}
+        {activeTab === 'consult' && (
+          <div className="space-y-8 pb-32 animate-in fade-in slide-in-from-right-4 duration-500">
+            <MuftiAI lang={lang} />
           </div>
         )}
 
         {/* SETTINGS TAB */}
         {activeTab === 'settings' && (
-          <div className="animate-in fade-in slide-in-from-right-4">
-            <SettingsTab
-              lang={lang}
-              darkMode={darkMode}
-              onLangChange={handleLangChange}
+          <div className="space-y-8 pb-32 animate-in fade-in slide-in-from-right-4 duration-500">
+            <SettingsTab 
+              lang={lang} 
+              darkMode={darkMode} 
+              onLangChange={handleLangChange} 
               onDarkToggle={toggleDark}
               onLock={() => setIsAuthorized(false)}
+              isPremium={isPremium}
+              eligibility={{
+                totalInvested: totalInvestedHistory,
+                totalProfit: totalRealizedProfit,
+                reqInvest: 250000000,
+                reqProfit: 500000000
+              }}
             />
           </div>
         )}
       </main>
 
-      {/* Modals - Premium Blur */}
       {modal && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4 z-[60] animate-in fade-in">
           <div className="relative w-full max-w-md bg-white rounded-t-[3rem] sm:rounded-[3rem] p-8 shadow-2xl animate-in slide-in-from-bottom-full duration-500">
@@ -377,48 +409,45 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Floating Utilities */}
       <VoiceAgent onCommand={handleVoice} />
-      <AiMuftiChatbot />
 
       {/* Bottom Navigation Bar - Floating Island */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[95%] max-w-md z-50">
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[98%] max-w-lg z-50">
         <nav className="glass-dark rounded-[2.5rem] p-2 flex justify-between items-center shadow-2xl border-white/10 overflow-hidden">
           {[
             { id: 'home', icon: '🏠', labelEn: 'Home', labelUr: 'ہوم' },
-            { id: 'invest', icon: '📈', labelEn: 'Invest', labelUr: 'سرمایہ' },
-            { id: 'impact', icon: '🌱', labelEn: 'Impact', labelUr: 'اثر' },
-            { id: 'learn', icon: '📚', labelEn: 'Learn', labelUr: 'سیکھیں' },
-            { id: 'settings', icon: '⚙️', labelEn: 'Settings', labelUr: 'ترتیبات' },
+            { id: 'portfolio', icon: '💼', labelEn: 'Stocks', labelUr: 'اسٹاکس' },
+            { id: 'assets', icon: '🚜', labelEn: 'Assets', labelUr: 'اثاثے' },
+            { id: 'kameti', icon: '🤝', labelEn: 'Family', labelUr: 'خاندان' },
+            { id: 'zakat', icon: '🕋', labelEn: 'Zakat', labelUr: 'زکوٰۃ' },
+            { id: 'consult', icon: '👳‍♂️', labelEn: 'Mufti', labelUr: 'مفتی' },
           ].map((tab) => (
             <button 
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`relative flex flex-col items-center justify-center py-3 px-4 rounded-3xl transition-all duration-500 group ${
+              className={`relative flex flex-col items-center justify-center py-3 px-3 rounded-3xl transition-all duration-500 group ${
                 activeTab === tab.id ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/20' : 'text-slate-400 hover:text-white'
               }`}
             >
               <span className={`text-xl transition-transform duration-500 ${activeTab === tab.id ? 'scale-110 -translate-y-1' : 'group-hover:scale-110'}`}>
                 {tab.icon}
               </span>
-              <span className={`text-[10px] font-black uppercase tracking-widest absolute transition-all duration-500 ${
+              <span className={`text-[8px] font-black uppercase tracking-widest absolute transition-all duration-500 ${
                 activeTab === tab.id ? 'opacity-100 translate-y-3' : 'opacity-0 translate-y-6'
               }`}>
                 {lang === 'ur' ? tab.labelUr : tab.labelEn}
               </span>
-              {activeTab === tab.id && (
-                <div className="absolute inset-0 bg-white/20 rounded-3xl blur-md"></div>
-              )}
             </button>
           ))}
         </nav>
       </div>
+
       {/* Sovereign Biometrics */}
       <SovereignScan 
         isOpen={isScanning} 
         onComplete={onScanComplete} 
       />
-    </div>
+      </div>
     </>
   );
 }

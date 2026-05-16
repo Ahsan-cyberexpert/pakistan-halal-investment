@@ -31,7 +31,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 text-center">
           <div className="inline-flex items-center space-x-2 bg-emerald-50 px-4 py-2 rounded-2xl border border-emerald-100 mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <span className="text-emerald-600">✨</span>
-            <span className="text-xs font-black text-emerald-700 uppercase tracking-widest">Now Live in Pakistan</span>
+            <span className="text-xs font-black text-emerald-700 uppercase tracking-widest">Pakistan's First Halal Wealth OS</span>
           </div>
           
           <h1 className="text-6xl md:text-8xl font-black tracking-tight mb-8 animate-in fade-in slide-in-from-bottom-8 duration-1000">
@@ -40,84 +40,109 @@ export default function Home() {
           </h1>
           
           <p className="max-w-2xl text-xl text-slate-500 mx-auto mb-12 leading-relaxed animate-in fade-in slide-in-from-bottom-12 duration-1000">
-            The sovereign financial operating system for the modern Muslim. Invest in Shariah-compliant stocks, Sukuks, and automate your Zakat—all completely Riba-free.
+            The sovereign financial operating system designed for the modern Muslim. Build your future with Shariah-compliant tools, automated Zakat, and Riba-free growth.
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center items-center gap-6 animate-in fade-in slide-in-from-bottom-16 duration-1000">
             <Link href="/dashboard" className="w-full sm:w-auto px-12 py-5 bg-slate-900 text-white rounded-[2rem] font-bold text-xl hover:bg-slate-800 shadow-2xl shadow-slate-900/20 hover:-translate-y-1 transition-all">
-              Start Investing →
+              Launch App
             </Link>
-            <div className="flex items-center space-x-4 px-6 py-4 rounded-[2rem] bg-white border border-slate-100 shadow-sm">
-              <div className="flex -space-x-3">
-                {[1,2,3].map(i => (
-                  <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-200"></div>
-                ))}
-              </div>
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-tighter">Joined by 10k+ Pakistanis</span>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* Feature Grid - Modern Cards */}
-      <section id="features" className="py-32 bg-slate-50/50">
+      {/* Feature Grid - Detailed */}
+      <section id="features" className="py-32 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
-            <div className="max-w-xl">
-              <h2 className="text-sm font-black text-emerald-600 uppercase tracking-widest mb-4">Core Platform</h2>
-              <h3 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">Everything you need to grow wealth purely.</h3>
-            </div>
-            <p className="max-w-xs text-slate-500 font-medium leading-relaxed">
-              We've combined world-class technology with ancient ethical principles.
-            </p>
+          <div className="text-center mb-24">
+            <h2 className="text-sm font-black text-emerald-600 uppercase tracking-widest mb-4">The Roziq Pillars</h2>
+            <h3 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tight">Built on Faith, Powered by AI.</h3>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               { 
-                emoji: '🕋', 
+                emoji: '⚖️', 
                 title: 'Shariah Screener', 
-                desc: 'Live algorithmic filtering of the PSX. We strictly remove any company with >33% debt or >5% haram income.',
-                color: 'bg-emerald-50'
+                desc: 'Real-time PSX filtering based on AAOIFI standards. We ensure zero Riba and zero Gharar.' 
               },
               { 
-                emoji: '💧', 
-                title: 'Auto-Purification', 
-                desc: 'Roziq automatically calculates and routes impure dividend income to charity, keeping your wealth halal.',
-                color: 'bg-teal-50'
+                emoji: '🤖', 
+                title: 'Wali AI Autopilot', 
+                desc: 'An elite guardian for your wealth. Automates halal trades only when your portfolio reaches the elite tier.' 
               },
               { 
-                emoji: '👳🏽‍♂️', 
-                title: 'AI Mufti Advisor', 
-                desc: 'Instant guidance on Islamic finance based directly on AAOIFI standards. Ask anything, anytime.',
-                color: 'bg-cyan-50'
+                emoji: '🕋', 
+                title: 'Hajj & Zakat', 
+                desc: 'Automate your spiritual obligations. National Zakat Vault integration with live audit tracking.' 
+              },
+              { 
+                emoji: '📜', 
+                title: 'Inheritance Engine', 
+                desc: 'Calculates your estate according to Islamic laws. Secure your family’s future legally and spiritually.' 
               }
             ].map((f, i) => (
-              <div key={i} className="premium-card p-10 group">
-                <div className={`w-20 h-20 ${f.color} rounded-[2rem] flex items-center justify-center text-4xl mb-8 group-hover:scale-110 transition-transform duration-500 shadow-inner`}>
-                  {f.emoji}
-                </div>
-                <h3 className="text-2xl font-black text-slate-900 mb-4">{f.title}</h3>
-                <p className="text-slate-500 leading-relaxed font-medium">{f.desc}</p>
+              <div key={i} className="p-8 rounded-[3rem] bg-slate-50 border border-slate-100 hover:border-emerald-200 hover:shadow-2xl hover:shadow-emerald-900/5 transition-all">
+                <div className="text-4xl mb-6">{f.emoji}</div>
+                <h4 className="text-xl font-black text-slate-900 mb-3">{f.title}</h4>
+                <p className="text-sm text-slate-500 font-medium leading-relaxed">{f.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Trust Section - Dark Glass */}
-      <section className="py-32 px-6">
-        <div className="max-w-5xl mx-auto glass-dark rounded-[4rem] p-16 md:p-24 text-center overflow-hidden relative">
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-emerald-600/20 to-transparent pointer-events-none"></div>
-          <div className="relative z-10">
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-8 tracking-tighter">Say Goodbye to Riba.</h2>
-            <p className="text-emerald-100/60 mb-12 text-xl max-w-2xl mx-auto font-medium">
-              Join the thousands of Pakistanis preserving their wealth without compromising their faith.
-            </p>
-            <Link href="/dashboard" className="inline-flex px-12 py-5 bg-emerald-500 text-white rounded-[2rem] font-bold text-xl hover:bg-emerald-400 transition-all shadow-[0_20px_50px_rgba(16,185,129,0.3)] hover:-translate-y-1">
-              Start Investing Now
-            </Link>
+      {/* Security Info - Educational */}
+      <section id="security" className="py-32 bg-slate-950 text-white overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-600/10 rounded-full blur-[120px] translate-x-1/3 -translate-y-1/4" />
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <div>
+              <h2 className="text-emerald-500 font-black uppercase tracking-widest text-xs mb-4">Sovereign Security</h2>
+              <h3 className="text-4xl md:text-6xl font-black tracking-tight mb-8">Your wealth, protected by code and faith.</h3>
+              <div className="space-y-8">
+                <div className="flex gap-6">
+                  <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-xl">🔐</div>
+                  <div>
+                    <h4 className="font-bold text-xl mb-1">Mandatory 1234 PIN</h4>
+                    <p className="text-slate-400 text-sm">Every access point is guarded by your personal security PIN. We never store your clear-text keys.</p>
+                  </div>
+                </div>
+                <div className="flex gap-6">
+                  <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-xl">🛡️</div>
+                  <div>
+                    <h4 className="font-bold text-xl mb-1">CNIC Heir-Lock</h4>
+                    <p className="text-slate-400 text-sm">Our inheritance engine uses CNIC-level verification to ensure only your legal heirs can claim wealth.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white/5 border border-white/10 rounded-[4rem] p-12 backdrop-blur-3xl">
+               <div className="flex items-center gap-4 mb-8">
+                  <div className="w-3 h-3 rounded-full bg-red-500" />
+                  <div className="w-3 h-3 rounded-full bg-amber-500" />
+                  <div className="w-3 h-3 rounded-full bg-emerald-500" />
+               </div>
+               <div className="space-y-4 font-mono text-xs text-emerald-500/80">
+                  <p>&gt; initializing shariah_screener_v1.0</p>
+                  <p>&gt; filtering non_compliant_assets...</p>
+                  <p className="text-emerald-400">&gt; SUCCESS: 100% Halal Portfolio Verified</p>
+                  <p>&gt; secure_pin_bridge: active</p>
+                  <p className="animate-pulse">_</p>
+               </div>
+            </div>
           </div>
+        </div>
+      </section>
+
+      {/* Mission Section */}
+      <section id="mission" className="py-32 bg-white">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h2 className="text-sm font-black text-emerald-600 uppercase tracking-widest mb-6 italic">The Sovereign Mission</h2>
+          <blockquote className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight mb-12">
+            "To build a financial future where technology respects the soul, and every Pakistani can grow their wealth without fear of interest."
+          </blockquote>
+          <div className="w-20 h-1 bg-emerald-500 mx-auto rounded-full" />
         </div>
       </section>
 

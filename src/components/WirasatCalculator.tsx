@@ -71,128 +71,140 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
   const results = calculated ? calculateShares() : [];
 
   return (
-    <div className="premium-card p-8 overflow-hidden relative">
-      <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-      
-      <div className="relative z-10">
-        <div className="flex items-center gap-4 mb-8">
-          <div className="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-3xl shadow-inner border border-emerald-100">⚖️</div>
-          <div>
-            <h2 className="text-xl font-black text-slate-800 tracking-tight">Sovereign Wirasat</h2>
-            <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mt-1">Smart Inheritance Engine</p>
+    <div className="premium-card p-0 overflow-hidden group rounded-[3rem] bg-white border border-slate-100 shadow-4xl relative">
+      <div className="bg-slate-950 p-10 text-white relative border-b border-white/5">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-[80px]"></div>
+        
+        <div className="relative z-10">
+          <div className="flex justify-between items-start mb-8">
+            <div>
+              <div className="flex gap-2 mb-6">
+                <div className="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 text-[9px] font-black uppercase tracking-[0.3em] px-4 py-2 rounded-full border border-emerald-500/30">
+                  <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
+                  Shariah Legacy Engine
+                </div>
+                <div className="inline-flex items-center gap-2 bg-slate-800 text-slate-400 text-[9px] font-black uppercase tracking-[0.3em] px-4 py-2 rounded-full border border-white/5">
+                  Free Sovereign Service
+                </div>
+              </div>
+              <h2 className="text-4xl font-black tracking-tighter italic text-white">SOVEREIGN <span className="text-emerald-500">WIRASAT</span></h2>
+              <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mt-2">Algorithmic Inheritance Distribution</p>
+            </div>
+            <div className="w-16 h-16 bg-white/5 rounded-3xl flex items-center justify-center text-4xl border border-white/10 shadow-2xl">⚖️</div>
           </div>
+
+          {!calculated ? (
+            <div className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2">
+                  <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-3 block">Deductions (PKR)</label>
+                  <div className="flex gap-3">
+                    <input 
+                      type="number" 
+                      placeholder="Outstanding Debts"
+                      className="w-1/2 p-4 bg-white/5 border border-white/5 rounded-2xl text-xs font-bold text-white focus:bg-white/10 outline-none"
+                      onChange={(e) => setDebt(Number(e.target.value))}
+                    />
+                    <input 
+                      type="number" 
+                      placeholder="Wasiyyat (Max 1/3)"
+                      className="w-1/2 p-4 bg-white/5 border border-white/5 rounded-2xl text-xs font-bold text-white focus:bg-white/10 outline-none"
+                      onChange={(e) => setWasiyyat(Number(e.target.value))}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-3 block">Primary Spouse</label>
+                  <select 
+                    className="w-full p-4 bg-white/5 border border-white/5 rounded-2xl text-xs font-bold text-white outline-none"
+                    onChange={(e) => setHeirs({ ...heirs, wife: e.target.value === 'wife' ? 1 : 0, husband: e.target.value === 'husband' })}
+                  >
+                    <option value="wife" className="text-black">Wife Alive</option>
+                    <option value="husband" className="text-black">Husband Alive</option>
+                    <option value="none" className="text-black">None</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-3 block">Parents</label>
+                  <select 
+                    className="w-full p-4 bg-white/5 border border-white/5 rounded-2xl text-xs font-bold text-white outline-none"
+                    onChange={(e) => setHeirs({ ...heirs, father: e.target.value !== 'mother', mother: e.target.value !== 'father' })}
+                  >
+                    <option value="both" className="text-black">Both Alive</option>
+                    <option value="father" className="text-black">Father Only</option>
+                    <option value="mother" className="text-black">Mother Only</option>
+                    <option value="none" className="text-black">None</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-3 block">No. of Sons</label>
+                  <input 
+                    type="number" 
+                    value={heirs.sons}
+                    className="w-full p-4 bg-white/5 border border-white/5 rounded-2xl text-xs font-bold text-white outline-none"
+                    onChange={(e) => setHeirs({ ...heirs, sons: Number(e.target.value) })}
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-3 block">No. of Daughters</label>
+                  <input 
+                    type="number" 
+                    value={heirs.daughters}
+                    className="w-full p-4 bg-white/5 border border-white/5 rounded-2xl text-xs font-bold text-white outline-none"
+                    onChange={(e) => setHeirs({ ...heirs, daughters: Number(e.target.value) })}
+                  />
+                </div>
+              </div>
+
+              <button 
+                onClick={() => setCalculated(true)}
+                className="w-full py-5 bg-emerald-600 text-white font-black rounded-2xl shadow-xl shadow-emerald-900/30 hover:bg-emerald-500 transition-all text-xs uppercase tracking-widest"
+              >
+                Generate Legal Shariah Will
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+              <div className="p-6 bg-white/5 rounded-[2rem] border border-white/5 text-center">
+                <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-2 italic">Net Distributable Estate</p>
+                <p className="text-3xl font-black text-white italic">PKR {(portfolioValue - debt - wasiyyat).toLocaleString()}</p>
+              </div>
+
+              <div className="space-y-3">
+                {results.map((res, i) => (
+                  <div key={i} className="flex justify-between items-center p-5 bg-white/5 rounded-2xl border border-white/5 hover:bg-white/10 transition-all">
+                    <div>
+                      <p className="font-black text-white text-xs">{res.name}</p>
+                      <p className="text-[9px] font-bold text-emerald-400 uppercase tracking-widest mt-0.5">{res.ratio} Share</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-black text-white text-sm">PKR {res.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+                      <button className="text-[7px] font-black text-emerald-400 uppercase tracking-tighter mt-1 bg-emerald-500/10 px-1.5 py-0.5 rounded-full border border-emerald-500/20">Link CNIC</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex gap-4 mt-8">
+                <button 
+                  onClick={() => setCalculated(false)}
+                  className="flex-1 py-5 bg-white/5 text-slate-400 font-black text-[10px] uppercase rounded-2xl border border-white/5"
+                >
+                  Edit Family
+                </button>
+                <button 
+                  className="flex-[2] py-5 bg-white text-slate-900 font-black text-[10px] uppercase rounded-2xl shadow-4xl"
+                >
+                  Lock Heir CNICs 🔒
+                </button>
+              </div>
+            </div>
+          )}
         </div>
-
-        {!calculated ? (
-          <div className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="col-span-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2 block">Deductions (PKR)</label>
-                <div className="flex gap-2">
-                  <input 
-                    type="number" 
-                    placeholder="Debts/Loans"
-                    className="w-1/2 p-3 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold focus:bg-white focus:border-emerald-500 transition-all outline-none"
-                    onChange={(e) => setDebt(Number(e.target.value))}
-                  />
-                  <input 
-                    type="number" 
-                    placeholder="Wasiyyat (Max 1/3)"
-                    className="w-1/2 p-3 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold focus:bg-white focus:border-emerald-500 transition-all outline-none"
-                    onChange={(e) => setWasiyyat(Number(e.target.value))}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2 block">Spouse Status</label>
-                <select 
-                  className="w-full p-3 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold outline-none"
-                  onChange={(e) => setHeirs({ ...heirs, wife: e.target.value === 'wife' ? 1 : 0, husband: e.target.value === 'husband' })}
-                >
-                  <option value="wife">Wife Alive</option>
-                  <option value="husband">Husband Alive</option>
-                  <option value="none">None</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2 block">Parents</label>
-                <select 
-                  className="w-full p-3 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold outline-none"
-                  onChange={(e) => setHeirs({ ...heirs, father: e.target.value !== 'mother', mother: e.target.value !== 'father' })}
-                >
-                  <option value="both">Both Alive</option>
-                  <option value="father">Father Only</option>
-                  <option value="mother">Mother Only</option>
-                  <option value="none">None</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2 block">Number of Sons</label>
-                <input 
-                  type="number" 
-                  value={heirs.sons}
-                  className="w-full p-3 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold outline-none"
-                  onChange={(e) => setHeirs({ ...heirs, sons: Number(e.target.value) })}
-                />
-              </div>
-
-              <div>
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2 block">Number of Daughters</label>
-                <input 
-                  type="number" 
-                  value={heirs.daughters}
-                  className="w-full p-3 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold outline-none"
-                  onChange={(e) => setHeirs({ ...heirs, daughters: Number(e.target.value) })}
-                />
-              </div>
-            </div>
-
-            <button 
-              onClick={() => setCalculated(true)}
-              className="w-full py-4 bg-emerald-600 text-white font-black rounded-[2rem] shadow-xl shadow-emerald-900/10 hover:bg-emerald-700 hover:-translate-y-1 active:scale-95 transition-all"
-            >
-              Generate Smart Will
-            </button>
-          </div>
-        ) : (
-          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
-            <div className="p-4 bg-slate-50 rounded-3xl border border-slate-100 text-center">
-              <div className="text-[10px] font-black text-slate-400 uppercase mb-1">Net Distributable Wealth</div>
-              <div className="text-2xl font-black text-slate-800 tracking-tight">PKR {(portfolioValue - debt - wasiyyat).toLocaleString()}</div>
-            </div>
-
-            <div className="space-y-3">
-              {results.map((res, i) => (
-                <div key={i} className="flex justify-between items-center p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all">
-                  <div>
-                    <div className="font-black text-slate-800 text-sm tracking-tight">{res.name}</div>
-                    <div className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">{res.ratio} Share</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-black text-slate-800">PKR {res.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex gap-3">
-              <button 
-                onClick={() => setCalculated(false)}
-                className="w-1/2 py-4 bg-slate-100 text-slate-600 font-bold rounded-2xl hover:bg-slate-200 transition-all text-sm"
-              >
-                ← Back
-              </button>
-              <button 
-                className="w-1/2 py-4 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 shadow-lg shadow-slate-900/10 transition-all text-sm"
-              >
-                Legalize Will
-              </button>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

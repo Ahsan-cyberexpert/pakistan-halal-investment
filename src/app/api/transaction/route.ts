@@ -137,6 +137,45 @@ export async function POST(request: Request) {
       break;
     }
 
+    case 'sell_stock': {
+      const holdingIndex = db.holdings.findIndex((h: any) => h.symbol === symbol);
+      if (holdingIndex === -1) {
+        return NextResponse.json({ success: false, error: 'Holding not found' }, { status: 404 });
+      }
+
+      const holding = db.holdings[holdingIndex];
+      const sellAmount = (holding.invested + holding.pnl) * (data.percentage / 100);
+      const realizedProfit = holding.pnl * (data.percentage / 100);
+      
+      let platformFee = 0;
+      if (realizedProfit > 0) {
+        platformFee = realizedProfit * 0.015; // 1.5% Success Share
+      }
+
+      const finalAmount = sellAmount - platformFee;
+      db.balance += finalAmount;
+
+      // Update holding
+      holding.units -= holding.units * (data.percentage / 100);
+      holding.invested -= holding.invested * (data.percentage / 100);
+      holding.pnl -= holding.pnl * (data.percentage / 100);
+
+      if (holding.units <= 0) {
+        db.holdings.splice(holdingIndex, 1);
+      }
+
+      db.transactions.unshift({
+        id: Date.now(),
+        type: 'sell_stock',
+        amount: finalAmount,
+        profit: realizedProfit,
+        fee: platformFee,
+        symbol,
+        status: 'success',
+        date: now,
+      });
+      break;
+    }
     default:
       return NextResponse.json({ success: false, error: 'Unknown transaction type' }, { status: 400 });
   }

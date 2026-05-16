@@ -105,7 +105,7 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
         </div>
         <h3 className="text-xl font-bold text-red-700">Payment Failed</h3>
         <p className="text-red-500 mt-2 text-sm">{error}</p>
-        <button 
+        <button
           onClick={() => { setBankStatus('idle'); setError(''); }}
           className="mt-6 px-6 py-2 bg-gray-100 rounded-xl hover:bg-gray-200 font-medium"
         >
@@ -118,7 +118,7 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
   return (
     <div className="w-full max-w-sm mx-auto p-6 bg-white rounded-2xl shadow-xl border border-gray-100">
       <h2 className="text-xl font-bold mb-5 text-gray-800">💰 ڈیپوزٹ کریں</h2>
-      
+
       {step === 1 && (
         <div className="space-y-4">
           <label className="block text-sm font-medium text-gray-700">رقم (PKR)</label>
@@ -143,9 +143,8 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
               <button
                 key={m.id}
                 onClick={() => setMethod(m.id)}
-                className={`p-3 border rounded-xl text-center transition ${
-                  method === m.id ? `${m.color} ring-2 ring-green-500` : 'hover:bg-gray-50'
-                }`}
+                className={`p-3 border rounded-xl text-center transition ${method === m.id ? `${m.color} ring-2 ring-green-500` : 'hover:bg-gray-50'
+                  }`}
               >
                 <div className="text-2xl mb-1">{m.icon}</div>
                 <div className="text-xs font-medium">{m.name}</div>

@@ -7,13 +7,16 @@ interface SettingsTabProps {
   onLangChange: (l: 'en' | 'ur') => void;
   onDarkToggle: (val: boolean) => void;
   onLock: () => void;
+  isPremium?: boolean;
+  eligibility?: any;
 }
 
-export default function SettingsTab({ lang, darkMode, onLangChange, onDarkToggle, onLock }: SettingsTabProps) {
+export default function SettingsTab({ lang, darkMode, onLangChange, onDarkToggle, onLock, isPremium, eligibility }: SettingsTabProps) {
   const isRtl = lang === 'ur';
   const t = (en: string, ur: string) => isRtl ? ur : en;
 
   const [showPinChange, setShowPinChange] = useState(false);
+  const [showWaliSubs, setShowWaliSubs] = useState(false);
   const [oldPin, setOldPin] = useState('');
   const [newPin, setNewPin] = useState('');
   const [confirmPin, setConfirmPin] = useState('');
@@ -40,6 +43,19 @@ export default function SettingsTab({ lang, darkMode, onLangChange, onDarkToggle
   };
 
   const sections = [
+    {
+      titleEn: 'Elite Services', titleUr: 'ایلیٹ سروسز',
+      items: [
+        {
+          icon: '🛡️',
+          labelEn: 'Wali AI Autopilot', labelUr: 'ولی اے آئی آٹو پائلٹ',
+          descEn: isPremium ? 'Active Guardian' : 'Elite Access Restricted',
+          descUr: isPremium ? 'فعال محافظ' : 'ایلیٹ رسائی محدود ہے',
+          action: () => setShowWaliSubs(v => !v),
+          badge: isPremium ? 'PREMIUM' : 'LOCKED',
+        },
+      ],
+    },
     {
       titleEn: 'Preferences', titleUr: 'ترجیحات',
       items: [
@@ -165,6 +181,51 @@ export default function SettingsTab({ lang, darkMode, onLangChange, onDarkToggle
                   )}
                 </button>
 
+                {/* Wali Subscription UI */}
+                {item.labelEn === 'Wali AI Autopilot' && showWaliSubs && !isPremium && (
+                  <div className="mt-2 p-8 bg-slate-900 rounded-3xl border border-emerald-500/20 space-y-6 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <div className="text-center">
+                      <p className="text-xl font-black text-white italic">UNLOCK <span className="text-emerald-500">WALI AI</span></p>
+                      <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1">{t('Elite Guardian Access', 'ایلیٹ گارڈین تک رسائی')}</p>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-slate-400">
+                          <span>{t('Total Invested', 'کل سرمایہ کاری')}</span>
+                          <span className="text-emerald-500">15 Cr / 25 Cr</span>
+                        </div>
+                        <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                          <div className="h-full bg-emerald-500" style={{ width: '60%' }}></div>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-slate-400">
+                          <span>{t('Realized Profit', 'حاصل شدہ منافع')}</span>
+                          <span className="text-emerald-500">20 Cr / 50 Cr</span>
+                        </div>
+                        <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                          <div className="h-full bg-emerald-500" style={{ width: '40%' }}></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-4 bg-emerald-500/5 rounded-2xl border border-emerald-500/10 text-center">
+                      <p className="text-[9px] text-emerald-400/80 font-bold leading-relaxed italic">
+                        {t('Reach 25 Crore Invested and 50 Crore Profit to Unlock Elite Subscription.', 'ایلیٹ سبسکرپشن کھولنے کے لیے 25 کروڑ کی سرمایہ کاری اور 50 کروڑ کا منافع حاصل کریں۔')}
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col gap-3">
+                      <button disabled className="w-full py-4 bg-white/5 text-slate-500 font-black text-[10px] uppercase rounded-2xl border border-white/5 cursor-not-allowed">
+                        {t('Elite Monthly (Locked)', 'ایلیٹ ماہانہ (مقفل)')}
+                      </button>
+                      <button disabled className="w-full py-4 bg-white/5 text-slate-500 font-black text-[10px] uppercase rounded-2xl border border-white/5 cursor-not-allowed">
+                        {t('Sovereign Yearly (Locked)', 'سالانہ (مقفل)')}
+                      </button>
+                    </div>
+                  </div>
+                )}
                 {/* PIN Change Form */}
                 {item.labelEn === 'Change PIN' && showPinChange && (
                   <div className="mt-2 p-6 bg-slate-50 rounded-3xl border border-slate-100 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">

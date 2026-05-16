@@ -5,7 +5,14 @@ const DATA_DIR = path.join(process.cwd(), 'data');
 const DB_PATH = path.join(DATA_DIR, 'db.json');
 
 const INITIAL_DATA = {
-  balance: 250000,
+  balance: 5000000,
+  waliBalance: 0,
+  isPremium: false,
+  waliSubscriptionExpiry: null,
+  totalInvestedHistory: 150000000, // 15 Crore
+  totalRealizedProfit: 200000000, // 20 Crore
+  globalZakatVault: 4580250,
+  userZakatContributions: [], // Tracks user's history in the national vault
   transactions: [
     {
       id: 1,

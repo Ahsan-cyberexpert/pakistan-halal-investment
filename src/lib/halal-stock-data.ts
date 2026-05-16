@@ -2,11 +2,13 @@ export interface Stock {
   symbol: string; name: string; price: number; change: number;
   debtToEquity: number; interestIncomeRatio: number;
   businessType: string; halalScore: number; sector: string;
+  gdpImpact: number; // Scale of 1-10 on national contribution
+  jobsCreated: number; // Estimated jobs supported per 1M PKR invested
 }
 
 export const MOCK_PSX_STOCKS: Stock[] = [
   // Technology
-  { symbol: 'SYS', name: 'Systems Ltd', price: 415.00, change: 1.8, debtToEquity: 4.5, interestIncomeRatio: 0.8, businessType: 'Software', halalScore: 9.1, sector: 'Technology' },
+  { symbol: 'SYS', name: 'Systems Ltd', price: 415.00, change: 1.8, debtToEquity: 4.5, interestIncomeRatio: 0.8, businessType: 'Software', halalScore: 9.1, sector: 'Technology', gdpImpact: 9.5, jobsCreated: 120 },
   { symbol: 'TRG', name: 'TRG Pakistan', price: 124.50, change: 5.2, debtToEquity: 8.1, interestIncomeRatio: 1.2, businessType: 'IT Services', halalScore: 9.5, sector: 'Technology' },
   { symbol: 'NETSOL', name: 'NetSol Technologies', price: 78.40, change: 2.1, debtToEquity: 6.2, interestIncomeRatio: 0.5, businessType: 'Software', halalScore: 9.3, sector: 'Technology' },
   { symbol: 'AVN', name: 'Avanceon Ltd', price: 52.30, change: -0.8, debtToEquity: 9.4, interestIncomeRatio: 1.1, businessType: 'IT Services', halalScore: 8.9, sector: 'Technology' },
@@ -31,7 +33,7 @@ export const MOCK_PSX_STOCKS: Stock[] = [
   { symbol: 'ENGRO', name: 'Engro Corp', price: 312.80, change: 3.1, debtToEquity: 22.4, interestIncomeRatio: 4.2, businessType: 'Chemicals', halalScore: 7.9, sector: 'Chemicals' },
   { symbol: 'ICI', name: 'ICI Pakistan', price: 682.30, change: 1.8, debtToEquity: 11.2, interestIncomeRatio: 2.1, businessType: 'Chemicals', halalScore: 8.7, sector: 'Chemicals' },
   // Islamic Banking
-  { symbol: 'MEBL', name: 'Meezan Bank', price: 145.00, change: 1.2, debtToEquity: 0, interestIncomeRatio: 0, businessType: 'Islamic Banking', halalScore: 9.8, sector: 'Islamic Banking' },
+  { symbol: 'MEBL', name: 'Meezan Bank', price: 145.00, change: 1.2, debtToEquity: 0, interestIncomeRatio: 0, businessType: 'Islamic Banking', halalScore: 9.8, sector: 'Islamic Banking', gdpImpact: 9.4, jobsCreated: 60 },
   { symbol: 'BIPL', name: 'BankIslami Pakistan', price: 24.80, change: 0.4, debtToEquity: 0, interestIncomeRatio: 0, businessType: 'Islamic Banking', halalScore: 9.7, sector: 'Islamic Banking' },
   { symbol: 'DIL', name: 'Dubai Islamic Bank PK', price: 19.40, change: 0.6, debtToEquity: 0, interestIncomeRatio: 0, businessType: 'Islamic Banking', halalScore: 9.6, sector: 'Islamic Banking' },
   // Consumer Goods
