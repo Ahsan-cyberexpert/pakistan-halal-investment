@@ -1,186 +1,186 @@
 'use client';
 import { useState } from 'react';
 
+const PAYMENT_METHODS = [
+  { id: 'easypaisa', name: 'EasyPaisa', icon: '💚', color: 'bg-green-50 border-green-200', activeColor: 'bg-green-600', type: 'mobile' },
+  { id: 'jazzcash', name: 'JazzCash', icon: '🔴', color: 'bg-red-50 border-red-200', activeColor: 'bg-red-600', type: 'mobile' },
+  { id: 'meezan', name: 'Meezan Bank', icon: '🏦', color: 'bg-blue-50 border-blue-200', activeColor: 'bg-blue-600', type: 'bank' },
+  { id: 'hbl', name: 'HBL', icon: '🏛️', color: 'bg-emerald-50 border-emerald-200', activeColor: 'bg-emerald-600', type: 'bank' },
+  { id: 'ubl', name: 'UBL', icon: '💳', color: 'bg-indigo-50 border-indigo-200', activeColor: 'bg-indigo-600', type: 'bank' },
+];
+
+const QUICK_AMOUNTS = [5000, 10000, 25000, 50000, 100000, 500000];
+
 export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => void }) {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<'method' | 'amount' | 'confirm' | 'processing' | 'success'>('method');
+  const [method, setMethod] = useState<any>(null);
   const [amount, setAmount] = useState('');
-  const [method, setMethod] = useState('');
-  const [pin, setPin] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [mobileNumber, setMobileNumber] = useState('');
   const [error, setError] = useState('');
-  const [bankStatus, setBankStatus] = useState<'idle' | 'connecting' | 'processing' | 'success' | 'failed'>('idle');
+  const [txRef, setTxRef] = useState('');
+  const [instructions, setInstructions] = useState('');
+  const [bankDetails, setBankDetails] = useState<any>(null);
 
-  const methods = [
-    { id: 'jazzcash', name: 'JazzCash', color: 'bg-red-50 border-red-200', icon: '📱' },
-    { id: 'easypaisa', name: 'EasyPaisa', color: 'bg-green-50 border-green-200', icon: '🟢' },
-    { id: 'bank', name: 'Bank Transfer', color: 'bg-blue-50 border-blue-200', icon: '🏦' }
-  ];
+  const selectedMethod = PAYMENT_METHODS.find(m => m.id === method);
 
-  const validate = () => {
+  const handleMethodSelect = (id: string) => {
+    setMethod(id);
     setError('');
-    if (!amount || Number(amount) < 100) { setError('کم از کم PKR 100 درج کریں'); return false; }
-    if (!method) { setError('ادائیگی کا طریقہ منتخب کریں'); return false; }
-    if (pin.length !== 4 || !/^\d{4}$/.test(pin)) { setError('4 ہندسوں کا درست PIN درج کریں'); return false; }
-    return true;
+    setStep('amount');
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validate()) return;
+  const handleAmountNext = () => {
+    const num = parseFloat(amount);
+    if (!num || num < 100) { setError('Minimum deposit is PKR 100'); return; }
+    if (num > 5000000) { setError('Maximum deposit is PKR 50 Lakh'); return; }
+    setError('');
+    setStep('confirm');
+  };
 
-    setLoading(true);
-    setBankStatus('connecting');
-
+  const handleConfirm = async () => {
+    setStep('processing');
+    setError('');
     try {
-      // Simulate Bank Connection Phase
-      setTimeout(() => setBankStatus('processing'), 1000);
-
-      // Call our API
-      const response = await fetch('/api/payment/deposit', {
+      const res = await fetch('/api/payment/deposit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: Number(amount), method, pin })
+        body: JSON.stringify({ amount: parseFloat(amount), method, mobileNumber }),
       });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        setBankStatus('success');
-        // Wait 1 second then close modal and update parent
-        setTimeout(() => {
-          onSuccess({ type: 'deposit', amount: Number(amount), method, ref: result.ref });
-        }, 1500);
+      const data = await res.json();
+      if (data.success) {
+        setTxRef(data.txRef);
+        setInstructions(data.instructions || '');
+        setBankDetails(data.bankDetails || null);
+        // Now commit to our wallet
+        await onSuccess({ type: 'deposit', amount: parseFloat(amount), method: selectedMethod?.name, txRef: data.txRef });
+        setStep('success');
       } else {
-        setBankStatus('failed');
-        setError(result.message || 'Transaction Failed');
+        setError(data.message || 'Payment failed');
+        setStep('confirm');
       }
-    } catch (err) {
-      setBankStatus('failed');
-      setError('Network Error. Please try again.');
-    } finally {
-      setLoading(false);
+    } catch {
+      setError('Network error. Please try again.');
+      setStep('confirm');
     }
   };
 
-  if (bankStatus !== 'idle' && !loading && bankStatus !== 'success' && bankStatus !== 'failed') {
-    return (
-      <div className="w-full max-w-sm mx-auto p-8 bg-white rounded-2xl shadow-xl border border-gray-100 text-center">
-        {bankStatus === 'connecting' && (
-          <div className="flex flex-col items-center animate-pulse">
-            <div className="text-4xl mb-4">🏦</div>
-            <h3 className="text-lg font-bold text-gray-800">Connecting to Bank...</h3>
-            <p className="text-sm text-gray-500 mt-2">Please wait while we secure your connection.</p>
-          </div>
-        )}
-        {bankStatus === 'processing' && (
-          <div className="flex flex-col items-center">
-            <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <h3 className="text-lg font-bold text-gray-800">Processing Payment...</h3>
-            <p className="text-sm text-gray-500 mt-2">Confirming PKR {amount} via {method}</p>
-            <p className="text-xs text-gray-400 mt-1">Do not close this window</p>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  if (bankStatus === 'success') {
-    return (
-      <div className="w-full max-w-sm mx-auto p-8 bg-white rounded-2xl shadow-xl border border-gray-100 text-center">
-        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <span className="text-3xl">✅</span>
-        </div>
-        <h3 className="text-xl font-bold text-green-700">Payment Successful!</h3>
-        <p className="text-gray-600 mt-2">PKR {amount} has been added to your Roziq Wallet.</p>
-        <p className="text-xs text-gray-400 mt-4">Redirecting...</p>
-      </div>
-    );
-  }
-
-  if (bankStatus === 'failed') {
-    return (
-      <div className="w-full max-w-sm mx-auto p-8 bg-white rounded-2xl shadow-xl border border-gray-100 text-center">
-        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <span className="text-3xl">❌</span>
-        </div>
-        <h3 className="text-xl font-bold text-red-700">Payment Failed</h3>
-        <p className="text-red-500 mt-2 text-sm">{error}</p>
-        <button
-          onClick={() => { setBankStatus('idle'); setError(''); }}
-          className="mt-6 px-6 py-2 bg-gray-100 rounded-xl hover:bg-gray-200 font-medium"
-        >
-          Try Again
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <div className="w-full max-w-sm mx-auto p-6 bg-white rounded-2xl shadow-xl border border-gray-100">
-      <h2 className="text-xl font-bold mb-5 text-gray-800">💰 ڈیپوزٹ کریں</h2>
+    <div className="space-y-6">
+      {/* STEP: Method Selection */}
+      {step === 'method' && (
+        <div>
+          <h2 className="text-2xl font-black text-slate-900 mb-2">Add Funds</h2>
+          <p className="text-slate-500 text-sm mb-6">Choose your payment method</p>
+          <div className="grid grid-cols-1 gap-3">
+            {PAYMENT_METHODS.map(m => (
+              <button
+                key={m.id}
+                onClick={() => handleMethodSelect(m.id)}
+                className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all active:scale-95 hover:shadow-md ${m.color}`}
+              >
+                <span className="text-3xl">{m.icon}</span>
+                <div className="text-left">
+                  <div className="font-black text-slate-800">{m.name}</div>
+                  <div className="text-xs text-slate-500">{m.type === 'mobile' ? 'Mobile Wallet · Instant' : 'Bank Transfer · 1-2 hrs'}</div>
+                </div>
+                <span className="ml-auto text-slate-400">›</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
-      {step === 1 && (
-        <div className="space-y-4">
-          <label className="block text-sm font-medium text-gray-700">رقم (PKR)</label>
-          <input
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            placeholder="e.g. 5000"
-            className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-green-500 outline-none"
-          />
-          <button onClick={() => setStep(2)} className="w-full py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 font-medium">
-            آگے بڑھیں
+      {/* STEP: Amount */}
+      {step === 'amount' && (
+        <div>
+          <button onClick={() => setStep('method')} className="text-slate-400 text-sm mb-4 flex items-center gap-1">‹ Back</button>
+          <h2 className="text-2xl font-black text-slate-900 mb-1">Enter Amount</h2>
+          <p className="text-slate-500 text-sm mb-6">via <span className="font-bold text-slate-700">{selectedMethod?.name}</span></p>
+
+          {selectedMethod?.type === 'mobile' && (
+            <div className="mb-4">
+              <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Mobile Number</label>
+              <input
+                type="tel"
+                placeholder="03XX-XXXXXXX"
+                value={mobileNumber}
+                onChange={e => setMobileNumber(e.target.value)}
+                className="w-full mt-2 p-4 rounded-2xl border-2 border-slate-200 focus:border-emerald-400 outline-none font-bold text-slate-800 text-lg"
+              />
+            </div>
+          )}
+
+          <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Amount (PKR)</label>
+          <div className="relative mt-2 mb-4">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-black text-xl">₨</span>
+            <input
+              type="number"
+              placeholder="0"
+              value={amount}
+              onChange={e => setAmount(e.target.value)}
+              className="w-full pl-10 pr-4 py-4 rounded-2xl border-2 border-slate-200 focus:border-emerald-400 outline-none font-black text-slate-800 text-2xl"
+            />
+          </div>
+
+          <div className="grid grid-cols-3 gap-2 mb-6">
+            {QUICK_AMOUNTS.map(a => (
+              <button key={a} onClick={() => setAmount(String(a))} className="py-2 px-3 rounded-xl bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 text-slate-600 font-bold text-xs transition-all">
+                {a >= 100000 ? `${a/100000}L` : `${a/1000}K`}
+              </button>
+            ))}
+          </div>
+
+          {error && <p className="text-red-500 text-sm mb-3 font-medium">{error}</p>}
+          <button onClick={handleAmountNext} className="w-full py-4 bg-emerald-600 text-white rounded-2xl font-black text-lg hover:bg-emerald-700 active:scale-95 transition-all shadow-lg shadow-emerald-900/20">
+            Continue →
           </button>
         </div>
       )}
 
-      {step === 2 && (
-        <div className="space-y-4">
-          <label className="block text-sm font-medium text-gray-700">ادائیگی کا طریقہ</label>
-          <div className="grid grid-cols-3 gap-3">
-            {methods.map((m) => (
-              <button
-                key={m.id}
-                onClick={() => setMethod(m.id)}
-                className={`p-3 border rounded-xl text-center transition ${method === m.id ? `${m.color} ring-2 ring-green-500` : 'hover:bg-gray-50'
-                  }`}
-              >
-                <div className="text-2xl mb-1">{m.icon}</div>
-                <div className="text-xs font-medium">{m.name}</div>
-              </button>
-            ))}
+      {/* STEP: Confirm */}
+      {step === 'confirm' && (
+        <div>
+          <button onClick={() => setStep('amount')} className="text-slate-400 text-sm mb-4 flex items-center gap-1">‹ Back</button>
+          <h2 className="text-2xl font-black text-slate-900 mb-6">Confirm Deposit</h2>
+          <div className="bg-slate-50 rounded-3xl p-6 space-y-3 mb-6">
+            <div className="flex justify-between"><span className="text-slate-500">Method</span><span className="font-black">{selectedMethod?.icon} {selectedMethod?.name}</span></div>
+            {mobileNumber && <div className="flex justify-between"><span className="text-slate-500">Mobile</span><span className="font-bold">{mobileNumber}</span></div>}
+            <div className="flex justify-between text-lg"><span className="text-slate-500">Amount</span><span className="font-black text-emerald-600">₨ {parseFloat(amount).toLocaleString()}</span></div>
           </div>
-          <div className="flex gap-2">
-            <button onClick={() => setStep(1)} className="flex-1 py-3 border rounded-xl hover:bg-gray-50">واپس</button>
-            <button onClick={() => setStep(3)} className="flex-1 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700">آگے بڑھیں</button>
-          </div>
+          {error && <p className="text-red-500 text-sm mb-3 font-medium">{error}</p>}
+          <button onClick={handleConfirm} className="w-full py-4 bg-emerald-600 text-white rounded-2xl font-black text-lg hover:bg-emerald-700 active:scale-95 transition-all shadow-lg shadow-emerald-900/20">
+            Confirm & Pay
+          </button>
         </div>
       )}
 
-      {step === 3 && (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="p-3 bg-yellow-50 rounded-lg text-yellow-800 text-xs text-center mb-2">
-            🔒 Secure connection to {method.toUpperCase()}
-          </div>
-          <label className="block text-sm font-medium text-gray-700">4 ہندسوں کا PIN</label>
-          <input
-            type="password"
-            inputMode="numeric"
-            maxLength={4}
-            value={pin}
-            onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))}
-            placeholder="****"
-            className="w-full p-3 border rounded-xl text-center text-xl tracking-widest focus:ring-2 focus:ring-green-500 outline-none"
-          />
-          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
-          <div className="flex gap-2">
-            <button type="button" onClick={() => setStep(2)} className="flex-1 py-3 border rounded-xl hover:bg-gray-50">واپس</button>
-            <button type="submit" disabled={loading} className="flex-1 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 disabled:opacity-50 font-medium">
-              {loading ? 'پروسیس...' : 'تصدیق کریں'}
-            </button>
-          </div>
-        </form>
+      {/* STEP: Processing */}
+      {step === 'processing' && (
+        <div className="flex flex-col items-center justify-center py-16 space-y-4">
+          <div className="w-16 h-16 rounded-full border-4 border-emerald-200 border-t-emerald-600 animate-spin" />
+          <p className="font-black text-slate-800 text-xl">Processing Payment...</p>
+          <p className="text-slate-400 text-sm">Connecting to {selectedMethod?.name}</p>
+        </div>
+      )}
+
+      {/* STEP: Success */}
+      {step === 'success' && (
+        <div className="flex flex-col items-center text-center py-8 space-y-4">
+          <div className="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center text-4xl">✅</div>
+          <h2 className="text-2xl font-black text-slate-900">Deposit Successful!</h2>
+          <p className="text-slate-500">₨ {parseFloat(amount).toLocaleString()} added to your Halal Wallet</p>
+          {txRef && <p className="text-xs text-slate-400 font-mono bg-slate-100 px-4 py-2 rounded-xl">Ref: {txRef}</p>}
+          {instructions && <p className="text-sm text-slate-600 bg-emerald-50 border border-emerald-100 rounded-2xl p-4">{instructions}</p>}
+          {bankDetails && (
+            <div className="w-full text-left bg-slate-50 rounded-2xl p-4 space-y-2 text-sm">
+              <p className="font-black text-slate-700 mb-2">Bank Transfer Details:</p>
+              <p><span className="text-slate-400">Account:</span> <span className="font-bold">{bankDetails.accountTitle}</span></p>
+              <p><span className="text-slate-400">Number:</span> <span className="font-mono font-bold">{bankDetails.accountNumber}</span></p>
+              <p><span className="text-slate-400">IBAN:</span> <span className="font-mono text-xs">{bankDetails.iban}</span></p>
+              <p><span className="text-slate-400">Bank:</span> <span className="font-bold">{bankDetails.bank}</span></p>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

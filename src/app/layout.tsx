@@ -30,25 +30,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ur" dir="rtl">
+    <html lang="en">
       <body className="font-sans antialiased">
         {children}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                  for(let registration of registrations) {
-                    registration.unregister();
-                  }
-                });
-                caches.keys().then((keyList) => {
-                  return Promise.all(keyList.map((key) => caches.delete(key)));
-                });
-              }
-            `,
-          }}
-        />
       </body>
     </html>
   );
