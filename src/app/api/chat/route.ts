@@ -14,11 +14,21 @@ export async function POST(request: Request) {
     const query = (prompt || '').toLowerCase();
     const { balance, holdings } = context;
 
-    // Detect if the user's prompt is in Urdu/Arabic script OR contains Roman Urdu words
+    // Detect Urdu script OR distinct Roman Urdu grammar words (excluding shared English terms like zakat, halal, sukuk, bank)
     const isUrduScript = /[\u0600-\u06FF]/.test(prompt || '');
-    const isRomanUrdu = /mera|balance|kitna|hai|kya|batao|zakat|assalam|salam|halal|sukuk|kameti|ammi|abbu|bhai|kitne|kaise|paise|rupay|hisaab|karo|mujhe|bataen|shukriya|meezan|bank/.test(query);
+    const isRomanUrdu = /\b(mera|kitna|batao|kaise|kitne|paise|rupay|hisaab|mujhe|bataen|shukriya|karo|hai|kya|ammi|abbu|bhai|kameti)\b/.test(query);
     
-    const detectedLang = (explicitLang === 'ur' || isUrduScript || isRomanUrdu) ? 'ur' : (explicitLang === 'en' ? 'en' : (prompt ? 'en' : lang));
+    // Explicit lang override takes highest priority!
+    let detectedLang = lang;
+    if (explicitLang === 'en') {
+      detectedLang = 'en';
+    } else if (explicitLang === 'ur') {
+      detectedLang = 'ur';
+    } else if (isUrduScript || isRomanUrdu) {
+      detectedLang = 'ur';
+    } else if (prompt) {
+      detectedLang = 'en'; // Default typed text without Urdu grammar to English
+    }
 
     // Calculate dynamic user values
     const totalInvested = holdings.reduce((sum: number, h: any) => sum + (h.invested || 0), 0);
@@ -33,7 +43,7 @@ export async function POST(request: Request) {
     - Total Net Worth: PKR ${totalWealth.toLocaleString()}
     - Mandatory Zakat Owed (2.5%): PKR ${zakatOwed.toLocaleString()}
 
-    CRITICAL MANDATORY RULE: You MUST respond entirely in ${detectedLang === 'ur' ? 'URDU language (using clean Nastaliq Urdu script)' : 'ENGLISH language'}. Do NOT respond in English if Urdu is requested!
+    CRITICAL MANDATORY RULE: You MUST respond entirely in ${detectedLang === 'ur' ? 'URDU language (using clean Nastaliq Urdu script)' : 'ENGLISH language'}. Do NOT respond in English if Urdu is requested, and do NOT respond in Urdu if English is requested!
     Follow AAOIFI Shariah standards. Keep answers concise, clear, and perfectly formatted for voice synthesis.`;
 
     if (ai) {
