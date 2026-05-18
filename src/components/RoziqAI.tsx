@@ -14,6 +14,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
   const [prompt, setPrompt] = useState('');
   const [transcript, setTranscript] = useState('');
   const [response, setResponse] = useState(lang === 'ur' ? 'السلام علیکم! میں روزق اے آئی ہوں، آپ کا اسلامی مالیاتی مشیر۔ میں آپ کے اکاؤنٹس اور پورٹ فولیو دیکھ سکتا ہوں۔ بتائیں کیا رہنمائی چاہیے؟' : 'Assalam-o-Alaikum! I am Roziq AI, your Islamic Wealth Guardian. I have real-time access to your accounts and portfolio. How can I assist you today?');
+  const [audioTextToPlay, setAudioTextToPlay] = useState('');
   
   const [isListening, setIsListening] = useState<'ur' | 'en' | false>(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -45,6 +46,9 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
   }, [lang, balance, holdings]);
 
   const toggleListening = (speechLang: 'ur' | 'en') => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.resume(); // Resume audio context on direct user click
+    }
     if (isListening === speechLang) {
       recognitionRef.current?.stop();
       setIsListening(false);
@@ -66,13 +70,22 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
 
   const speak = (text: string, speechLang?: 'ur' | 'en') => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.resume();
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = speechLang === 'ur' ? 'ur-PK' : 'en-US';
       utterance.rate = 0.9;
       utterance.onstart = () => setIsSpeaking(true);
       utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = () => setIsSpeaking(false);
       window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  const handleManualPlayVoice = () => {
+    const textToSpeak = audioTextToPlay || response;
+    if (textToSpeak) {
+      speak(textToSpeak, lang === 'ur' ? 'ur' : 'en');
     }
   };
 
@@ -81,6 +94,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
     setIsProcessing(true);
     setTranscript(text);
     setPrompt('');
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) { window.speechSynthesis.resume(); }
     
     try {
       const res = await fetch('/api/chat', {
@@ -96,6 +110,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
       const data = await res.json();
       if (data.reply) {
         setResponse(data.reply);
+        setAudioTextToPlay(data.audioText || data.reply);
         speak(data.audioText || data.reply, explicitLang || lang);
       } else {
         setResponse(lang === 'ur' ? 'معذرت، ایک خرابی پیش آ گئی۔' : 'Sorry, an error occurred.');
@@ -133,7 +148,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
             <div className="bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 p-5 sm:p-6 text-white flex-shrink-0 relative overflow-hidden">
               <div className="absolute -right-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
               
-              <div className="flex justify-between items-center mb-4 relative z-10">
+              <div className="flex justify-between items-center mb-3 relative z-10">
                 <div className="flex items-center gap-3">
                   <div className={`w-11 h-11 bg-white/15 backdrop-blur-md rounded-2xl flex items-center justify-center text-2xl shadow-inner border border-white/20 transition-transform duration-500 ${isListening ? 'rotate-12 scale-110 bg-amber-500' : isSpeaking ? 'animate-bounce bg-emerald-50' : ''}`}>
                     🤖
@@ -150,13 +165,24 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
               </div>
               
               {/* AI Response Display Area */}
-              <div className="min-h-[90px] max-h-[160px] overflow-y-auto flex flex-col justify-center pr-1 relative z-10">
+              <div className="min-h-[80px] max-h-[150px] overflow-y-auto flex flex-col justify-center pr-1 relative z-10 mb-2">
                 <p className="text-xs sm:text-sm font-black leading-relaxed mb-1 text-white shadow-sm">"{response}"</p>
                 {transcript && <p className="text-emerald-200 text-[11px] font-bold opacity-80 italic">"{transcript}"</p>}
               </div>
 
+              {/* Prominent Manual Play Voice Button */}
+              <div className="relative z-10 flex justify-end mb-1">
+                <button 
+                  onClick={handleManualPlayVoice}
+                  className="px-3 py-1.5 bg-white text-emerald-700 hover:bg-emerald-50 rounded-xl text-[10px] sm:text-xs font-black flex items-center gap-1.5 shadow-md transition-all active:scale-95 border border-emerald-100 flex-shrink-0"
+                >
+                  <span className={`${isSpeaking ? 'animate-spin' : ''}`}>🔊</span> 
+                  <span>{lang === 'ur' ? 'آواز سنیں (Play Voice)' : 'Play Voice'}</span>
+                </button>
+              </div>
+
               {/* Live Context Badge */}
-              <div className="mt-3 pt-2 border-t border-white/10 flex justify-between items-center text-[10px] font-bold text-emerald-100/90 relative z-10">
+              <div className="mt-2 pt-2 border-t border-white/10 flex justify-between items-center text-[10px] font-bold text-emerald-100/90 relative z-10">
                 <span>🏦 {lang === 'ur' ? 'موجودہ کیش بیلنس:' : 'Live Cash Balance:'} PKR {balance.toLocaleString()}</span>
                 <span>💼 {holdings.length} {lang === 'ur' ? 'اسٹاکس' : 'Stocks'}</span>
               </div>

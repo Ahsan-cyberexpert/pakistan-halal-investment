@@ -105,8 +105,8 @@ export default function HalalStockScanner({ balance, onBuy }: { balance: number;
 
       {error && <p className="text-amber-600 text-[11px] sm:text-xs font-medium bg-amber-50 px-3 py-2 rounded-xl">{error}</p>}
 
-      {/* Stock List */}
-      <div className="space-y-2">
+      {/* Stock List — Contained in a beautiful 340px scrollable box */}
+      <div className="space-y-2 max-h-[340px] overflow-y-auto pr-1.5 scrollbar-thin scrollbar-thumb-slate-200">
         {filtered.map(stock => (
           <div key={stock.symbol}>
             <button
