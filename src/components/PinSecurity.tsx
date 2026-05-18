@@ -23,7 +23,7 @@ export default function PinSecurity({ onSuccess, mode = 'app', onCancel }: PinSe
   const pinKey = mode === 'trading' ? 'roziq_trading_pin' : 'roziq_pin';
 
   useEffect(() => {
-    const saved = localStorage.getItem(pinKey);
+    const saved = localStorage.getItem(pinKey) || localStorage.getItem('roziq_pin');
     if (saved) setStoredPin(saved);
     else localStorage.setItem(pinKey, DEFAULT_PIN);
 
@@ -87,6 +87,7 @@ export default function PinSecurity({ onSuccess, mode = 'app', onCancel }: PinSe
     if (step === 'confirm-new' && confirmPin.length === 4) {
       if (confirmPin === newPin) {
         localStorage.setItem(pinKey, newPin);
+        localStorage.setItem('roziq_pin', newPin);
         setStoredPin(newPin);
         setStep('enter'); setNewPin(''); setConfirmPin('');
       } else {
@@ -100,7 +101,7 @@ export default function PinSecurity({ onSuccess, mode = 'app', onCancel }: PinSe
   const currentPin = step === 'enter' ? pin : step === 'set-new' ? newPin : confirmPin;
 
   const titles: Record<typeof step, { ar: string; en: string }> = {
-    'enter': { ar: 'اپنا پن درج کریں', en: mode === 'trading' ? 'Enter Trading PIN' : 'Enter your PIN' },
+    'enter': { ar: 'اپنا 4 ہندسوں کا پن درج کریں', en: mode === 'trading' ? 'Enter 4-Digit Trading PIN' : 'Enter 4-Digit PIN' },
     'set-new': { ar: 'نیا پن درج کریں', en: 'Enter new PIN' },
     'confirm-new': { ar: 'پن کی تصدیق کریں', en: 'Confirm new PIN' },
   };
@@ -108,91 +109,97 @@ export default function PinSecurity({ onSuccess, mode = 'app', onCancel }: PinSe
   const keys = [1,2,3,4,5,6,7,8,9];
 
   return (
-    <div className="fixed inset-0 z-[1000] bg-slate-950 flex flex-col items-center justify-center px-4 py-6 overflow-y-auto">
-      <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-600/15 rounded-full blur-[80px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-48 h-48 bg-teal-600/10 rounded-full blur-[60px] pointer-events-none" />
+    <div className="fixed inset-0 z-[3000] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
+      <div className="relative w-full max-w-xs sm:max-w-sm bg-slate-900 border border-slate-700/80 rounded-[2.5rem] p-5 sm:p-6 shadow-2xl flex flex-col items-center animate-in zoom-in-95 duration-200 overflow-hidden">
+        {/* Background glow inside modal */}
+        <div className="absolute -top-10 -right-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
+        
+        {/* Close / Cancel Button */}
+        {onCancel && (
+          <button onClick={onCancel} className="absolute top-4 right-4 text-slate-400 hover:text-white text-xs p-1.5 bg-slate-800 rounded-full w-7 h-7 flex items-center justify-center border border-slate-700 transition-colors">✕</button>
+        )}
 
-      <div className="relative z-10 w-full flex flex-col items-center" style={{ maxWidth: 'min(360px, 90vw)' }}>
-        {/* Logo */}
-        <div className="w-14 h-14 sm:w-16 sm:h-16 bg-emerald-600 rounded-[1.5rem] sm:rounded-[2rem] flex items-center justify-center text-2xl sm:text-3xl mb-4 sm:mb-6 shadow-2xl shadow-emerald-900/40">
+        {/* Header Icon */}
+        <div className="w-12 h-12 sm:w-14 sm:h-14 bg-emerald-600 rounded-2xl flex items-center justify-center text-xl sm:text-2xl mb-3 shadow-lg shadow-emerald-900/40 border border-emerald-400/20">
           {mode === 'trading' ? '📈' : '🇵🇰'}
         </div>
-        <h1 className="text-xl sm:text-2xl font-black text-white tracking-tighter mb-1">
-          {mode === 'trading' ? 'Trading Security' : 'Roziq'}
+
+        <h1 className="text-base sm:text-lg font-black text-white tracking-tight mb-0.5">
+          {mode === 'trading' ? 'Trading Security Gate' : 'Roziq Security'}
         </h1>
-        <p className="text-emerald-400 font-bold uppercase tracking-[0.15em] text-[9px] sm:text-[10px] mb-6 sm:mb-8">
-          {mode === 'trading' ? 'Confirm Trade · تجارت کی تصدیق' : 'Security Gate · سیکیورٹی گیٹ'}
+        <p className="text-emerald-400 font-bold uppercase tracking-widest text-[8px] sm:text-[9px] mb-4">
+          {mode === 'trading' ? 'Confirm Transaction · تصدیق کریں' : 'Security Gate · سیکیورٹی گیٹ'}
         </p>
 
         {/* Biometric (app mode only) */}
         {biometricAvailable && step === 'enter' && mode === 'app' && (
           <button onClick={handleBiometric}
-            className={`mb-6 flex flex-col items-center gap-2 group transition-all duration-300 ${biometricStatus === 'scanning' ? 'opacity-70' : 'hover:scale-105'}`}>
-            <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-[1.2rem] flex items-center justify-center text-2xl border-2 transition-all duration-300 ${
+            className={`mb-4 flex flex-col items-center gap-1.5 group transition-all duration-300 ${biometricStatus === 'scanning' ? 'opacity-70' : 'hover:scale-105'}`}>
+            <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center text-xl border transition-all duration-300 ${
               biometricStatus === 'scanning' ? 'border-emerald-400 bg-emerald-900/40 animate-pulse' :
               biometricStatus === 'success' ? 'border-emerald-400 bg-emerald-600/30' :
               biometricStatus === 'error' ? 'border-red-400 bg-red-900/30' :
-              'border-white/20 bg-white/5 group-hover:border-emerald-500/50'}`}>
+              'border-white/10 bg-white/5 group-hover:border-emerald-500/50'}`}>
               {biometricStatus === 'success' ? '✅' : biometricStatus === 'error' ? '❌' : '🫱'}
             </div>
-            <span className="text-[9px] font-black text-white/40 uppercase tracking-widest group-hover:text-emerald-400 transition-colors">
+            <span className="text-[8px] font-black text-white/40 uppercase tracking-widest group-hover:text-emerald-400 transition-colors">
               {biometricStatus === 'scanning' ? 'Scanning...' : biometricStatus === 'success' ? 'Verified!' : biometricStatus === 'error' ? 'Try Again' : 'Fingerprint / Face ID'}
             </span>
           </button>
         )}
 
         {/* Title */}
-        <h2 className="text-base sm:text-lg font-bold text-slate-300 mb-1 text-center">{titles[step].en}</h2>
-        <p className="text-sm text-slate-500 mb-5 sm:mb-6 text-center">{titles[step].ar}</p>
+        <h2 className="text-xs sm:text-sm font-bold text-slate-200 mb-0.5 text-center">{titles[step].en}</h2>
+        <p className="text-[11px] text-slate-400 mb-4 text-center font-medium">{titles[step].ar}</p>
 
         {/* PIN Dots */}
-        <div className={`flex gap-4 sm:gap-5 mb-6 sm:mb-8 transition-all ${shake ? 'animate-bounce' : ''}`}>
+        <div className={`flex gap-3 sm:gap-4 mb-5 sm:mb-6 transition-all ${shake ? 'animate-bounce' : ''}`}>
           {[0,1,2,3].map(i => (
-            <div key={i} className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full border-2 transition-all duration-200 ${
+            <div key={i} className={`w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full border transition-all duration-200 ${
               currentPin.length > i
-                ? 'bg-emerald-500 border-emerald-500 scale-125 shadow-[0_0_12px_rgba(16,185,129,0.6)]'
-                : error ? 'border-red-500' : 'border-slate-700'
+                ? 'bg-emerald-500 border-emerald-400 scale-125 shadow-[0_0_10px_rgba(16,185,129,0.5)]'
+                : error ? 'border-red-500 bg-red-500/20' : 'border-slate-700 bg-slate-800/50'
             }`} />
           ))}
         </div>
 
-        {/* Keypad — responsive sizing */}
-        <div className="grid grid-cols-3 gap-2.5 sm:gap-3 w-full">
+        {/* Compact Keypad */}
+        <div className="grid grid-cols-3 gap-2 w-full max-w-[260px]">
           {keys.map(num => (
             <button key={num} onClick={() => handlePress(num.toString())}
-              className="aspect-square rounded-2xl sm:rounded-[1.5rem] bg-white/5 border border-white/10 flex items-center justify-center text-lg sm:text-xl font-bold text-white hover:bg-white/10 active:scale-90 active:bg-emerald-900/30 transition-all duration-150 min-h-[52px] max-h-[72px]">
+              className="aspect-square rounded-xl sm:rounded-2xl bg-slate-800/60 border border-slate-700/50 flex items-center justify-center text-base sm:text-lg font-bold text-white hover:bg-slate-750 active:scale-95 active:bg-emerald-900/40 transition-all duration-150 min-h-[44px] max-h-[54px] shadow-sm">
               {num}
             </button>
           ))}
           {/* Bottom row */}
           <div />
           <button onClick={() => handlePress('0')}
-            className="aspect-square rounded-2xl sm:rounded-[1.5rem] bg-white/5 border border-white/10 flex items-center justify-center text-lg sm:text-xl font-bold text-white hover:bg-white/10 active:scale-90 active:bg-emerald-900/30 transition-all duration-150 min-h-[52px] max-h-[72px]">
+            className="aspect-square rounded-xl sm:rounded-2xl bg-slate-800/60 border border-slate-700/50 flex items-center justify-center text-base sm:text-lg font-bold text-white hover:bg-slate-750 active:scale-95 active:bg-emerald-900/40 transition-all duration-150 min-h-[44px] max-h-[54px] shadow-sm">
             0
           </button>
           <button onClick={handleBackspace}
-            className="aspect-square rounded-2xl sm:rounded-[1.5rem] flex items-center justify-center text-xl text-slate-500 hover:text-white transition-colors min-h-[52px] max-h-[72px]">
+            className="aspect-square rounded-xl sm:rounded-2xl flex items-center justify-center text-lg sm:text-xl text-slate-400 hover:text-white transition-colors min-h-[44px] max-h-[54px] bg-slate-800/30 border border-slate-700/30">
             ⌫
           </button>
         </div>
 
         {/* Actions */}
-        <div className="mt-6 sm:mt-8 flex flex-col items-center gap-3 w-full">
+        <div className="mt-5 flex flex-col items-center gap-2 w-full pt-3 border-t border-slate-800">
           {step === 'enter' && (
             <button onClick={() => { setStep('set-new'); setPin(''); setError(false); }}
-              className="text-slate-500 text-xs font-bold hover:text-emerald-400 transition-colors uppercase tracking-widest">
+              className="text-slate-400 hover:text-emerald-400 text-[10px] sm:text-xs font-bold transition-colors uppercase tracking-widest">
               {mode === 'trading' ? 'Change Trading PIN' : 'Change PIN / پن تبدیل کریں'}
             </button>
           )}
           {step !== 'enter' && (
             <button onClick={() => { setStep('enter'); setNewPin(''); setConfirmPin(''); setError(false); }}
-              className="text-slate-500 text-xs font-bold hover:text-red-400 transition-colors uppercase tracking-widest">
+              className="text-slate-400 hover:text-red-400 text-[10px] sm:text-xs font-bold transition-colors uppercase tracking-widest">
               Cancel / واپس جائیں
             </button>
           )}
           {mode === 'trading' && onCancel && (
-            <button onClick={onCancel} className="text-slate-600 text-xs font-medium hover:text-slate-400 transition-colors">
-              Cancel Trade
+            <button onClick={onCancel} className="text-slate-500 hover:text-slate-300 text-[10px] sm:text-xs font-medium transition-colors mt-0.5">
+              Cancel Transaction
             </button>
           )}
         </div>
