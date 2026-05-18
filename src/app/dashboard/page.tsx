@@ -52,6 +52,7 @@ export default function Dashboard() {
   const [pendingTrade, setPendingTrade] = useState<any>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [pendingTx, setPendingTx] = useState<any>(null);
+  const [showResetModal, setShowResetModal] = useState(false);
 
   const t = (en: string, ur: string) => lang === 'ur' ? ur : en;
 
@@ -162,11 +163,17 @@ export default function Dashboard() {
   const handleETFInvest = (amount: number, etf: string) => initiateSecureTransaction({ type: 'buy_sukuk', amount, symbol: etf });
   const handleKametiContribute = (amount: number) => initiateSecureTransaction({ type: 'buy_sukuk', amount, symbol: 'KAMETI' });
 
-  const handleResetAccount = () => {
-    if (confirm(lang === 'ur' ? 'کیا آپ واقعی تمام فرضی ڈیٹا اور اکاؤنٹ ڈیلیٹ کرنا چاہتے ہیں؟' : 'Are you sure you want to delete all demo data and reset your account?')) {
-      localStorage.clear();
-      window.location.reload();
-    }
+  const executeReset = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    setCurrentUser(null);
+    setIsAuthorized(false);
+    setBalance(5000000);
+    setHoldings([]);
+    setTransactions([]);
+    setZakatHistory([]);
+    setShowResetModal(false);
+    window.location.href = '/dashboard';
   };
 
   return (
@@ -176,6 +183,33 @@ export default function Dashboard() {
       {!isAuthorized && !showLangSelect && !showOnboarding && <AuthGate onSuccess={handleAuthSuccess} />}
       {showTradingPin && <PinSecurity mode="trading" onSuccess={handleTradingPinSuccess} onCancel={() => { setShowTradingPin(false); setPendingTrade(null); }} />}
       
+      {/* Custom Reset Confirmation Modal */}
+      {showResetModal && (
+        <div className="fixed inset-0 z-[5000] bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200" dir={lang === 'ur' ? 'rtl' : 'ltr'}>
+          <div className="bg-white rounded-3xl p-6 max-w-sm w-full text-center shadow-2xl border border-slate-100 space-y-4 animate-in zoom-in-95 duration-200">
+            <div className="w-16 h-16 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center text-3xl mx-auto shadow-inner border border-red-200">🗑️</div>
+            <h3 className="text-lg font-black text-slate-800 tracking-tight">{t('Reset All Demo Data?', 'کیا آپ واقعی تمام فرضی ڈیٹا ری سیٹ کرنا چاہتے ہیں؟')}</h3>
+            <p className="text-xs text-slate-500 leading-relaxed font-medium">
+              {t('This will permanently delete your CNIC account, virtual cash balance, and mock transaction history. You will be redirected to the onboarding screen.', 'اس سے آپ کا CNIC اکاؤنٹ، ورچوئل کیش بیلنس اور فرضی ٹرانزیکشن ہسٹری مکمل طور پر ڈیلیٹ ہو جائے گی۔ آپ کو دوبارہ لاگ ان کرنا ہوگا۔')}
+            </p>
+            <div className="flex gap-3 pt-2">
+              <button 
+                onClick={() => setShowResetModal(false)} 
+                className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition-all active:scale-95 shadow-sm"
+              >
+                {t('Cancel', 'کینسل')}
+              </button>
+              <button 
+                onClick={executeReset} 
+                className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white font-black rounded-xl text-xs shadow-md transition-all active:scale-95"
+              >
+                {t('Yes, Delete All', 'ہاں، ڈیلیٹ کریں')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Master AI Agent (Voice + Write + Linked Accounts) */}
       <RoziqAI balance={balance} holdings={holdings} transactions={transactions} lang={lang} />
 
@@ -198,7 +232,7 @@ export default function Dashboard() {
             
             {/* Prominent Reset Demo Data / Delete Account Button */}
             <button 
-              onClick={handleResetAccount}
+              onClick={() => setShowResetModal(true)}
               title={t('Delete Account & Reset Demo Data', 'اکاؤنٹ ڈیلیٹ کریں اور ڈیٹا ری سیٹ کریں')}
               className="px-2.5 py-1.5 sm:px-3 sm:py-2 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white border border-red-200 hover:border-red-500 rounded-xl text-[10px] sm:text-xs font-black transition-all active:scale-95 flex items-center gap-1 shadow-sm"
             >
@@ -249,7 +283,7 @@ export default function Dashboard() {
 
                 <div className="pt-3 mt-3 border-t border-slate-100 px-2">
                   <button 
-                    onClick={handleResetAccount}
+                    onClick={() => setShowResetModal(true)}
                     className="w-full py-2.5 px-3 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white border border-red-200 hover:border-red-500 rounded-xl text-xs font-black transition-all active:scale-95 flex items-center justify-center gap-1.5 shadow-sm"
                   >
                     <span>🗑️</span> {t('Delete Account & Demo Data', 'اکاؤنٹ اور فرضی ڈیٹا ڈیلیٹ کریں')}
