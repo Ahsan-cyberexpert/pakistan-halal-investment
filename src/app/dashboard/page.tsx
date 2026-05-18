@@ -280,10 +280,14 @@ export default function Dashboard() {
                   {currentUser?.isOverseas && (
                     <OverseasInvest balance={balance} onInvest={(amt, asset) => handleTransactionSuccess({ type: 'overseas_invest', amount: amt, name: asset })} lang={lang} cnic={currentUser.cnic} country={currentUser.country} />
                   )}
-                  <HajjVault />
-                  <AgriFinancing balance={balance} onInvest={(amount) => handleTransactionSuccess({ type: 'buy_sukuk', amount })} />
-                  <FractionalSukuk balance={balance} onBuy={handleBuySukuk} />
-                  <GlobalHalalETFs />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-stretch">
+                    <HajjVault />
+                    <AgriFinancing balance={balance} onInvest={(amount) => handleTransactionSuccess({ type: 'buy_sukuk', amount })} />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-stretch">
+                    <FractionalSukuk balance={balance} onBuy={handleBuySukuk} />
+                    <GlobalHalalETFs />
+                  </div>
                 </div>
               )}
 
@@ -295,10 +299,14 @@ export default function Dashboard() {
                     <p className="text-slate-500 text-xs mt-0.5">{t('Real-time tracking of your Halal wealth.', 'آپ کی حلال دولت کی اصل وقت میں ٹریکنگ۔')}</p>
                   </div>
                   <PortfolioDashboard holdings={holdings} totalValue={totalPortfolioValue} dailyPnl={dailyPnl} />
-                  <PortfolioChart balance={balance} holdings={holdings} totalValue={totalPortfolioValue} />
-                  <div className="space-y-2.5 bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-slate-200 shadow-sm">
-                    <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">{t('Halal Marketplace', 'حلال مارکیٹ پلیس')}</h3>
-                    <HalalStockScanner balance={balance} onBuy={initiateBuyStock} />
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 items-start">
+                    <div className="md:col-span-7">
+                      <PortfolioChart balance={balance} holdings={holdings} totalValue={totalPortfolioValue} />
+                    </div>
+                    <div className="md:col-span-5 space-y-2.5 bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-slate-200 shadow-sm">
+                      <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">{t('Halal Marketplace', 'حلال مارکیٹ پلیس')}</h3>
+                      <HalalStockScanner balance={balance} onBuy={initiateBuyStock} />
+                    </div>
                   </div>
                 </div>
               )}
@@ -307,8 +315,10 @@ export default function Dashboard() {
               {activeTab === 'kameti' && (
                 <div className="space-y-4 sm:space-y-6 pb-20 animate-in fade-in duration-300">
                   <FamilyHealthSaving balance={balance} onSave={(amt) => handleTransactionSuccess({ type: 'health_save', amount: amt })} lang={lang} cnic={currentUser?.cnic} />
-                  <DigitalCommittee />
-                  <WirasatCalculator />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-stretch">
+                    <DigitalCommittee />
+                    <WirasatCalculator />
+                  </div>
                 </div>
               )}
 
@@ -320,8 +330,10 @@ export default function Dashboard() {
                     <p className="text-slate-500 text-xs mt-0.5">{t('Purify wealth and empower the Ummah.', 'دولت کو پاک کریں اور امت کو بااختیار بنائیں۔')}</p>
                   </div>
                   <ZakatDistribution balance={balance} portfolioValue={totalPortfolioValue} />
-                  <PurificationTracker onPurify={(amount) => handleZakatDonation(amount, 'Dividend Purification')} />
-                  <FinancialHealthScore balance={balance} portfolioValue={totalPortfolioValue} holdings={holdings} transactions={transactions} zakatHistory={zakatHistory} isZakatEligible={isZakatEligible} />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-stretch">
+                    <PurificationTracker onPurify={(amount) => handleZakatDonation(amount, 'Dividend Purification')} />
+                    <FinancialHealthScore balance={balance} portfolioValue={totalPortfolioValue} holdings={holdings} transactions={transactions} zakatHistory={zakatHistory} isZakatEligible={isZakatEligible} />
+                  </div>
                 </div>
               )}
 
