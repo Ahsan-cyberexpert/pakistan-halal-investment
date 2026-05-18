@@ -10,13 +10,15 @@ if (apiKey) {
 
 export async function POST(request: Request) {
   try {
-    const { prompt, lang = 'ur', context = { balance: 0, holdings: [], transactions: [] } } = await request.json();
+    const { prompt, lang = 'ur', explicitLang, context = { balance: 0, holdings: [], transactions: [] } } = await request.json();
     const query = (prompt || '').toLowerCase();
     const { balance, holdings } = context;
 
-    // Detect if the user's prompt is in Urdu/Arabic script
-    const isUrduPrompt = /[\u0600-\u06FF]/.test(prompt || '');
-    const detectedLang = isUrduPrompt ? 'ur' : (prompt ? 'en' : lang);
+    // Detect if the user's prompt is in Urdu/Arabic script OR contains Roman Urdu words
+    const isUrduScript = /[\u0600-\u06FF]/.test(prompt || '');
+    const isRomanUrdu = /mera|balance|kitna|hai|kya|batao|zakat|assalam|salam|halal|sukuk|kameti|ammi|abbu|bhai|kitne|kaise|paise|rupay|hisaab|karo|mujhe|bataen|shukriya|meezan|bank/.test(query);
+    
+    const detectedLang = (explicitLang === 'ur' || isUrduScript || isRomanUrdu) ? 'ur' : (explicitLang === 'en' ? 'en' : (prompt ? 'en' : lang));
 
     // Calculate dynamic user values
     const totalInvested = holdings.reduce((sum: number, h: any) => sum + (h.invested || 0), 0);
@@ -59,11 +61,11 @@ export async function POST(request: Request) {
     let replyTextEn = '';
     let replyTextUr = '';
 
-    if (query.includes('balance') || query.includes('worth') || query.includes('بیلنس') || query.includes('رقم') || query.includes('پیسے') || query.includes('کیا ہے')) {
+    if (query.includes('balance') || query.includes('worth') || query.includes('بیلنس') || query.includes('رقم') || query.includes('پیسے') || query.includes('کیا ہے') || query.includes('mera') || query.includes('kitna') || query.includes('paise')) {
       replyTextEn = `Your total net worth is PKR ${totalWealth.toLocaleString()}, comprising PKR ${balance.toLocaleString()} in liquid cash and PKR ${totalInvested.toLocaleString()} in Halal stocks (${holdingsList}).`;
       replyTextUr = `آپ کا کل اثاثہ ${totalWealth.toLocaleString()} روپے ہے، جس میں ${balance.toLocaleString()} روپے کیش اور ${totalInvested.toLocaleString()} روپے حلال اسٹاکس (${holdingsList}) میں شامل ہیں۔`;
     } 
-    else if (query.includes('zakat') || query.includes('زکو') || query.includes('charity')) {
+    else if (query.includes('zakat') || query.includes('زکو') || query.includes('charity') || query.includes('hisaab')) {
       replyTextEn = zakatOwed > 0 
         ? `Based on your total wealth of PKR ${totalWealth.toLocaleString()}, your mandatory 2.5% Zakat is PKR ${zakatOwed.toLocaleString()}. You can pay this directly from the Zakat tab.` 
         : `Your wealth of PKR ${totalWealth.toLocaleString()} is below the Zakat Nisab threshold. No mandatory Zakat is due at this time.`;
@@ -71,7 +73,7 @@ export async function POST(request: Request) {
         ? `آپ کے کل اثاثے ${totalWealth.toLocaleString()} روپے کے حساب سے آپ کی 2.5% فرض زکوٰۃ ${zakatOwed.toLocaleString()} روپے بنتی ہے۔ آپ اسے زکوٰۃ ٹیب سے ادا کر سکتے ہیں۔`
         : `آپ کی دولت نصاب سے کم ہے، اس لیے فی الحال آپ پر زکوٰۃ فرض نہیں ہے۔`;
     }
-    else if (query.includes('stock') || query.includes('share') || query.includes('اسٹاک') || query.includes('سرمایہ') || query.includes('portfolio') || query.includes('دکھائیں')) {
+    else if (query.includes('stock') || query.includes('share') || query.includes('اسٹاک') || query.includes('سرمایہ') || query.includes('portfolio') || query.includes('دکھائیں') || query.includes('batao')) {
       replyTextEn = holdings.length > 0 
         ? `You currently hold ${holdingsList}. I recommend monitoring your dividend purification and exploring Naya Pakistan Sukuks for stable, asset-backed Halal returns.`
         : `You have no active stock investments. Use our Halal Marketplace to invest in Shariah-compliant market leaders like Meezan Bank (MEBL) or Lucky Cement (LUCK).`;
@@ -79,7 +81,7 @@ export async function POST(request: Request) {
         ? `آپ کے پاس اس وقت ${holdingsList} موجود ہیں۔ مزید حلال منافع کے لیے نیا پاکستان سکوک میں سرمایہ کاری پر غور کریں۔`
         : `آپ نے ابھی تک کسی اسٹاک میں سرمایہ کاری نہیں کی ہے۔ حلال مارکیٹ پلیس کے ذریعے میزان بینک یا لکی سیمنٹ میں سرمایہ کاری کریں۔`;
     }
-    else if (query.includes('riba') || query.includes('interest') || query.includes('سود') || query.includes('ربا') || query.includes('halal') || query.includes('حلال') || query.includes('میزان')) {
+    else if (query.includes('riba') || query.includes('interest') || query.includes('سود') || query.includes('ربا') || query.includes('halal') || query.includes('حلال') || query.includes('میزان') || query.includes('meezan')) {
       replyTextEn = "Roziq operates strictly under AAOIFI Shariah standards. We ensure 100% Riba-free wealth management by filtering out conventional banks and companies with >5% illicit income.";
       replyTextUr = "روزق مکمل طور پر AAOIFI شریعہ معیارات پر کام کرتا ہے۔ ہم روایتی بینکوں اور سودی کمپنیوں کو فلٹر کر کے 100% حلال اور سود سے پاک مالیات یقینی بناتے ہیں۔";
     }
@@ -87,7 +89,7 @@ export async function POST(request: Request) {
       replyTextEn = "Naya Pakistan Shariah Sukuks are government-backed asset certificates offering stable, Halal returns without Riba. Perfect for overseas Pakistanis and conservative investors.";
       replyTextUr = "نیا پاکستان شریعہ سکوک حکومتی اثاثوں کی ضمانت پر مبنی سرٹیفکیٹس ہیں جو سود سے پاک حلال منافع فراہم کرتے ہیں۔ اوورسیز پاکستانیوں کے لیے بہترین انتخاب ہیں۔";
     }
-    else if (query.includes('health') || query.includes('family') || query.includes('صحت') || query.includes('فیملی')) {
+    else if (query.includes('health') || query.includes('family') || query.includes('صحت') || query.includes('فیملی') || query.includes('kameti') || query.includes('ammi') || query.includes('abbu')) {
       replyTextEn = "The Family Health Savings Pool is a Takaful-based emergency fund. You can allocate monthly savings for your parents, spouse, and children, and file instant medical claims when needed.";
       replyTextUr = "فیملی ہیلتھ سیونگ پول ایک تکافل پر مبنی ایمرجنسی فنڈ ہے۔ آپ اپنے والدین، شریک حیات اور بچوں کے لیے ماہانہ بچت کر سکتے ہیں اور بوقت ضرورت فوری کلیم کر سکتے ہیں۔";
     }

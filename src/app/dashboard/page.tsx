@@ -144,13 +144,30 @@ export default function Dashboard() {
     setShowTradingPin(true);
   };
 
+  const initiateSecureTransaction = (data: any) => {
+    setPendingTrade(data);
+    setShowTradingPin(true);
+  };
+
   const handleTradingPinSuccess = () => {
     setShowTradingPin(false);
     if (pendingTrade) { handleTransactionSuccess(pendingTrade); setPendingTrade(null); }
   };
 
-  const handleBuySukuk = async (amount: number) => { await handleTransactionSuccess({ type: 'buy_sukuk', amount }); };
-  const handleZakatDonation = async (amount: number, recipient: string) => { await handleTransactionSuccess({ type: 'zakat', amount, recipient }); };
+  const handleBuySukuk = (amount: number) => initiateSecureTransaction({ type: 'buy_sukuk', amount, symbol: 'SUKUK' });
+  const handleZakatDonation = (amount: number, recipient: string) => initiateSecureTransaction({ type: 'zakat', amount, recipient, symbol: 'ZAKAT' });
+  const handleHealthSave = (amount: number) => initiateSecureTransaction({ type: 'health_save', amount, symbol: 'HEALTH' });
+  const handleOverseasInvest = (amount: number, asset: string) => initiateSecureTransaction({ type: 'overseas_invest', amount, name: asset, symbol: asset });
+  const handleHajjDeposit = (amount: number) => initiateSecureTransaction({ type: 'buy_sukuk', amount, symbol: 'HAJJ' });
+  const handleETFInvest = (amount: number, etf: string) => initiateSecureTransaction({ type: 'buy_sukuk', amount, symbol: etf });
+  const handleKametiContribute = (amount: number) => initiateSecureTransaction({ type: 'buy_sukuk', amount, symbol: 'KAMETI' });
+
+  const handleResetAccount = () => {
+    if (confirm(lang === 'ur' ? 'کیا آپ واقعی تمام فرضی ڈیٹا اور اکاؤنٹ ڈیلیٹ کرنا چاہتے ہیں؟' : 'Are you sure you want to delete all demo data and reset your account?')) {
+      localStorage.clear();
+      window.location.reload();
+    }
+  };
 
   return (
     <>
@@ -178,6 +195,16 @@ export default function Dashboard() {
                 🌍 {currentUser.country || 'Overseas'}
               </span>
             )}
+            
+            {/* Prominent Reset Demo Data / Delete Account Button */}
+            <button 
+              onClick={handleResetAccount}
+              title={t('Delete Account & Reset Demo Data', 'اکاؤنٹ ڈیلیٹ کریں اور ڈیٹا ری سیٹ کریں')}
+              className="px-2.5 py-1.5 sm:px-3 sm:py-2 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white border border-red-200 hover:border-red-500 rounded-xl text-[10px] sm:text-xs font-black transition-all active:scale-95 flex items-center gap-1 shadow-sm"
+            >
+              <span>🗑️</span> <span className="hidden sm:inline">{t('Reset Demo', 'ڈیٹا ری سیٹ')}</span>
+            </button>
+
             <button className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white flex items-center justify-center border border-slate-200 hover:bg-slate-50 transition-all active:scale-90 text-xs sm:text-sm shadow-sm">
               🔔
             </button>
@@ -219,6 +246,15 @@ export default function Dashboard() {
                     <span>{lang === 'ur' ? tab.labelUr : tab.labelEn}</span>
                   </button>
                 ))}
+
+                <div className="pt-3 mt-3 border-t border-slate-100 px-2">
+                  <button 
+                    onClick={handleResetAccount}
+                    className="w-full py-2.5 px-3 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white border border-red-200 hover:border-red-500 rounded-xl text-xs font-black transition-all active:scale-95 flex items-center justify-center gap-1.5 shadow-sm"
+                  >
+                    <span>🗑️</span> {t('Delete Account & Demo Data', 'اکاؤنٹ اور فرضی ڈیٹا ڈیلیٹ کریں')}
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -278,15 +314,15 @@ export default function Dashboard() {
                     <p className="text-slate-500 text-xs mt-0.5">{t('Invest in land, Hajj, Sukuks, and Overseas funds.', 'زمین، حج، سکوک، اور اوورسیز فنڈز میں سرمایہ کاری کریں۔')}</p>
                   </div>
                   {currentUser?.isOverseas && (
-                    <OverseasInvest balance={balance} onInvest={(amt, asset) => handleTransactionSuccess({ type: 'overseas_invest', amount: amt, name: asset })} lang={lang} cnic={currentUser.cnic} country={currentUser.country} />
+                    <OverseasInvest balance={balance} onInvest={handleOverseasInvest} lang={lang} cnic={currentUser.cnic} country={currentUser.country} />
                   )}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-stretch">
-                    <HajjVault />
-                    <AgriFinancing balance={balance} onInvest={(amount) => handleTransactionSuccess({ type: 'buy_sukuk', amount })} />
+                    <HajjVault onDeposit={handleHajjDeposit} />
+                    <AgriFinancing balance={balance} onInvest={(amount) => initiateSecureTransaction({ type: 'buy_sukuk', amount, symbol: 'AGRI' })} />
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-stretch">
                     <FractionalSukuk balance={balance} onBuy={handleBuySukuk} />
-                    <GlobalHalalETFs />
+                    <GlobalHalalETFs onInvest={handleETFInvest} />
                   </div>
                 </div>
               )}
@@ -314,8 +350,8 @@ export default function Dashboard() {
               {/* KAMETI & HEALTH TAB */}
               {activeTab === 'kameti' && (
                 <div className="space-y-4 sm:space-y-6 pb-20 animate-in fade-in duration-300">
-                  <FamilyHealthSaving balance={balance} onSave={(amt) => handleTransactionSuccess({ type: 'health_save', amount: amt })} lang={lang} cnic={currentUser?.cnic} />
-                  <DigitalCommittee />
+                  <FamilyHealthSaving balance={balance} onSave={handleHealthSave} lang={lang} cnic={currentUser?.cnic} />
+                  <DigitalCommittee onContribute={handleKametiContribute} />
                   <WirasatCalculator />
                 </div>
               )}

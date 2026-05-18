@@ -15,7 +15,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
   const [transcript, setTranscript] = useState('');
   const [response, setResponse] = useState(lang === 'ur' ? 'السلام علیکم! میں روزق اے آئی ہوں، آپ کا اسلامی مالیاتی مشیر۔ میں آپ کے اکاؤنٹس اور پورٹ فولیو دیکھ سکتا ہوں۔ بتائیں کیا رہنمائی چاہیے؟' : 'Assalam-o-Alaikum! I am Roziq AI, your Islamic Wealth Guardian. I have real-time access to your accounts and portfolio. How can I assist you today?');
   
-  const [isListening, setIsListening] = useState(false);
+  const [isListening, setIsListening] = useState<'ur' | 'en' | false>(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const recognitionRef = useRef<any>(null);
 
@@ -24,14 +24,14 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
       const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
       if (SpeechRecognition) {
         recognitionRef.current = new SpeechRecognition();
-        recognitionRef.current.lang = lang === 'ur' ? 'ur-PK' : 'en-US';
         recognitionRef.current.continuous = false;
         recognitionRef.current.interimResults = false;
 
         recognitionRef.current.onresult = (event: any) => {
           const text = event.results[0][0].transcript;
+          const detectedSpeechLang = recognitionRef.current.lang.includes('ur') ? 'ur' : 'en';
           setTranscript(text);
-          sendPrompt(text);
+          sendPrompt(text, detectedSpeechLang);
           setIsListening(false);
         };
 
@@ -44,14 +44,17 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
     }
   }, [lang, balance, holdings]);
 
-  const toggleListening = () => {
-    if (isListening) {
+  const toggleListening = (speechLang: 'ur' | 'en') => {
+    if (isListening === speechLang) {
       recognitionRef.current?.stop();
       setIsListening(false);
     } else {
       if ('vibrate' in navigator) navigator.vibrate(50);
+      if (recognitionRef.current) {
+        recognitionRef.current.lang = speechLang === 'ur' ? 'ur-PK' : 'en-US';
+      }
       setTranscript('');
-      setIsListening(true);
+      setIsListening(speechLang);
       try {
         recognitionRef.current?.start();
       } catch {
@@ -61,11 +64,11 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
     }
   };
 
-  const speak = (text: string) => {
+  const speak = (text: string, speechLang?: 'ur' | 'en') => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = lang === 'ur' ? 'ur-PK' : 'en-US';
+      utterance.lang = speechLang === 'ur' ? 'ur-PK' : 'en-US';
       utterance.rate = 0.9;
       utterance.onstart = () => setIsSpeaking(true);
       utterance.onend = () => setIsSpeaking(false);
@@ -73,7 +76,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
     }
   };
 
-  const sendPrompt = async (text: string) => {
+  const sendPrompt = async (text: string, explicitLang?: 'ur' | 'en') => {
     if (!text.trim()) return;
     setIsProcessing(true);
     setTranscript(text);
@@ -85,14 +88,15 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           prompt: text, 
-          lang,
+          lang: explicitLang || lang,
+          explicitLang,
           context: { balance, holdings, transactions } 
         }),
       });
       const data = await res.json();
       if (data.reply) {
         setResponse(data.reply);
-        speak(data.audioText || data.reply);
+        speak(data.audioText || data.reply, explicitLang || lang);
       } else {
         setResponse(lang === 'ur' ? 'معذرت، ایک خرابی پیش آ گئی۔' : 'Sorry, an error occurred.');
       }
@@ -131,7 +135,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
               
               <div className="flex justify-between items-center mb-4 relative z-10">
                 <div className="flex items-center gap-3">
-                  <div className={`w-11 h-11 bg-white/15 backdrop-blur-md rounded-2xl flex items-center justify-center text-2xl shadow-inner border border-white/20 transition-transform duration-500 ${isListening ? 'rotate-12 scale-110 bg-amber-500' : isSpeaking ? 'animate-bounce bg-emerald-500' : ''}`}>
+                  <div className={`w-11 h-11 bg-white/15 backdrop-blur-md rounded-2xl flex items-center justify-center text-2xl shadow-inner border border-white/20 transition-transform duration-500 ${isListening ? 'rotate-12 scale-110 bg-amber-500' : isSpeaking ? 'animate-bounce bg-emerald-50' : ''}`}>
                     🤖
                   </div>
                   <div>
@@ -159,39 +163,53 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
             </div>
 
             {/* Input & Controls Area (Voice + Write) */}
-            <div className="p-5 sm:p-6 flex-1 overflow-y-auto flex flex-col justify-between space-y-4 bg-slate-50">
-              <div className="flex w-full gap-2 items-center">
-                <button 
-                  onClick={toggleListening}
-                  title={lang === 'ur' ? 'آواز سے بولیں' : 'Speak via Voice'}
-                  className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl transition-all active:scale-95 flex-shrink-0 shadow-md ${
-                    isListening ? 'bg-red-500 text-white animate-pulse ring-4 ring-red-500/30' : 'bg-white text-emerald-600 border border-slate-200 hover:bg-emerald-50'
-                  }`}
-                >
-                  {isListening ? '⏹️' : '🎤'}
-                </button>
+            <div className="p-4 sm:p-6 flex-1 overflow-y-auto flex flex-col justify-between space-y-4 bg-slate-50">
+              <div className="flex flex-col gap-2 w-full">
+                {/* Dual Mic Row */}
+                <div className="flex gap-2 w-full justify-center">
+                  <button 
+                    onClick={() => toggleListening('ur')}
+                    className={`flex-1 py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 text-xs font-black transition-all active:scale-95 shadow-sm border ${
+                      isListening === 'ur' ? 'bg-red-500 text-white animate-pulse border-red-600' : 'bg-white text-emerald-700 border-emerald-200 hover:bg-emerald-50'
+                    }`}
+                  >
+                    <span>{isListening === 'ur' ? '⏹️' : '🎤'}</span> Speak Urdu (اردو)
+                  </button>
 
-                <input
-                  type="text"
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder={lang === 'ur' ? 'لکھ کر سوال پوچھیں (زکوٰۃ، حلال اسٹاکس، بیلنس)...' : 'Write a question (Zakat, Halal stocks, Balance)...'}
-                  className="flex-1 bg-white text-slate-800 placeholder-slate-400 rounded-2xl px-4 py-3.5 text-xs font-bold outline-none border border-slate-200 focus:border-emerald-500 shadow-inner transition-colors"
-                />
+                  <button 
+                    onClick={() => toggleListening('en')}
+                    className={`flex-1 py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 text-xs font-black transition-all active:scale-95 shadow-sm border ${
+                      isListening === 'en' ? 'bg-red-500 text-white animate-pulse border-red-600' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                    }`}
+                  >
+                    <span>{isListening === 'en' ? '⏹️' : '🎤'}</span> Speak English
+                  </button>
+                </div>
 
-                <button 
-                  onClick={() => sendPrompt(prompt)}
-                  disabled={isProcessing || !prompt.trim()}
-                  className="w-12 h-12 bg-emerald-600 text-white rounded-2xl flex items-center justify-center text-lg font-black hover:bg-emerald-700 active:scale-95 transition-all disabled:opacity-50 flex-shrink-0 shadow-md"
-                >
-                  {isProcessing ? '⏳' : '↑'}
-                </button>
+                {/* Text Input Row */}
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder={lang === 'ur' ? 'لکھ کر سوال پوچھیں (زکوٰۃ، حلال اسٹاکس، بیلنس)...' : 'Write a question (Zakat, Halal stocks, Balance)...'}
+                    className="flex-1 bg-white text-slate-800 placeholder-slate-400 rounded-xl px-4 py-3 text-xs font-bold outline-none border border-slate-200 focus:border-emerald-500 shadow-inner transition-colors"
+                  />
+
+                  <button 
+                    onClick={() => sendPrompt(prompt)}
+                    disabled={isProcessing || !prompt.trim()}
+                    className="w-10 h-10 bg-emerald-600 text-white rounded-xl flex items-center justify-center text-lg font-black hover:bg-emerald-700 active:scale-95 transition-all disabled:opacity-50 flex-shrink-0 shadow-md"
+                  >
+                    {isProcessing ? '⏳' : '↑'}
+                  </button>
+                </div>
               </div>
               
               {/* Quick Prompt Chips */}
               <div>
-                <p className="text-[11px] font-bold text-slate-400 text-center mb-2.5">
+                <p className="text-[11px] font-bold text-slate-400 text-center mb-2">
                   {lang === 'ur' ? 'یا ذیل میں سے فوری احکامات منتخب کریں:' : 'Or choose quick commands below:'}
                 </p>
                 <div className="w-full flex flex-wrap gap-1.5 justify-center">
@@ -201,8 +219,8 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
                   ).map(t => (
                     <button 
                       key={t} 
-                      onClick={() => sendPrompt(t)}
-                      className="px-3 py-2 bg-white border border-slate-200/80 rounded-xl text-[10px] font-black text-slate-600 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 transition-all active:scale-95 shadow-sm"
+                      onClick={() => sendPrompt(t, lang === 'ur' ? 'ur' : 'en')}
+                      className="px-3 py-1.5 bg-white border border-slate-200/80 rounded-xl text-[10px] font-black text-slate-600 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 transition-all active:scale-95 shadow-sm"
                     >
                       {t}
                     </button>

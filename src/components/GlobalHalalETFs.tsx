@@ -1,8 +1,12 @@
 'use client';
 
-export default function GlobalHalalETFs() {
+interface GlobalHalalETFsProps {
+  onInvest?: (amount: number, etfName: string) => void;
+}
+
+export default function GlobalHalalETFs({ onInvest }: GlobalHalalETFsProps) {
   return (
-    <div className="bg-slate-900 rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-white shadow-sm border border-slate-800 mb-4 sm:mb-6">
+    <div className="bg-slate-900 rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-white shadow-sm border border-slate-800 mb-4 sm:mb-6 animate-in fade-in duration-500">
       <div className="flex justify-between items-center mb-4 sm:mb-6">
         <div>
           <h2 className="text-base sm:text-xl font-bold tracking-tight">🌍 Global USD Exposure</h2>
@@ -12,7 +16,10 @@ export default function GlobalHalalETFs() {
       </div>
 
       <div className="space-y-2 sm:space-y-3">
-        <div className="bg-slate-800 p-3 sm:p-4 rounded-xl sm:rounded-2xl flex justify-between items-center border border-slate-700 hover:border-blue-500 transition-colors cursor-pointer active:scale-95 duration-200">
+        <div 
+          onClick={() => onInvest?.(100000, 'HLAL Wahed FTSE USA Shariah ETF')}
+          className="bg-slate-800 p-3 sm:p-4 rounded-xl sm:rounded-2xl flex justify-between items-center border border-slate-700 hover:border-blue-500 transition-colors cursor-pointer active:scale-95 duration-200 shadow-sm"
+        >
           <div className="flex items-center space-x-2.5 sm:space-x-3">
             <div className="w-9 h-9 sm:w-10 sm:h-10 bg-blue-900 text-blue-300 rounded-xl flex items-center justify-center font-bold text-xs flex-shrink-0">HLAL</div>
             <div>
@@ -26,7 +33,10 @@ export default function GlobalHalalETFs() {
           </div>
         </div>
 
-        <div className="bg-slate-800 p-3 sm:p-4 rounded-xl sm:rounded-2xl flex justify-between items-center border border-slate-700 hover:border-purple-500 transition-colors cursor-pointer active:scale-95 duration-200">
+        <div 
+          onClick={() => onInvest?.(100000, 'SPUS S&P 500 Sharia ETF')}
+          className="bg-slate-800 p-3 sm:p-4 rounded-xl sm:rounded-2xl flex justify-between items-center border border-slate-700 hover:border-purple-500 transition-colors cursor-pointer active:scale-95 duration-200 shadow-sm"
+        >
           <div className="flex items-center space-x-2.5 sm:space-x-3">
             <div className="w-9 h-9 sm:w-10 sm:h-10 bg-purple-900 text-purple-300 rounded-xl flex items-center justify-center font-bold text-xs flex-shrink-0">SPUS</div>
             <div>
@@ -41,7 +51,10 @@ export default function GlobalHalalETFs() {
         </div>
       </div>
       
-      <button className="w-full mt-4 bg-blue-600 text-white font-bold py-2.5 sm:py-3 rounded-xl hover:bg-blue-700 active:scale-95 transition-all text-xs sm:text-sm shadow-md">
+      <button 
+        onClick={() => onInvest?.(100000, 'SPUS S&P 500 Sharia ETF')}
+        className="w-full mt-4 bg-blue-600 text-white font-bold py-2.5 sm:py-3 rounded-xl hover:bg-blue-700 active:scale-95 transition-all text-xs sm:text-sm shadow-md text-center"
+      >
         Convert PKR to Invest (via RDA)
       </button>
     </div>
