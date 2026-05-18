@@ -31,14 +31,18 @@ export async function POST(request: Request) {
     - Total Net Worth: PKR ${totalWealth.toLocaleString()}
     - Mandatory Zakat Owed (2.5%): PKR ${zakatOwed.toLocaleString()}
 
-    Your goal is to answer the user's questions in ${detectedLang === 'ur' ? 'Urdu (using clean Urdu script)' : 'English'} with absolute precision, scholarly dignity, and actionable advice.
+    CRITICAL MANDATORY RULE: You MUST respond entirely in ${detectedLang === 'ur' ? 'URDU language (using clean Nastaliq Urdu script)' : 'ENGLISH language'}. Do NOT respond in English if Urdu is requested!
     Follow AAOIFI Shariah standards. Keep answers concise, clear, and perfectly formatted for voice synthesis.`;
 
     if (ai) {
       try {
+        const enrichedContents = detectedLang === 'ur' 
+          ? `[Please respond strictly in clean Urdu script to the following query]: ${prompt}` 
+          : `[Please respond strictly in English to the following query]: ${prompt}`;
+
         const response = await ai.models.generateContent({
           model: 'gemini-2.5-flash',
-          contents: prompt,
+          contents: enrichedContents,
           config: { systemInstruction, temperature: 0.7 }
         });
         const text = response.text;
