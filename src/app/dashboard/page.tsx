@@ -315,10 +315,8 @@ export default function Dashboard() {
               {activeTab === 'kameti' && (
                 <div className="space-y-4 sm:space-y-6 pb-20 animate-in fade-in duration-300">
                   <FamilyHealthSaving balance={balance} onSave={(amt) => handleTransactionSuccess({ type: 'health_save', amount: amt })} lang={lang} cnic={currentUser?.cnic} />
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-stretch">
-                    <DigitalCommittee />
-                    <WirasatCalculator />
-                  </div>
+                  <DigitalCommittee />
+                  <WirasatCalculator />
                 </div>
               )}
 
