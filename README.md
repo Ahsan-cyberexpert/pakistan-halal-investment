@@ -1,156 +1,110 @@
-# 🇵🇰 Roziq — Pakistan's First Halal Wealth OS
+# 🇵🇰 Roziq Halal Wealth OS — Sovereign Edition
 
-<div align="center">
-  <img src="public/icon-192.png" width="120" alt="Roziq App Icon"/>
-  <h3>Build wealth. Stay pure. Serve the Ummah.</h3>
-  <p>
-    <img src="https://img.shields.io/badge/Next.js-16-black?logo=next.js" />
-    <img src="https://img.shields.io/badge/TypeScript-5-blue?logo=typescript" />
-    <img src="https://img.shields.io/badge/Shariah-AAOIFI%20Compliant-green" />
-    <img src="https://img.shields.io/badge/Payments-EasyPaisa%20%7C%20JazzCash-red" />
-  </p>
-</div>
+![Roziq Banner](https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&q=80&w=1600)
+
+> **Empowering the Ummah with Shariah-Compliant, Autonomous, & Sovereign Financial Intelligence.**
+
+**Roziq** is a state-of-the-art, mobile-first Halal Wealth Operating System designed specifically for the Pakistani and global Islamic financial ecosystem. Built to bridge the gap between cutting-edge AI automation and strict Islamic jurisprudence (Fiqh al-Muamalat), Roziq provides an all-in-one sovereign platform for ethical wealth accumulation, automated purification, and legacy planning.
 
 ---
 
-## 🎯 What is Roziq?
+## 🌟 Key Innovations & Architectural Pillars
 
-Roziq is a **sovereign financial operating system** designed exclusively for Pakistan's Muslim community. It combines AI, real-time PSX data, and Islamic finance principles to provide an all-in-one Halal wealth management platform.
+### 1. 🤖 Master Roziq AI Guardian (Voice & Text)
+*   **Unified Intelligence:** Replaces fragmented AI tabs with a single, pervasive AI Guardian accessible via a floating action button across the entire OS.
+*   **Context-Aware Advice:** Directly linked to the user's live wallet balance, asset holdings, and transaction history to provide personalized, real-time Shariah rulings and financial strategies.
+*   **Multimodal Interaction:** Supports natural language voice input and text chat in both **English** and **Urdu**, breaking down financial literacy barriers.
 
-**Pakistan has 220M+ Muslims with zero dedicated Shariah-compliant fintech.** Roziq fills that gap.
+### 2. 🏛️ Sovereign Zakat Vault & Algorithmic Tathir
+*   **National Zakat Vault:** Automates the calculation of 2.5% Zakat on total net worth (cash + portfolio assets) with direct routing to verified state and charitable repositories (Edhi, Indus Hospital, TCF).
+*   **Tathir Router (Dividend Purification):** Implements **AAOIFI Standard No. 21** by automatically isolating and purifying impure dividend yields (e.g., 2.8% interest contamination) from corporate holdings before they mix with halal capital.
 
----
+### 3. 🛡️ Wali AI Autopilot (Premium Elite Tier)
+*   **Autonomous Halal Trading:** An elite, algorithmic trading guardian that continuously scans the Pakistan Stock Exchange (PSX) for high-yield, Shariah-compliant equities.
+*   **Sovereign Entry Barrier:** To maintain elite stability and prevent market volatility, Wali AI is strictly gated. Users must demonstrate a proven track record of **25 Crore PKR Invested** and **50 Crore PKR Realized Profit** to unlock autonomous execution.
+*   **Macroeconomic Alignment:** Evaluates equities not just on profit, but on sovereign GDP impact, job creation, and debt-to-equity ratios (<37%).
 
-## ✨ Core Features
-
-### 🔐 Security First
-- **Mandatory 1234 PIN** on every session launch (Master Key always works)
-- Biometric (WebAuthn) integration for transaction approval
-- CNIC-locked heir distribution in the inheritance engine
-
-### 📈 Halal Stock Market (PSX)
-- **Live PSX data** via Financial Modeling Prep API (60-second refresh)
-- Algorithmic AAOIFI Shariah screening — removes all Riba/Gharar stocks
-- Inline buy flow with real-time share quantity calculation
-
-### 💳 Real Payment Integration
-| Gateway | Type | Status |
-|---------|------|--------|
-| EasyPaisa | Mobile Wallet | ✅ Integrated (Sandbox) |
-| JazzCash | Mobile Wallet | ✅ Integrated (Sandbox) |
-| Meezan Bank | Bank Transfer | ✅ Integrated |
-| HBL | Bank Transfer | ✅ Integrated |
-| UBL | Bank Transfer | ✅ Integrated |
-
-### 🤖 AI Engines
-- **Mufti AI** — Voice-activated Shariah fatwa advisor (Google Gemini)
-- **Wali Autopilot** — Elite AI trading guardian (unlocks at 25 Crore invested)
-
-### 🏦 Sovereign Assets
-- **Hajj Vault** — Riba-free savings towards pilgrimage
-- **Agri-Financing** — Invest in Halal agricultural yields
-- **Fractional Sukuk** — Islamic bonds from PKR 1,000
-
-### 🤝 Social Finance
-- **Digital Kameti** — 0% fee family ROSCA platform
-- **Wirasat Engine** — Islamic inheritance calculator with CNIC heir-locks
-
-### 🕋 Zakat Ecosystem
-- Automated Zakat calculation (2.5% of eligible wealth)
-- National Vault — distribute to Edhi, Shaukat Khanum, Saylani, Akhuwat
-- Dividend Purification Tracker
+### 4. 📱 Mobile-First "Micro-Sizing" UI/UX
+*   **Zero-Clutter Navigation:** Eliminated redundant tabs and implemented an elegant 5-pillar bottom navigation bar (Home, Stocks, Assets, Family, Zakat).
+*   **Adaptive Fluid Density:** Every component is meticulously engineered with responsive padding (`p-4 sm:p-6`), typography (`text-xs sm:text-sm`), and compact grid layouts to eliminate excessive vertical scrolling and provide a thumb-friendly premium experience.
+*   **Bilingual Glassmorphism:** Features stunning dark/light glassmorphic aesthetics with complete bi-directional support (LTR English / RTL Urdu).
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Technology Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | Next.js 16 (App Router) |
-| Language | TypeScript 5 |
-| Styling | Tailwind CSS 3 |
-| AI | Google Generative AI (Gemini) |
-| Payments | EasyPaisa + JazzCash APIs |
-| Market Data | Financial Modeling Prep (PSX) |
-| Mobile | Capacitor 6 (Android/iOS) |
-| Hosting | Vercel |
+*   **Core Framework:** Next.js 16 (App Router, Server & Client Components)
+*   **Language:** TypeScript (Strict Typing & Interface Definitions)
+*   **Styling:** Tailwind CSS (Custom utility classes, glassmorphic overlays, responsive micro-sizing)
+*   **State Management:** Reactive React Hooks (`useState`, `useEffect`, `useMemo`) + LocalStorage Persistence (Keyed by user CNIC for sovereign demo session management)
+*   **AI Engine:** Google Gemini AI API integration (`/api/chat`, `/api/agent/autopilot`)
+*   **Security:** Cryptographic 4-Digit PIN Gateways (`PinSecurity.tsx`) for trading authorization and capital transfers.
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start & Local Setup
 
-### 1. Clone and Install
-```bash
-git clone https://github.com/Ahsan-cyberexpert/pakistan-halal-investment.git
-cd pakistan-halal-investment
-npm install
-```
+### Prerequisites
+*   Node.js (v18.17.0 or higher)
+*   npm (v9.0.0 or higher)
+*   A valid Google Gemini API Key (`GEMINI_API_KEY`)
 
-### 2. Configure Environment
-```bash
-cp .env.example .env.local
-# Edit .env.local with your API keys
-```
+### Installation
 
-### 3. Run Development Server
-```bash
-npm run dev
-# Open http://localhost:3000
-# PIN: 1234
-```
+1. **Clone the Repository:**
+   ```bash
+   git clone https://github.com/Ahsan-cyberexpert/pakistan-halal-investment.git
+   cd pakistan-halal-investment
+   ```
 
----
+2. **Install Dependencies:**
+   ```bash
+   npm install
+   ```
 
-## 📱 Mobile APK
+3. **Configure Environment Variables:**
+   Create a `.env.local` file in the root directory:
+   ```env
+   GEMINI_API_KEY=your_gemini_api_key_here
+   FMP_API_KEY=your_financial_modeling_prep_key_here
+   ```
 
-The Android project is in the `android/` folder. To build:
+4. **Run the Development Server:**
+   ```bash
+   npm run dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
 
-1. Open **Android Studio**
-2. File → Open → select `android/` folder
-3. Build → Build APK(s)
-
-> **Note:** Your Java version must be 17 or 21. If you have Java 24, use Android Studio's embedded JDK.
-
----
-
-## 🌐 Environment Variables
-
-See `.env.example` for all required keys:
-- `GEMINI_API_KEY` — Mufti AI & Wali Autopilot
-- `FMP_API_KEY` — Live PSX stock data
-- `EASYPAISA_STORE_ID` + `EASYPAISA_HASH_KEY` — EasyPaisa live payments
-- `JAZZCASH_MERCHANT_ID` + `JAZZCASH_PASSWORD` + `JAZZCASH_HASH_KEY` — JazzCash live payments
+5. **Production Build:**
+   ```bash
+   npm run build
+   npm run start
+   ```
 
 ---
 
-## 📁 Project Structure
+## 📱 Hackathon Demo Guide
 
-```
-src/
-├── app/
-│   ├── page.tsx              # Landing page
-│   ├── dashboard/page.tsx    # Main app shell
-│   ├── layout.tsx            # Root layout
-│   └── api/
-│       ├── psx/route.ts      # Live PSX market data
-│       ├── transaction/      # Wallet engine
-│       ├── payment/deposit/  # EasyPaisa + JazzCash
-│       ├── payment/withdraw/ # Withdrawal processing
-│       ├── agent/mufti/      # Mufti AI (Gemini)
-│       ├── agent/autopilot/  # Wali AI engine
-│       └── zakat/vault/      # National Zakat Vault
-├── components/               # 33 modular components
-└── lib/
-    ├── db.ts                 # File-based wallet store
-    └── halal-stock-data.ts   # PSX Halal stock list
-```
+When presenting Roziq Wealth OS to hackathon judges, follow this interactive walkthrough:
+
+1. **Onboarding & Auth Gate:** Launch the app to see the bilingual splash screen. Enter your CNIC and PIN (`1234` default) to unlock your Sovereign Account.
+2. **Master AI Guardian:** Click the floating `🤖` button at the bottom right. Ask the AI in Urdu or English: *"What is my current balance and is my portfolio Halal?"* Watch it respond using live wallet data!
+3. **Halal Stock Scanner:** Navigate to the **Stocks (`💼`)** tab. View real-time Shariah compliance scores. Click **Buy** on `SYS` (Systems Ltd) to trigger the secure 4-digit PIN confirmation gateway.
+4. **Wali AI Autopilot:** Navigate to **Settings (`⚙️`)** -> **Elite Services**. Show the judges the strict **25 Crore / 50 Crore** progress bar that protects the sovereign economy from speculative retail panic.
+5. **Purification & Zakat:** Go to the **Zakat (`🕋`)** tab. Demonstrate the **Tathir Router** instantly purifying 2.8% impure dividend earnings with 1-click routing to the Edhi Foundation.
 
 ---
 
-## 🏆 Built for Hackathon
+## 📜 Shariah Compliance & Governance
 
-This project was built for the **Pakistan Fintech Hackathon 2026**. The mission: prove that cutting-edge AI and financial technology can serve the Muslim market without compromising on Shariah principles.
+Roziq strictly adheres to the governance frameworks established by the **Accounting and Auditing Organization for Islamic Financial Institutions (AAOIFI)**, specifically:
+*   **AAOIFI Standard No. 21:** Rules for shares and dividend purification.
+*   **PSX Shariah Screening Criteria:** Debt-to-Asset ratio < 37%, Illiquid-to-Total Asset ratio > 25%, Net Liquid Asset vs Share Price screening.
+
+> *"And Allah has permitted trade and forbidden interest."* — Quran 2:275
 
 ---
 
-*Built with pride for Pakistan 🕌 — اللہ کے نام پر*
+## 📄 License & Hackathon Disclaimer
+
+Developed for the 2026 Advanced AI & FinTech Hackathon. All mock financial data, stock tickers, and sovereign vault simulations are designed for demonstration and architectural evaluation purposes.

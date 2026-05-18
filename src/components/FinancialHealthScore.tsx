@@ -81,14 +81,14 @@ export default function FinancialHealthScore({
     return 'text-red-600 stroke-red-600';
   };
 
-  const circumference = 2 * Math.PI * 45;
+  const circumference = 2 * Math.PI * 40;
   const strokeDashoffset = circumference - (score / 100) * circumference;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold text-gray-800">📈 Financial Health</h2>
-        <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5 mb-4 sm:mb-6">
+      <div className="flex justify-between items-center mb-3 sm:mb-4">
+        <h2 className="text-base sm:text-lg font-bold text-gray-800 tracking-tight">📈 Financial Health</h2>
+        <span className={`text-[10px] sm:text-xs px-2.5 py-1 rounded-full font-medium ${
           score >= 80 ? 'bg-green-100 text-green-800' : score >= 60 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'
         }`}>
           {score >= 80 ? 'Excellent' : score >= 60 ? 'Good' : 'Needs Work'}
@@ -96,12 +96,12 @@ export default function FinancialHealthScore({
       </div>
 
       {/* Score Circle + Streak */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="relative w-28 h-28">
-          <svg className="w-full h-full transform -rotate-90">
-            <circle cx="56" cy="56" r="45" stroke="#e5e7eb" strokeWidth="8" fill="none" />
+      <div className="flex items-center justify-between mb-4 sm:mb-6">
+        <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0">
+          <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="40" stroke="#e5e7eb" strokeWidth="8" fill="none" />
             <circle 
-              cx="56" cy="56" r="45" 
+              cx="50" cy="50" r="40" 
               stroke="currentColor" 
               strokeWidth="8" 
               fill="none" 
@@ -112,50 +112,50 @@ export default function FinancialHealthScore({
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className={`text-3xl font-bold ${getScoreColor()}`}>{score}</span>
-            <span className="text-xs text-gray-500">/ 100</span>
+            <span className={`text-xl sm:text-2xl font-black tracking-tight ${getScoreColor()}`}>{score}</span>
+            <span className="text-[9px] sm:text-[10px] text-gray-500 font-bold">/ 100</span>
           </div>
         </div>
 
-        <div className="text-right">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-2xl">🔥</span>
-            <span className="text-xl font-bold text-orange-600">{streak} Day Streak</span>
+        <div className="text-right flex-shrink-0">
+          <div className="flex items-center gap-1 sm:gap-1.5 mb-0.5 sm:mb-1 justify-end">
+            <span className="text-lg sm:text-xl">🔥</span>
+            <span className="text-sm sm:text-base font-black text-orange-600 tracking-tight">{streak} Day Streak</span>
           </div>
-          <p className="text-xs text-gray-500">Keep investing daily to grow your streak</p>
+          <p className="text-[10px] sm:text-xs text-gray-500">Keep investing daily to grow your streak</p>
         </div>
       </div>
 
       {/* Metric Breakdown */}
-      <div className="grid grid-cols-2 gap-3 mb-6">
-        <div className="p-3 bg-gray-50 rounded-xl">
-          <div className="text-xs text-gray-500">Emergency Fund</div>
-          <div className="font-semibold text-gray-800">{Math.min(100, Math.round((balance / Math.max(portfolioValue * 0.2, 5000)) * 100))}%</div>
+      <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-4 sm:mb-6">
+        <div className="p-2.5 sm:p-3 bg-gray-50 rounded-xl">
+          <div className="text-[10px] sm:text-xs text-gray-500">Emergency Fund</div>
+          <div className="font-semibold text-xs sm:text-sm text-gray-800 mt-0.5">{Math.min(100, Math.round((balance / Math.max(portfolioValue * 0.2, 5000)) * 100))}%</div>
         </div>
-        <div className="p-3 bg-gray-50 rounded-xl">
-          <div className="text-xs text-gray-500">Diversification</div>
-          <div className="font-semibold text-gray-800">{Math.min(100, Math.round((holdings.length / 4) * 100))}%</div>
+        <div className="p-2.5 sm:p-3 bg-gray-50 rounded-xl">
+          <div className="text-[10px] sm:text-xs text-gray-500">Diversification</div>
+          <div className="font-semibold text-xs sm:text-sm text-gray-800 mt-0.5">{Math.min(100, Math.round((holdings.length / 4) * 100))}%</div>
         </div>
-        <div className="p-3 bg-gray-50 rounded-xl">
-          <div className="text-xs text-gray-500">Consistency</div>
-          <div className="font-semibold text-gray-800">{Math.min(100, Math.round((transactions.length / 5) * 100))}%</div>
+        <div className="p-2.5 sm:p-3 bg-gray-50 rounded-xl">
+          <div className="text-[10px] sm:text-xs text-gray-500">Consistency</div>
+          <div className="font-semibold text-xs sm:text-sm text-gray-800 mt-0.5">{Math.min(100, Math.round((transactions.length / 5) * 100))}%</div>
         </div>
-        <div className="p-3 bg-gray-50 rounded-xl">
-          <div className="text-xs text-gray-500">Zakat Status</div>
-          <div className="font-semibold text-gray-800">{(!isZakatEligible || zakatHistory.length > 0) ? '✅ Compliant' : '⏳ Pending'}</div>
+        <div className="p-2.5 sm:p-3 bg-gray-50 rounded-xl">
+          <div className="text-[10px] sm:text-xs text-gray-500">Zakat Status</div>
+          <div className="font-semibold text-xs sm:text-sm text-gray-800 mt-0.5">{(!isZakatEligible || zakatHistory.length > 0) ? '✅ Compliant' : '⏳ Pending'}</div>
         </div>
       </div>
 
       {/* Badges */}
-      <div className="mb-4">
-        <h3 className="text-sm font-semibold text-gray-700 mb-2">🏆 Badges</h3>
-        <div className="flex gap-2 overflow-x-auto pb-2">
+      <div className="mb-3 sm:mb-4">
+        <h3 className="text-xs sm:text-sm font-bold text-gray-700 mb-2 px-0.5">🏆 Badges</h3>
+        <div className="flex gap-2 overflow-x-auto pb-1.5 scrollbar-none">
           {badges.map(b => (
-            <div key={b.id} className={`flex-shrink-0 w-20 p-2 rounded-xl text-center border-2 transition ${
-              b.unlocked ? 'border-green-300 bg-green-50' : 'border-gray-200 bg-gray-50 opacity-50'
+            <div key={b.id} className={`flex-shrink-0 w-16 sm:w-20 p-2 rounded-xl text-center border transition-all ${
+              b.unlocked ? 'border-green-300 bg-green-50 shadow-sm' : 'border-gray-200 bg-gray-50 opacity-40'
             }`}>
-              <div className="text-xl mb-1">{b.icon}</div>
-              <div className="text-[10px] font-medium text-gray-700 leading-tight">{b.title}</div>
+              <div className="text-lg sm:text-xl mb-1">{b.icon}</div>
+              <div className="text-[9px] sm:text-[10px] font-bold text-gray-700 leading-tight truncate">{b.title}</div>
             </div>
           ))}
         </div>
@@ -163,11 +163,11 @@ export default function FinancialHealthScore({
 
       {/* Actionable Tips */}
       {tips.length > 0 && (
-        <div className="p-3 bg-blue-50 border border-blue-100 rounded-xl">
-          <h4 className="text-xs font-bold text-blue-800 mb-1">💡 How to Improve</h4>
+        <div className="p-3 bg-blue-50 border border-blue-100 rounded-xl shadow-inner">
+          <h4 className="text-[10px] sm:text-xs font-bold text-blue-800 mb-1">💡 How to Improve</h4>
           <ul className="space-y-1">
             {tips.map((tip, i) => (
-              <li key={i} className="text-xs text-blue-700 flex items-start gap-1">
+              <li key={i} className="text-[10px] sm:text-xs text-blue-700 flex items-start gap-1 font-medium">
                 <span>•</span> {tip}
               </li>
             ))}

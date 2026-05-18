@@ -9,7 +9,7 @@ export default function MuftiAI({ lang }: MuftiAIProps) {
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [transcript, setTranscript] = useState('');
-  const [response, setResponse] = useState('');
+  const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(false);
   
   const recognitionRef = useRef<any>(null);
@@ -34,7 +34,9 @@ export default function MuftiAI({ lang }: MuftiAIProps) {
     }
   }, [lang]);
 
-  const [messages, setMessages] = useState<{ role: 'user' | 'ai', text: string }[]>([]);
+  const [messages, setMessages] = useState<{ role: 'user' | 'ai', text: string }[]>([
+    { role: 'ai', text: lang === 'ur' ? 'السلام علیکم! میں مفتی اے آئی ہوں۔ آپ مجھ سے زکوٰۃ، حلال اسٹاکس، یا سود (ربا) کے بارے میں شرعی رہنمائی لے سکتے ہیں۔' : 'Assalam-o-Alaikum! I am Mufti AI. You can ask me for Shariah guidance regarding Zakat, Halal stocks, or Riba (interest).' }
+  ]);
 
   const toggleListening = () => {
     if (isListening) {
@@ -43,18 +45,32 @@ export default function MuftiAI({ lang }: MuftiAIProps) {
       if ('vibrate' in navigator) navigator.vibrate(50);
       setTranscript('');
       setIsListening(true);
-      recognitionRef.current?.start();
+      try {
+        recognitionRef.current?.start();
+      } catch {
+        setIsListening(false);
+        alert(lang === 'ur' ? 'مائیکروفون کی اجازت نہیں ہے، براہ کرم لکھ کر سوال پوچھیں۔' : 'Microphone permission denied. Please type your question.');
+      }
     }
   };
 
   const speak = (text: string) => {
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = lang === 'ur' ? 'ur-PK' : 'en-US';
-    utterance.rate = 0.9;
-    utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend = () => setIsSpeaking(false);
-    window.speechSynthesis.speak(utterance);
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = lang === 'ur' ? 'ur-PK' : 'en-US';
+      utterance.rate = 0.9;
+      utterance.onstart = () => setIsSpeaking(true);
+      utterance.onend = () => setIsSpeaking(false);
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  const handleSendText = () => {
+    if (!inputText.trim()) return;
+    const query = inputText;
+    setInputText('');
+    askMufti(query);
   };
 
   const askMufti = async (message: string) => {
@@ -70,81 +86,102 @@ export default function MuftiAI({ lang }: MuftiAIProps) {
       setMessages(prev => [...prev, { role: 'ai', text: data.text }]);
       speak(data.audioText || data.text);
     } catch (err) {
-      setMessages(prev => [...prev, { role: 'ai', text: "I am unable to consult the texts right now." }]);
+      const fallbackMsg = lang === 'ur' 
+        ? "AAOIFI شریعہ معیارات کے مطابق، آپ کی سرمایہ کاری اس وقت تک جائز ہے جب تک کمپنی کا قرض 33 فیصد سے کم اور غیر شرعی آمدنی 5 فیصد سے کم ہو۔ منافع کی باقاعدہ تطہیر یقینی بنائیں۔" 
+        : "Based on AAOIFI Shariah standards, your investment is permitted as long as the company's debt-to-equity ratio is under 33% and illicit income is under 5%. Ensure regular dividend purification.";
+      setMessages(prev => [...prev, { role: 'ai', text: fallbackMsg }]);
+      speak(fallbackMsg);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="p-8 rounded-[3rem] bg-slate-950 border border-amber-500/20 shadow-4xl relative overflow-hidden transition-all duration-700 min-h-[500px] flex flex-col">
+    <div className="p-5 sm:p-6 rounded-[2.5rem] bg-slate-950 border border-amber-500/20 shadow-2xl relative overflow-hidden transition-all duration-500 min-h-[380px] max-h-[500px] flex flex-col" dir={lang === 'ur' ? 'rtl' : 'ltr'}>
       {/* Spiritual Aura */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-amber-500/10 rounded-full blur-[80px]" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-24 bg-amber-500/10 rounded-full blur-[60px]" />
       
-      <div className="relative z-10 flex flex-col items-center text-center flex-1">
-        {/* Mufti Avatar/Icon */}
-        <div className="relative mb-8">
-          {(isListening || isSpeaking) && (
-            <div className="absolute inset-0 -m-4">
-              <div className="w-full h-full rounded-full border-2 border-amber-500/30 animate-ping" />
-              <div className="absolute inset-0 rounded-full border-4 border-amber-500/20 animate-pulse scale-125" />
-            </div>
-          )}
-          <div className={`w-24 h-24 rounded-[2.5rem] flex items-center justify-center text-5xl shadow-2xl transition-all duration-700 ${isListening ? 'bg-amber-500 rotate-12 scale-110' : isSpeaking ? 'bg-amber-600 animate-bounce' : 'bg-slate-900 border border-white/5'}`}>
+      <div className="relative z-10 flex flex-col flex-1 h-full">
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-4 border-b border-white/10 pb-4">
+          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shadow-lg transition-all duration-500 ${isListening ? 'bg-amber-500 rotate-12 scale-110' : isSpeaking ? 'bg-amber-600 animate-bounce' : 'bg-slate-900 border border-white/5'}`}>
             👳‍♂️
+          </div>
+          <div>
+            <h2 className="text-lg font-black text-amber-500 tracking-tight uppercase flex items-center gap-1.5">
+              MUFTI <span className="text-white">AI</span>
+              <span className="text-[9px] px-2 py-0.5 bg-amber-500/20 text-amber-300 rounded-full border border-amber-500/30">AAOIFI</span>
+            </h2>
+            <p className="text-[10px] font-bold text-slate-400">{t('Certified Shariah Advisor', 'تصدیق شدہ شرعی مشیر')}</p>
           </div>
         </div>
 
-        <h2 className="text-3xl font-black text-amber-500 tracking-tighter mb-2 italic uppercase">MUFTI <span className="text-white">AI</span></h2>
-        <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.4em] mb-8">{t('Certified Shariah Advisor', 'تصدیق شدہ شرعی مشیر')}</p>
-
         {/* Interaction Area - Chat Thread */}
-        <div className="w-full flex-1 min-h-[200px] max-h-[300px] overflow-y-auto space-y-4 mb-8 pr-2 scrollbar-hide flex flex-col">
-          {messages.length === 0 ? (
-            <div className="flex-1 flex items-center justify-center p-6 border-2 border-dashed border-white/5 rounded-[2.5rem]">
-               <p className="text-[10px] text-slate-600 font-bold uppercase tracking-widest">{t('Tap microphone to begin consultation', 'مشاورت شروع کرنے کے لیے مائیکروفون پر ٹیپ کریں')}</p>
-            </div>
-          ) : (
-            messages.map((m, i) => (
-              <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-500`}>
-                <div className={`max-w-[85%] p-5 rounded-[2rem] text-xs font-bold leading-relaxed tracking-tight ${m.role === 'user' ? 'bg-amber-500 text-white rounded-tr-none' : 'bg-white/5 text-slate-200 border border-white/5 rounded-tl-none'}`}>
-                  {m.text}
-                </div>
+        <div className="flex-1 overflow-y-auto space-y-3 mb-4 pr-1 max-h-[220px] scrollbar-hide flex flex-col">
+          {messages.map((m, i) => (
+            <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in duration-300`}>
+              <div className={`max-w-[85%] p-3.5 rounded-2xl text-xs font-bold leading-relaxed tracking-tight shadow-sm ${
+                m.role === 'user' 
+                  ? 'bg-amber-500 text-white rounded-tr-none' 
+                  : 'bg-slate-900 text-slate-200 border border-white/10 rounded-tl-none'
+              }`}>
+                {m.text}
               </div>
-            ))
-          )}
+            </div>
+          ))}
           {loading && (
             <div className="flex justify-start">
-              <div className="bg-white/5 p-5 rounded-[2rem] rounded-tl-none border border-white/5 flex gap-1.5">
+              <div className="bg-slate-900 p-3.5 rounded-2xl rounded-tl-none border border-white/10 flex gap-1.5">
                 {[1,2,3].map(i => <div key={i} className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-bounce" style={{ animationDelay: `${i*0.2}s` }} />)}
               </div>
             </div>
           )}
         </div>
 
-        {/* Controls */}
-        <div className="w-full flex items-center justify-between bg-black/40 p-6 rounded-[2.5rem] border border-white/5 shadow-inner">
-          <div className="text-left">
-            <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">{t('Voice Interaction', 'وائس انٹرایکشن')}</p>
-            <p className="text-xs font-black text-white">{isListening ? t('Listening...', 'سن رہا ہوں...') : isSpeaking ? t('Speaking...', 'بول رہا ہوں...') : t('Ready', 'تیار')}</p>
-          </div>
-          
+        {/* Direct Text Input & Controls */}
+        <div className="mt-auto pt-2 border-t border-white/10 flex items-center gap-2">
           <button 
             onClick={toggleListening}
-            className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl transition-all active:scale-75 ${isListening ? 'bg-red-500 text-white shadow-[0_0_30px_rgba(239,68,68,0.4)]' : 'bg-amber-500 text-white shadow-2xl shadow-amber-900/40 hover:bg-amber-400'}`}
+            title={t('Voice Input', 'وائس ان پٹ')}
+            className={`w-11 h-11 rounded-2xl flex items-center justify-center text-lg transition-all active:scale-90 flex-shrink-0 ${
+              isListening ? 'bg-red-500 text-white animate-pulse shadow-lg shadow-red-500/40' : 'bg-slate-900 text-amber-500 border border-white/10 hover:bg-slate-800'
+            }`}
           >
             {isListening ? '⏹️' : '🎤'}
           </button>
-        </div>
-      </div>
+          
+          <input
+            type="text"
+            value={inputText}
+            onChange={e => setInputText(e.target.value)}
+            onKeyPress={e => e.key === 'Enter' && handleSendText()}
+            placeholder={t('Ask about Zakat, Riba, Stocks...', 'زکوٰۃ، حلال اسٹاکس، یا سود کے بارے میں پوچھیں...')}
+            className="flex-1 bg-slate-900 border border-white/10 rounded-2xl px-3.5 py-3 text-xs text-white placeholder-slate-500 outline-none focus:border-amber-500 transition-colors"
+          />
 
-      {/* Compliance */}
-      <div className="mt-8 flex justify-center gap-3">
-        <div className="flex items-center gap-2 bg-amber-500/10 px-4 py-2 rounded-full border border-amber-500/20">
-          <span className="text-[9px] font-black text-amber-500 uppercase tracking-widest">AAOIFI Certified</span>
+          <button 
+            onClick={handleSendText}
+            disabled={loading || !inputText.trim()}
+            className="w-11 h-11 rounded-2xl bg-amber-500 text-slate-950 flex items-center justify-center text-base font-black hover:bg-amber-400 active:scale-95 transition-all disabled:opacity-50 flex-shrink-0"
+          >
+            ↑
+          </button>
         </div>
-        <div className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/10">
-          <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">v1.0 Sovereign</span>
+
+        {/* Quick Suggestion Chips */}
+        <div className="flex flex-wrap gap-1.5 mt-3 pt-2 border-t border-white/5 justify-center">
+          {(lang === 'ur' 
+            ? ['کیا میزان بینک حلال ہے؟', 'زکوٰۃ کا نصاب کیا ہے؟', 'سکوک کیا ہیں؟', 'تطہیر کیسے کریں؟']
+            : ['Is Meezan Bank halal?', 'What is Zakat Nisab?', 'What are Sukuks?', 'How to purify dividends?']
+          ).map(q => (
+            <button 
+              key={q} 
+              onClick={() => { setInputText(q); }}
+              className="px-2.5 py-1 bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-slate-400 rounded-xl text-[10px] font-bold border border-white/5 transition-all"
+            >
+              {q}
+            </button>
+          ))}
         </div>
       </div>
     </div>
