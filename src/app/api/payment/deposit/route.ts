@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server';
 // Production-ready Sandbox mode — swap sandbox URLs for live when going live
 // ─────────────────────────────────────────────────────────────────────────────
 
-const GATEWAY_CONFIG = {
+export const GATEWAY_CONFIG = {
   easypaisa: {
     name: 'EasyPaisa',
     // In production replace with: https://easypay.easypaisa.com.pk/easypay/Index.jsf
@@ -41,7 +41,7 @@ function validateRequest(amount: number, method: string): string | null {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { amount, method, mobileNumber, accountNumber } = body;
+    const { amount, method, mobileNumber } = body;
 
     // ── 1. Validate inputs
     const validationError = validateRequest(Number(amount), method);

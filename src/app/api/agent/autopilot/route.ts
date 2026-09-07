@@ -62,22 +62,29 @@ export async function POST(request: Request) {
       const existingHolding = db.holdings.find((h: any) => h.symbol === stock.symbol);
       if (existingHolding) {
         // Harvesting Logic: If there was profit in existing holding, move it to main balance
-        const currentVal = existingHolding.quantity * stock.price;
-        const costBasis = existingHolding.quantity * existingHolding.avgPrice;
+        const holdQty = existingHolding.quantity ?? existingHolding.units ?? 0;
+        const holdAvg = existingHolding.avgPrice ?? existingHolding.currentPrice ?? stock.price;
+        const currentVal = holdQty * stock.price;
+        const costBasis = holdQty * holdAvg;
         if (currentVal > costBasis) {
           const profit = currentVal - costBasis;
           db.balance += profit; // Profit goes to main wallet automatically!
           existingHolding.avgPrice = stock.price; // Reset cost basis after harvesting profit
         }
         
-        existingHolding.quantity += quantity;
+        existingHolding.quantity = holdQty + quantity;
+        existingHolding.units = holdQty + quantity;
+        existingHolding.invested = (existingHolding.invested || 0) + totalCost;
       } else {
         db.holdings.push({
           symbol: stock.symbol,
           name: stock.name,
+          units: quantity,
           quantity,
+          invested: totalCost,
           avgPrice: stock.price,
           currentPrice: stock.price,
+          pnl: 0,
           sector: stock.sector,
           isWali: true // Mark as managed by Wali
         });

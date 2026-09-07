@@ -120,18 +120,18 @@ export default function WaliAutopilot({ lang }: WaliAutopilotProps) {
   };
 
   return (
-    <div className="p-4 sm:p-6 rounded-2xl sm:rounded-[3rem] bg-slate-950 border border-emerald-500/10 shadow-xl overflow-hidden relative transition-all duration-500 mb-4 sm:mb-6">
-      <div className="absolute top-0 right-0 w-32 h-32 sm:w-48 sm:h-48 bg-emerald-500/5 rounded-full blur-[60px] sm:blur-[80px]" />
+    <div className="p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-slate-950 border border-emerald-500/10 shadow-lg overflow-hidden relative transition-all duration-300 mb-4 sm:mb-6">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl" />
       
       {/* Header */}
-      <div className="flex items-center justify-between mb-4 sm:mb-6">
-        <div className="flex items-center gap-3 sm:gap-4">
-          <div className={`w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-[2rem] flex items-center justify-center text-xl sm:text-3xl transition-all duration-700 flex-shrink-0 ${status === 'scanning' ? 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.4)] rotate-12' : 'bg-slate-900 border border-white/5'}`}>
+      <div className="flex items-center justify-between mb-3 sm:mb-4">
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-lg sm:text-xl transition-all duration-500 flex-shrink-0 ${status === 'scanning' ? 'bg-emerald-500 shadow-md shadow-emerald-900/40 rotate-12' : 'bg-slate-900 border border-white/5'}`}>
             🤖
           </div>
           <div>
-            <h2 className="text-lg sm:text-2xl font-black text-white tracking-tighter italic">WALI<span className="text-emerald-500 text-xs sm:text-sm align-top ml-1">AI</span></h2>
-            <p className="text-[8px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">{t('Sovereign Guardian', 'خود مختار محافظ')}</p>
+            <h2 className="text-base sm:text-lg font-black text-white tracking-tight italic">WALI<span className="text-emerald-500 text-xs align-top ml-1">AI</span></h2>
+            <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">{t('Sovereign Guardian', 'خود مختار محافظ')}</p>
           </div>
         </div>
 
@@ -139,19 +139,19 @@ export default function WaliAutopilot({ lang }: WaliAutopilotProps) {
           status === 'idle' && (
             <button
               onClick={startScanning}
-              className="px-5 py-2.5 sm:px-8 sm:py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl sm:rounded-[1.5rem] font-black text-[11px] sm:text-xs uppercase tracking-widest shadow-lg shadow-emerald-900/40 transition-all active:scale-95"
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-black text-xs uppercase tracking-wider shadow-md transition-all active:scale-95"
             >
               {t('Start Scanning', 'اسکیننگ شروع کریں')}
             </button>
           )
         ) : (
           <div className="text-right flex-shrink-0">
-            <p className="text-[7px] sm:text-[8px] font-black text-amber-500 uppercase tracking-widest mb-0.5 sm:mb-1">{t('Elite Access Pending', 'ایلیٹ رسائی باقی ہے')}</p>
+            <p className="text-[7px] font-black text-amber-500 uppercase tracking-widest mb-0.5">{t('Elite Access Pending', 'ایلیٹ رسائی باقی ہے')}</p>
             <div className="flex gap-1 justify-end">
-              <div className="w-8 sm:w-12 h-1 bg-white/10 rounded-full overflow-hidden">
+              <div className="w-8 h-1 bg-white/10 rounded-full overflow-hidden">
                 <div className="h-full bg-emerald-500" style={{ width: `${Math.min(100, (eligibility.totalInvested / 250000000) * 100)}%` }}></div>
               </div>
-              <div className="w-8 sm:w-12 h-1 bg-white/10 rounded-full overflow-hidden">
+              <div className="w-8 h-1 bg-white/10 rounded-full overflow-hidden">
                 <div className="h-full bg-emerald-500" style={{ width: `${Math.min(100, (eligibility.totalProfit / 500000000) * 100)}%` }}></div>
               </div>
             </div>
@@ -160,39 +160,39 @@ export default function WaliAutopilot({ lang }: WaliAutopilotProps) {
       </div>
 
       {!eligibility.isPremium && (
-        <div className="mb-4 sm:mb-6 p-3.5 sm:p-5 bg-white/5 rounded-xl sm:rounded-3xl border border-white/5 flex items-center justify-between gap-2">
+        <div className="mb-3 sm:mb-4 p-3 bg-white/5 rounded-xl border border-white/5 flex items-center justify-between gap-2">
           <div>
-            <p className="text-[8px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('Progress to Wali AI', 'ولی اے آئی کی طرف پیشرفت')}</p>
-            <p className="text-[11px] sm:text-xs font-bold text-emerald-400 mt-0.5 sm:mt-1">
+            <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">{t('Progress to Wali AI', 'ولی اے آئی کی طرف پیشرفت')}</p>
+            <p className="text-[10px] sm:text-xs font-bold text-emerald-400 mt-0.5">
               {Math.floor((eligibility.totalInvested / 250000000) * 100)}% {t('Invested', 'سرمایہ کاری')} • {Math.floor((eligibility.totalProfit / 500000000) * 100)}% {t('Profit', 'منافع')}
             </p>
           </div>
-          <button className="text-[8px] sm:text-[9px] font-black text-white bg-white/10 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl hover:bg-white/20 transition-all uppercase tracking-widest flex-shrink-0">
+          <button className="text-[8px] font-black text-white bg-white/10 px-2.5 py-1 rounded-lg hover:bg-white/20 transition-all uppercase tracking-widest flex-shrink-0">
              {t('Elite Access Only', 'صرف ایلیٹ رسائی')}
           </button>
         </div>
       )}
       
       {/* Vault Stats */}
-      <div className="grid grid-cols-5 gap-2 sm:gap-3 mb-4 sm:mb-6">
-        <div className="col-span-3 bg-white/5 border border-white/5 rounded-xl sm:rounded-[2rem] p-4 sm:p-6 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-3 sm:p-4 opacity-10 group-hover:opacity-20 transition-opacity text-xl sm:text-2xl pointer-events-none">🏦</div>
-          <p className="text-[8px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1 sm:mb-2">{t('Wali Vault', 'ولی والٹ')}</p>
-          <p className="text-lg sm:text-3xl font-black text-white tabular-nums tracking-tighter">
-            <span className="text-[10px] sm:text-xs font-medium text-emerald-500 mr-1 sm:mr-1.5">PKR</span>
+      <div className="grid grid-cols-5 gap-2 mb-3 sm:mb-4">
+        <div className="col-span-3 bg-white/5 border border-white/5 rounded-xl p-3 sm:p-4 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-2.5 opacity-10 group-hover:opacity-20 transition-opacity text-xl pointer-events-none">🏦</div>
+          <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-1">{t('Wali Vault', 'ولی والٹ')}</p>
+          <p className="text-base sm:text-xl font-black text-white tabular-nums tracking-tight">
+            <span className="text-[9px] font-medium text-emerald-400 mr-1">PKR</span>
             {vaultBalance.toLocaleString()}
           </p>
           <button 
             onClick={() => setShowManageVault(!showManageVault)}
-            className="mt-2 sm:mt-3 text-[9px] sm:text-[10px] font-black text-emerald-500 uppercase flex items-center gap-1 hover:gap-1.5 transition-all"
+            className="mt-1.5 text-[9px] font-black text-emerald-400 uppercase flex items-center gap-1 hover:gap-1.5 transition-all"
           >
             {t('Manage Capital', 'سرمایہ کا انتظام')} <span>→</span>
           </button>
         </div>
-        <div className="col-span-2 bg-emerald-500/5 border border-emerald-500/10 rounded-xl sm:rounded-[2rem] p-4 sm:p-6 flex flex-col justify-center items-center text-center">
-          <p className="text-[8px] sm:text-[10px] font-bold text-emerald-500/60 uppercase tracking-widest mb-0.5 sm:mb-1">{t('Security', 'سیکیورٹی')}</p>
-          <p className="text-sm sm:text-xl font-black text-emerald-500">{t('Verified', 'تصدیق شدہ')}</p>
-          <div className="flex gap-1 mt-1 sm:mt-2">
+        <div className="col-span-2 bg-emerald-500/5 border border-emerald-500/10 rounded-xl p-3 flex flex-col justify-center items-center text-center">
+          <p className="text-[8px] font-bold text-emerald-400/80 uppercase tracking-widest mb-0.5">{t('Security', 'سیکیورٹی')}</p>
+          <p className="text-xs sm:text-sm font-black text-emerald-400">{t('Verified', 'تصدیق شدہ')}</p>
+          <div className="flex gap-1 mt-1">
             {[1,2,3].map(i => <div key={i} className="w-1 h-1 bg-emerald-500 rounded-full" />)}
           </div>
         </div>
@@ -200,18 +200,18 @@ export default function WaliAutopilot({ lang }: WaliAutopilotProps) {
 
       {/* Manage Vault Overlay */}
       {showManageVault && (
-        <div className="mb-4 sm:mb-6 p-4 sm:p-6 bg-slate-900 border border-white/5 rounded-xl sm:rounded-[2.5rem] animate-in slide-in-from-top-4 duration-300">
-          <div className="flex gap-2 sm:gap-3">
+        <div className="mb-3 sm:mb-4 p-3.5 bg-slate-900 border border-white/5 rounded-xl animate-in slide-in-from-top-2 duration-200">
+          <div className="flex gap-2">
             <input 
               type="number" 
               value={allocAmount}
               onChange={(e) => setAllocAmount(e.target.value)}
               placeholder="0.00"
-              className="flex-1 bg-black border border-white/10 rounded-xl sm:rounded-2xl px-3.5 py-2.5 sm:px-5 sm:py-4 text-white font-bold focus:border-emerald-500 outline-none transition-all text-xs sm:text-sm"
+              className="flex-1 bg-black border border-white/10 rounded-xl px-3 py-2 text-white font-bold focus:border-emerald-500 outline-none transition-all text-xs"
             />
-            <div className="flex flex-col gap-1.5 sm:gap-2">
-              <button onClick={() => handleAllocate('allocate')} className="bg-emerald-600 text-white px-4 py-1.5 sm:px-6 sm:py-2 rounded-lg sm:rounded-xl text-[9px] sm:text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-500 transition-colors">Deposit</button>
-              <button onClick={() => handleAllocate('deallocate')} className="bg-slate-800 text-white px-4 py-1.5 sm:px-6 sm:py-2 rounded-lg sm:rounded-xl text-[9px] sm:text-[10px] font-bold uppercase tracking-widest hover:bg-slate-700 transition-colors">Refund</button>
+            <div className="flex flex-col gap-1">
+              <button onClick={() => handleAllocate('allocate')} className="bg-emerald-600 text-white px-3 py-1 rounded-lg text-[9px] font-bold uppercase tracking-wider hover:bg-emerald-500 transition-colors">Deposit</button>
+              <button onClick={() => handleAllocate('deallocate')} className="bg-slate-800 text-white px-3 py-1 rounded-lg text-[9px] font-bold uppercase tracking-wider hover:bg-slate-700 transition-colors">Refund</button>
             </div>
           </div>
         </div>

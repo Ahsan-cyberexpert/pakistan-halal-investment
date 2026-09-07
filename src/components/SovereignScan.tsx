@@ -11,32 +11,32 @@ export default function SovereignScan({ onComplete, isOpen }: SovereignScanProps
   const [status, setStatus] = useState('Initializing Sovereign Bio-Link...');
 
   useEffect(() => {
-    if (isOpen) {
-      setProgress(0);
-      setStatus('Initializing Sovereign Bio-Link...');
-      
-      const timer1 = setTimeout(() => setStatus('Scanning Biometrics...'), 1000);
-      const timer2 = setTimeout(() => setStatus('Verifying Shariah Identity...'), 2500);
-      const timer3 = setTimeout(() => setStatus('Authorized.'), 4000);
+    if (!isOpen) return;
 
-      const interval = setInterval(() => {
-        setProgress(prev => {
-          if (prev >= 100) {
-            clearInterval(interval);
-            setTimeout(onComplete, 500);
-            return 100;
-          }
-          return prev + 2;
-        });
-      }, 80);
+    setProgress(0);
+    setStatus('Initializing Sovereign Bio-Link...');
+    
+    const timer1 = setTimeout(() => setStatus('Scanning Biometrics...'), 1000);
+    const timer2 = setTimeout(() => setStatus('Verifying Shariah Identity...'), 2500);
+    const timer3 = setTimeout(() => setStatus('Authorized.'), 4000);
 
-      return () => {
-        clearTimeout(timer1);
-        clearTimeout(timer2);
-        clearTimeout(timer3);
-        clearInterval(interval);
-      };
-    }
+    const interval = setInterval(() => {
+      setProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          setTimeout(onComplete, 500);
+          return 100;
+        }
+        return prev + 2;
+      });
+    }, 80);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+      clearInterval(interval);
+    };
   }, [isOpen, onComplete]);
 
   if (!isOpen) return null;

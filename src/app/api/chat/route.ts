@@ -57,7 +57,7 @@ export async function POST(request: Request) {
           contents: enrichedContents,
           config: { systemInstruction, temperature: 0.7 }
         });
-        const text = response.text;
+        const text = response.text || '';
         return NextResponse.json({ 
           reply: text,
           audioText: text.replace(/[*#]/g, '') 

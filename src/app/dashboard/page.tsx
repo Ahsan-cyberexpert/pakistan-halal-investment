@@ -1,49 +1,48 @@
 'use client';
 import { useState, useEffect } from 'react';
-import DepositFlow from '@/components/DepositFlow';
-import WithdrawFlow from '@/components/WithdrawFlow';
-import BalanceCard from '@/components/BalanceCard';
-import HalalStockScanner from '@/components/HalalStockScanner';
-import PortfolioDashboard from '@/components/PortfolioDashboard';
-import FinancialHealthScore from '@/components/FinancialHealthScore';
-import PurificationTracker from '@/components/PurificationTracker';
-import FractionalSukuk from '@/components/FractionalSukuk';
-import DigitalCommittee from '@/components/DigitalCommittee';
-import AgriFinancing from '@/components/AgriFinancing';
-import HajjVault from '@/components/HajjVault';
-import GlobalHalalETFs from '@/components/GlobalHalalETFs';
-import WirasatCalculator from '@/components/WirasatCalculator';
-import SovereignScan from '@/components/SovereignScan';
-import PortfolioChart from '@/components/PortfolioChart';
-import ZakatDistribution from '@/components/ZakatDistribution';
-import RoziqAI from '@/components/RoziqAI';
-import PinSecurity from '@/components/PinSecurity';
-import LanguageSelect from '@/components/LanguageSelect';
-import Onboarding from '@/components/Onboarding';
-import SettingsTab from '@/components/SettingsTab';
-import WaliAutopilot from '@/components/WaliAutopilot';
-import AuthGate, { UserProfile } from '@/components/AuthGate';
-import FamilyHealthSaving from '@/components/FamilyHealthSaving';
-import OverseasInvest from '@/components/OverseasInvest';
+import {
+  DepositFlow,
+  WithdrawFlow,
+  BalanceCard,
+  HalalStockScanner,
+  PortfolioDashboard,
+  FinancialHealthScore,
+  PurificationTracker,
+  FractionalSukuk,
+  DigitalCommittee,
+  AgriFinancing,
+  HajjVault,
+  GlobalHalalETFs,
+  WirasatCalculator,
+  SovereignScan,
+  PortfolioChart,
+  ZakatDistribution,
+  RoziqAI,
+  PinSecurity,
+  LanguageSelect,
+  Onboarding,
+  SettingsTab,
+  WaliAutopilot,
+  AuthGate,
+  FamilyHealthSaving,
+  OverseasInvest,
+  ToastContainer,
+} from '@/components';
+import { UserProfile, Holding, ZakatRecord, Transaction, DashboardTab, SupportedLanguage } from '@/types';
 import { getStockBySymbol } from '@/lib/halal-stock-data';
+import { ZAKAT_NISAB_PKR, WALI_INVESTED_THRESHOLD, WALI_PROFIT_THRESHOLD } from '@/lib/constants';
 
-interface Holding {
-  symbol: string; name: string; invested: number; currentPrice: number; units: number; pnl: number;
-}
-interface ZakatRecord {
-  date: string; amount: number; recipient: string;
-}
 
 export default function Dashboard() {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [balance, setBalance] = useState(0);
-  const [transactions, setTransactions] = useState<any[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [modal, setModal] = useState<'deposit' | 'withdraw' | null>(null);
   const [holdings, setHoldings] = useState<Holding[]>([]);
   const [zakatHistory, setZakatHistory] = useState<ZakatRecord[]>([]);
-  const [activeTab, setActiveTab] = useState<'home' | 'portfolio' | 'assets' | 'kameti' | 'zakat' | 'settings'>('home');
-  const [lang, setLangState] = useState<'en' | 'ur'>('en');
+  const [activeTab, setActiveTab] = useState<DashboardTab>('home');
+  const [lang, setLangState] = useState<SupportedLanguage>('en');
   const [showLangSelect, setShowLangSelect] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
@@ -96,18 +95,19 @@ export default function Dashboard() {
   };
 
   const handleLangSelect = (l: 'en' | 'ur') => {
-    localStorage.setItem('roziq_lang', l); setLangState(l); setShowLangSelect(false);
+    setLangState(l); localStorage.setItem('roziq_lang', l);
+    setShowLangSelect(false);
     if (!localStorage.getItem('roziq_onboarded')) setShowOnboarding(true);
   };
   const handleLangChange = (l: 'en' | 'ur') => { localStorage.setItem('roziq_lang', l); setLangState(l); };
 
   const totalPortfolioValue = holdings.reduce((sum, h) => sum + h.invested + h.pnl, 0);
   const dailyPnl = holdings.reduce((sum, h) => sum + h.pnl, 0);
-  const isZakatEligible = (balance + totalPortfolioValue) >= 300000;
+  const isZakatEligible = (balance + totalPortfolioValue) >= ZAKAT_NISAB_PKR;
 
   const totalInvestedHistory = holdings.reduce((sum, h) => sum + h.invested, 0);
   const totalRealizedProfit = transactions.reduce((sum, t) => sum + (t.profit || 0), 0);
-  const isPremium = totalInvestedHistory >= 250000000 && totalRealizedProfit >= 500000000;
+  const isPremium = totalInvestedHistory >= WALI_INVESTED_THRESHOLD && totalRealizedProfit >= WALI_PROFIT_THRESHOLD;
 
   const handleTransactionSuccess = async (data: any) => {
     if (['buy_stock', 'buy_sukuk', 'zakat', 'withdraw', 'health_save', 'overseas_invest'].includes(data.type)) {
@@ -118,7 +118,14 @@ export default function Dashboard() {
 
   const processTransaction = async (data: any) => {
     let newBal = balance; let newHoldings = [...holdings]; let newTxs = [...transactions]; let newZk = [...zakatHistory];
-    const txRecord = { id: Date.now(), type: data.type, amount: data.amount, symbol: data.symbol || data.name || data.type, date: new Date().toISOString() };
+    const txRecord: Transaction = {
+      id: Date.now(),
+      type: data.type,
+      amount: data.amount,
+      symbol: data.symbol || data.name || data.type,
+      status: 'SUCCESS',
+      date: new Date().toISOString(),
+    };
 
     if (data.type === 'deposit') { newBal += data.amount; newTxs.unshift(txRecord); }
     else if (data.type === 'withdraw') { newBal -= data.amount; newTxs.unshift(txRecord); }
@@ -178,6 +185,7 @@ export default function Dashboard() {
 
   return (
     <>
+      <ToastContainer />
       {showLangSelect && <LanguageSelect onSelect={handleLangSelect} />}
       {showOnboarding && !showLangSelect && <Onboarding lang={lang} onComplete={() => { setShowOnboarding(false); localStorage.setItem('roziq_onboarded', '1'); }} />}
       {!isAuthorized && !showLangSelect && !showOnboarding && <AuthGate onSuccess={handleAuthSuccess} />}
@@ -213,38 +221,64 @@ export default function Dashboard() {
       {/* Master AI Agent (Voice + Write + Linked Accounts) */}
       <RoziqAI balance={balance} holdings={holdings} transactions={transactions} lang={lang} />
 
-      <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-emerald-100 selection:text-emerald-900 overflow-x-hidden pb-32" dir={lang === 'ur' ? 'rtl' : 'ltr'}>
+      <div className="min-h-screen text-slate-900 selection:bg-emerald-100 selection:text-emerald-900 overflow-x-hidden pb-32" style={{ background: 'var(--bg-primary)' }} dir={lang === 'ur' ? 'rtl' : 'ltr'}>
         {/* Top Header */}
-        <header className="sticky top-0 z-50 bg-slate-50/80 backdrop-blur-xl border-b border-slate-200/50 px-4 sm:px-6 py-3 flex justify-between items-center shadow-sm">
+        <header className="sticky top-0 z-50 backdrop-blur-xl border-b px-4 sm:px-6 py-3 flex justify-between items-center shadow-sm" style={{ background: 'var(--bg-primary)', borderColor: 'var(--border-color)' }}>
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 bg-emerald-600 rounded-xl flex items-center justify-center text-base sm:text-lg shadow-md shadow-emerald-900/20">🇵🇰</div>
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl sm:rounded-2xl flex items-center justify-center text-base sm:text-lg shadow-md shadow-emerald-900/20">🇵🇰</div>
             <div>
-              <h1 className="text-sm sm:text-base font-black tracking-tighter text-slate-900">ROZIQ</h1>
-              <p className="text-[7px] sm:text-[8px] font-black text-emerald-600 uppercase tracking-[0.2em]">{currentUser ? currentUser.name : t('Wealth OS', 'ویلتھ او ایس')}</p>
+              <div className="flex items-center gap-2">
+                <h1 className="text-sm sm:text-base font-black tracking-tighter" style={{ color: 'var(--text-primary)' }}>ROZIQ</h1>
+                <div className="hidden sm:flex items-center gap-1 bg-emerald-50 border border-emerald-100 rounded-lg px-2 py-0.5">
+                  <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                  <span className="text-[8px] font-black text-emerald-600 uppercase tracking-wider">Live</span>
+                </div>
+              </div>
+              <p className="text-[8px] sm:text-[9px] font-black text-emerald-600 uppercase tracking-[0.2em]">
+                {currentUser ? currentUser.name : t('Wealth OS', 'ویلتھ او ایس')}
+              </p>
+            </div>
+            {/* Desktop tab name breadcrumb */}
+            <div className="hidden lg:flex items-center gap-1.5 ml-2" style={{ color: 'var(--text-muted)' }}>
+              <span className="text-xs">/</span>
+              <span className="text-xs font-black uppercase tracking-widest capitalize" style={{ color: 'var(--text-secondary)' }}>
+                {activeTab === 'home' ? 'Dashboard' : activeTab === 'portfolio' ? 'Halal Stocks' : activeTab === 'assets' ? 'Sovereign Assets' : activeTab === 'kameti' ? 'Family & Takaful' : activeTab === 'zakat' ? 'Zakat & Impact' : 'Settings'}
+              </span>
             </div>
           </div>
+
           <div className="flex items-center gap-2">
             {currentUser?.isOverseas && (
-              <span className="px-2 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-[9px] font-black uppercase tracking-widest hidden sm:inline-block">
+              <span className="px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-[9px] font-black uppercase tracking-widest hidden sm:inline-flex items-center gap-1">
                 🌍 {currentUser.country || 'Overseas'}
               </span>
             )}
-            
-            {/* Prominent Reset Demo Data / Delete Account Button */}
-            <button 
+
+            {isPremium && (
+              <span className="hidden md:inline-flex items-center gap-1 px-2.5 py-1 bg-gradient-to-r from-amber-400 to-yellow-500 text-amber-900 rounded-xl text-[9px] font-black uppercase tracking-widest shadow-sm">
+                ⭐ Elite
+              </span>
+            )}
+
+            {/* Reset Demo Data */}
+            <button
               onClick={() => setShowResetModal(true)}
               title={t('Delete Account & Reset Demo Data', 'اکاؤنٹ ڈیلیٹ کریں اور ڈیٹا ری سیٹ کریں')}
               className="px-2.5 py-1.5 sm:px-3 sm:py-2 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white border border-red-200 hover:border-red-500 rounded-xl text-[10px] sm:text-xs font-black transition-all active:scale-95 flex items-center gap-1 shadow-sm"
             >
-              <span>🗑️</span> <span className="hidden sm:inline">{t('Reset Demo', 'ڈیٹا ری سیٹ')}</span>
+              <span>🗑️</span> <span className="hidden sm:inline">{t('Reset Demo', 'ری سیٹ')}</span>
             </button>
 
-            <button className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white flex items-center justify-center border border-slate-200 hover:bg-slate-50 transition-all active:scale-90 text-xs sm:text-sm shadow-sm">
+            <button className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center border border-slate-200 hover:bg-slate-50 transition-all active:scale-90 text-xs sm:text-sm shadow-sm" style={{ background: 'var(--bg-card)' }}>
               🔔
             </button>
-            <button onClick={() => setActiveTab('settings')} className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 border-2 shadow-md transition-all active:scale-90 ${activeTab === 'settings' ? 'border-emerald-400 scale-105 shadow-emerald-500/30' : 'border-white'}`}>
+
+            <button
+              onClick={() => setActiveTab('settings')}
+              className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 border-2 shadow-md transition-all active:scale-90 ${activeTab === 'settings' ? 'border-emerald-400 scale-105 shadow-emerald-500/30' : 'border-white'}`}
+            >
               <div className="w-full h-full rounded-xl border border-black/10 flex items-center justify-center text-white text-xs font-black">
-                {currentUser ? currentUser.name.charAt(0) : '⚙️'}
+                {currentUser ? currentUser.name.charAt(0).toUpperCase() : '⚙'}
               </div>
             </button>
           </div>
@@ -256,7 +290,7 @@ export default function Dashboard() {
             
             {/* Left Column: Wallet Overview & Navigation */}
             <div className="lg:col-span-4 space-y-4 sm:space-y-6 sticky top-20 z-10">
-              <BalanceCard balance={balance} onDeposit={() => setModal('deposit')} onWithdraw={() => setModal('withdraw')} />
+              <BalanceCard balance={balance} portfolioValue={totalPortfolioValue} onDeposit={() => setModal('deposit')} onWithdraw={() => setModal('withdraw')} />
               
               {isPremium && (
                 <div className="hidden lg:block">
@@ -264,24 +298,58 @@ export default function Dashboard() {
                 </div>
               )}
 
-              {/* Quick Tab Selector for Desktop Sidebar */}
-              <div className="hidden lg:block bg-white rounded-3xl p-4 border border-slate-200 shadow-sm space-y-1">
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-3 mb-2">{t('Navigation Menu', 'نیویگیشن مینو')}</p>
+              {/* Desktop Sidebar Navigation */}
+              <div className="hidden lg:block rounded-3xl p-4 border shadow-sm space-y-1" style={{ background: 'var(--bg-card)', borderColor: 'var(--border-color)' }}>
+                <p className="text-[9px] font-black uppercase tracking-widest px-3 mb-3" style={{ color: 'var(--text-muted)' }}>
+                  {t('Navigation', 'نیویگیشن')}
+                </p>
                 {[
-                  { id: 'home', icon: '🏠', labelEn: 'Home Dashboard', labelUr: 'ہوم ڈیش بورڈ' },
-                  { id: 'portfolio', icon: '💼', labelEn: 'Halal Stocks & PSX', labelUr: 'حلال اسٹاکس' },
-                  { id: 'assets', icon: '🚜', labelEn: 'Sukuks & Overseas', labelUr: 'سکوک اور اوورسیز' },
-                  { id: 'kameti', icon: '🤝', labelEn: 'Family Health Takaful', labelUr: 'فیملی ہیلتھ تکافل' },
-                  { id: 'zakat', icon: '🕋', labelEn: 'Zakat & Impact', labelUr: 'زکوٰۃ اور اثر' },
+                  { id: 'home', icon: '🏠', labelEn: 'Dashboard', labelUr: 'ڈیش بورڈ', sub: t('Overview & Activity', 'جائزہ') },
+                  { id: 'portfolio', icon: '📈', labelEn: 'Halal Stocks', labelUr: 'حلال اسٹاکس', sub: t('PSX Screened', 'PSX اسکریند') },
+                  { id: 'assets', icon: '🏛️', labelEn: 'Sovereign Assets', labelUr: 'خود مختار اثاثے', sub: t('Sukuk, Hajj, Agri', 'سکوک، حج') },
+                  { id: 'kameti', icon: '🤝', labelEn: 'Family & Takaful', labelUr: 'فیملی ہیلتھ تکافل', sub: t('Health & Kameti', 'صحت') },
+                  { id: 'zakat', icon: '🕋', labelEn: 'Zakat & Impact', labelUr: 'زکوٰۃ اور اثر', sub: t('Social Finance', 'سماجی مالیات') },
                 ].map((tab) => (
-                  <button key={tab.id} onClick={() => setActiveTab(tab.id as any)}
-                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-black transition-all text-left ${activeTab === tab.id ? 'bg-emerald-600 text-white shadow-md shadow-emerald-900/20' : 'text-slate-600 hover:bg-slate-50'}`}>
-                    <span className="text-base">{tab.icon}</span>
-                    <span>{lang === 'ur' ? tab.labelUr : tab.labelEn}</span>
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id as any)}
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-2xl text-left transition-all duration-200 group/nav ${
+                      activeTab === tab.id
+                        ? 'bg-emerald-600 text-white shadow-md shadow-emerald-900/20'
+                        : 'hover:bg-emerald-50'
+                    }`}
+                  >
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-base flex-shrink-0 transition-all ${
+                      activeTab === tab.id ? 'bg-white/20' : 'bg-slate-100 group-hover/nav:bg-emerald-100'
+                    }`}>
+                      {tab.icon}
+                    </div>
+                    <div className="min-w-0">
+                      <div className={`text-xs font-black tracking-tight ${activeTab === tab.id ? 'text-white' : ''}`} style={activeTab !== tab.id ? { color: 'var(--text-primary)' } : {}}>
+                        {lang === 'ur' ? tab.labelUr : tab.labelEn}
+                      </div>
+                      <div className={`text-[9px] font-medium truncate ${activeTab === tab.id ? 'text-emerald-100' : ''}`} style={activeTab !== tab.id ? { color: 'var(--text-muted)' } : {}}>
+                        {tab.sub}
+                      </div>
+                    </div>
+                    {activeTab === tab.id && <span className="ml-auto text-white/60 text-xs">→</span>}
                   </button>
                 ))}
 
-                <div className="pt-3 mt-3 border-t border-slate-100 px-2">
+                {/* Zakat Eligibility Indicator */}
+                {isZakatEligible && (
+                  <div className="mx-1 mt-2 p-3 bg-amber-50 border border-amber-200 rounded-2xl">
+                    <div className="flex items-center gap-2">
+                      <span className="text-base">🕋</span>
+                      <div>
+                        <div className="text-[10px] font-black text-amber-800">{t('Zakat Due', 'زکوٰۃ واجب')}</div>
+                        <div className="text-[9px] text-amber-600 font-medium">{t('You are Nisab eligible', 'آپ نصاب کی شرط پوری کرتے ہیں')}</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="pt-3 mt-2 border-t px-1" style={{ borderColor: 'var(--border-color)' }}>
                   <button 
                     onClick={() => setShowResetModal(true)}
                     className="w-full py-2.5 px-3 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white border border-red-200 hover:border-red-500 rounded-xl text-xs font-black transition-all active:scale-95 flex items-center justify-center gap-1.5 shadow-sm"
@@ -416,9 +484,9 @@ export default function Dashboard() {
         </main>
 
         {modal && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4 z-[60] animate-in fade-in">
-            <div className="relative w-full max-w-md bg-white rounded-t-[2.5rem] sm:rounded-[2.5rem] p-5 sm:p-6 shadow-2xl animate-in slide-in-from-bottom-full duration-300">
-              <button onClick={() => setModal(null)} className="absolute top-5 right-6 text-slate-400 hover:text-slate-600 transition-colors">✕</button>
+          <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 z-[60] animate-in fade-in">
+            <div className="relative w-full max-w-sm sm:max-w-md bg-white rounded-t-3xl sm:rounded-3xl p-4 sm:p-5 shadow-2xl animate-in slide-in-from-bottom-full duration-200">
+              <button onClick={() => setModal(null)} className="absolute top-4 right-5 text-slate-400 hover:text-slate-600 transition-colors p-1 text-sm">✕</button>
               <div className="mt-1">
                 {modal === 'deposit' ? <DepositFlow onSuccess={handleTransactionSuccess} /> : <WithdrawFlow onSuccess={handleTransactionSuccess} />}
               </div>

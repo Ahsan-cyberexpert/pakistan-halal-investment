@@ -8,7 +8,6 @@ interface MuftiAIProps {
 export default function MuftiAI({ lang }: MuftiAIProps) {
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [transcript, setTranscript] = useState('');
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(false);
   
@@ -24,9 +23,8 @@ export default function MuftiAI({ lang }: MuftiAIProps) {
       recognitionRef.current.lang = lang === 'ur' ? 'ur-PK' : 'en-US';
 
       recognitionRef.current.onresult = (event: any) => {
-        const text = event.results[0][0].transcript;
-        setTranscript(text);
-        askMufti(text);
+        const text = event.results[0][0]?.transcript;
+        if (text) askMufti(text);
       };
 
       recognitionRef.current.onend = () => setIsListening(false);
@@ -43,7 +41,6 @@ export default function MuftiAI({ lang }: MuftiAIProps) {
       recognitionRef.current?.stop();
     } else {
       if ('vibrate' in navigator) navigator.vibrate(50);
-      setTranscript('');
       setIsListening(true);
       try {
         recognitionRef.current?.start();

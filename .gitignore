@@ -19,3 +19,11 @@ yarn-error.log
 
 # Sovereign Wallet Data (private user data - never commit)
 /data/
+*.tsbuildinfo
+
+# SRS Reports & code dumps (academic/local only - do not push)
+ROZIQ_SRS_REPORT.docx
+ROZIQ_SRS_REPORT.md
+COMPLETE_PROJECT_CODE.md
+COMPLETE_PROJECT_CODE.txt
+generate_srs_doc.py

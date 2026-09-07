@@ -123,7 +123,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') sendPrompt(prompt);
+    if (e.key === 'Enter' && !e.shiftKey) sendPrompt(prompt);
   };
 
   return (
@@ -143,25 +143,25 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
         <div className="fixed inset-0 z-[2000] flex items-end sm:items-center justify-center p-3 sm:p-4" dir={lang === 'ur' ? 'rtl' : 'ltr'}>
           <div className="absolute inset-0 bg-slate-900/70 backdrop-blur-sm" onClick={() => setIsOpen(false)}></div>
           
-          <div className="relative w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl overflow-hidden animate-in slide-in-from-bottom-10 duration-300 flex flex-col max-h-[85vh] border border-slate-100">
+          <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden animate-in slide-in-from-bottom-6 duration-200 flex flex-col max-h-[85vh] border border-slate-100">
             {/* Top Brand Header */}
-            <div className="bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 p-5 sm:p-6 text-white flex-shrink-0 relative overflow-hidden">
+            <div className="bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 p-4 sm:p-5 text-white flex-shrink-0 relative overflow-hidden">
               <div className="absolute -right-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
               
-              <div className="flex justify-between items-center mb-3 relative z-10">
-                <div className="flex items-center gap-3">
-                  <div className={`w-11 h-11 bg-white/15 backdrop-blur-md rounded-2xl flex items-center justify-center text-2xl shadow-inner border border-white/20 transition-transform duration-500 ${isListening ? 'rotate-12 scale-110 bg-amber-500' : isSpeaking ? 'animate-bounce bg-emerald-50' : ''}`}>
+              <div className="flex justify-between items-center mb-2.5 relative z-10">
+                <div className="flex items-center gap-2.5">
+                  <div className={`w-9 h-9 sm:w-10 sm:h-10 bg-white/15 backdrop-blur-md rounded-2xl flex items-center justify-center text-xl sm:text-2xl shadow-inner border border-white/20 transition-transform duration-300 ${isListening ? 'rotate-12 scale-110 bg-amber-500' : isSpeaking ? 'animate-bounce bg-emerald-50' : ''}`}>
                     🤖
                   </div>
                   <div>
-                    <h3 className="font-black text-base tracking-tight flex items-center gap-1.5">
+                    <h3 className="font-black text-sm sm:text-base tracking-tight flex items-center gap-1.5">
                       ROZIQ <span className="text-emerald-200">AI</span>
-                      <span className="text-[8px] bg-white/20 px-2 py-0.5 rounded-full border border-white/30 uppercase tracking-widest">Master Agent</span>
+                      <span className="text-[7px] sm:text-[8px] bg-white/20 px-1.5 py-0.5 rounded-full border border-white/30 uppercase tracking-widest">Master Agent</span>
                     </h3>
-                    <p className="text-[10px] font-bold text-emerald-100/80">{lang === 'ur' ? 'شرعی و مالیاتی مشیر (اکاؤنٹ سے منسلک)' : 'Sovereign Wealth Guardian (Account Linked)'}</p>
+                    <p className="text-[9px] sm:text-[10px] font-bold text-emerald-100/80">{lang === 'ur' ? 'شرعی و مالیاتی مشیر (اکاؤنٹ سے منسلک)' : 'Sovereign Wealth Guardian (Account Linked)'}</p>
                   </div>
                 </div>
-                <button onClick={() => setIsOpen(false)} className="text-white/70 hover:text-white text-lg p-1 bg-white/10 rounded-xl w-8 h-8 flex items-center justify-center backdrop-blur-sm border border-white/10">✕</button>
+                <button onClick={() => setIsOpen(false)} className="text-white/70 hover:text-white text-sm p-1 bg-white/10 rounded-xl w-7 h-7 flex items-center justify-center backdrop-blur-sm border border-white/10">✕</button>
               </div>
               
               {/* AI Response Display Area */}
@@ -218,7 +218,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
                     type="text"
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
-                    onKeyPress={handleKeyPress}
+                    onKeyDown={handleKeyPress}
                     placeholder={lang === 'ur' ? 'لکھ کر سوال پوچھیں (زکوٰۃ، حلال اسٹاکس، بیلنس)...' : 'Write a question (Zakat, Halal stocks, Balance)...'}
                     className="flex-1 bg-white text-slate-800 placeholder-slate-400 rounded-xl px-4 py-3 text-xs font-bold outline-none border border-slate-200 focus:border-emerald-500 shadow-inner transition-colors"
                   />

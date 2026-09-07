@@ -1,0 +1,410 @@
+﻿/* ================================================================
+   ROZIQ DESIGN TOKENS v1.0 — Sovereign Architecture
+   ================================================================
+
+   RULE: Never use raw hex codes in components.
+   Always reference these tokens.
+
+   Hierarchy:
+     Base (unchanging) -> Context (per-screen) -> Component (reusable)
+
+   Contexts:
+     marketing  -- Heavy gold, Islamic geometry, aspirational
+     app        -- Restrained gold, emerald trust, functional luxury
+     trading    -- Minimal, dense, charcoal dominant
+     spiritual  -- Warm amber/bronze, soft illumination
+     security   -- Cold, technical, zero gold
+   ================================================================ */
+
+/* ─────────────────────────────────────────────────────────────────
+   1. BASE PRIMITIVES — The Immutable Brand DNA
+   Never change these per context. They are Roziq's identity.
+   ───────────────────────────────────────────────────────────────── */
+:root {
+  /* Brand Core */
+  --rz-black:          #0a0a0a;
+  --rz-gold:           #c9a227;
+  --rz-gold-light:     #e8d48b;
+  --rz-gold-dark:      #8b6914;
+  --rz-gold-dim:       rgba(201, 162, 39, 0.15);
+
+  --rz-emerald:        #004d40;
+  --rz-emerald-light:  #00695c;
+  --rz-emerald-glow:   #4db6ac;
+  --rz-emerald-dim:    rgba(0, 77, 64, 0.2);
+
+  --rz-ruby:           #8b1538;
+  --rz-ruby-light:     #a61e4d;
+  --rz-ruby-dim:       rgba(139, 21, 56, 0.2);
+
+  --rz-pearl:          #f5f5dc;
+  --rz-pearl-dim:      rgba(245, 245, 220, 0.6);
+
+  --rz-bronze:         #cd7f32;
+  --rz-bronze-light:   #daa520;
+  --rz-bronze-dim:     rgba(205, 127, 50, 0.15);
+
+  --rz-onyx:           #1a1a1a;
+  --rz-charcoal:       #2d2d2d;
+  --rz-charcoal-light: #3a3a3a;
+  --rz-slate:          #666666;
+  --rz-slate-light:    #888888;
+
+  /* Functional */
+  --rz-success:        #4db6ac;
+  --rz-warning:        #daa520;
+  --rz-danger:         #cf4b4b;
+  --rz-info:           #5c8aff;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   2. CONTEXT TOKENS — The 5 Personalities
+
+   Usage in components:
+     background: var(--ctx-bg-primary);
+     color: var(--ctx-text-primary);
+
+   Switch context by setting data-context on <html> or a parent.
+   ───────────────────────────────────────────────────────────────── */
+
+/* MARKETING — Aspirational, Heavy Gold, Islamic Geometry */
+[data-context="marketing"] {
+  --ctx-bg-primary:       var(--rz-black);
+  --ctx-bg-secondary:     #111111;
+  --ctx-bg-card:          linear-gradient(145deg, #161616 0%, #111111 100%);
+  --ctx-bg-elevated:      #1a1a1a;
+  --ctx-bg-hover:         #222222;
+
+  --ctx-text-primary:     var(--rz-pearl);
+  --ctx-text-secondary:   var(--rz-gold);
+  --ctx-text-muted:       #888888;
+  --ctx-text-inverse:     var(--rz-black);
+
+  --ctx-accent-primary:   var(--rz-gold);
+  --ctx-accent-secondary: var(--rz-emerald);
+  --ctx-accent-tertiary:  var(--rz-ruby);
+
+  --ctx-border-subtle:    rgba(201, 162, 39, 0.15);
+  --ctx-border-medium:    rgba(201, 162, 39, 0.3);
+  --ctx-border-strong:    rgba(201, 162, 39, 0.5);
+
+  --ctx-shadow-sm:        0 4px 24px rgba(0,0,0,0.5);
+  --ctx-shadow-md:        0 8px 40px rgba(0,0,0,0.6), 0 0 20px rgba(201,162,39,0.05);
+  --ctx-shadow-lg:        0 20px 60px rgba(0,0,0,0.7), 0 0 40px rgba(201,162,39,0.08);
+  --ctx-shadow-gold:      0 0 30px rgba(201,162,39,0.2);
+
+  --ctx-geometry-opacity: 0.08;
+  --ctx-gold-density:     0.35;   /* 0-1: how much gold appears */
+  --ctx-corner-radius:    1.5rem; /* 24px — generous, luxurious */
+  --ctx-spacing-density:  1.25;   /* multiplier */
+  --ctx-typography-scale: 1.15;   /* larger, more airy */
+}
+
+/* APP — Functional Luxury, Restrained Gold, Emerald Trust */
+[data-context="app"] {
+  --ctx-bg-primary:       var(--rz-black);
+  --ctx-bg-secondary:     #0e0e0e;
+  --ctx-bg-card:          linear-gradient(145deg, #131313 0%, #0f0f0f 100%);
+  --ctx-bg-elevated:      #161616;
+  --ctx-bg-hover:         #1c1c1c;
+
+  --ctx-text-primary:     var(--rz-pearl);
+  --ctx-text-secondary:   var(--rz-gold-light);
+  --ctx-text-muted:       #555555;
+  --ctx-text-inverse:     var(--rz-black);
+
+  --ctx-accent-primary:   var(--rz-emerald-glow);
+  --ctx-accent-secondary: var(--rz-gold);
+  --ctx-accent-tertiary:  var(--rz-ruby);
+
+  --ctx-border-subtle:    rgba(255, 255, 255, 0.06);
+  --ctx-border-medium:    rgba(201, 162, 39, 0.15);
+  --ctx-border-strong:    rgba(201, 162, 39, 0.3);
+
+  --ctx-shadow-sm:        0 2px 12px rgba(0,0,0,0.5);
+  --ctx-shadow-md:        0 4px 24px rgba(0,0,0,0.6);
+  --ctx-shadow-lg:        0 12px 40px rgba(0,0,0,0.7);
+  --ctx-shadow-gold:      0 0 20px rgba(201,162,39,0.1);
+
+  --ctx-geometry-opacity: 0.03;
+  --ctx-gold-density:     0.12;
+  --ctx-corner-radius:    1rem;   /* 16px — balanced */
+  --ctx-spacing-density:  1.0;
+  --ctx-typography-scale: 1.0;
+}
+
+/* TRADING — Minimal, Dense, Functional */
+[data-context="trading"] {
+  --ctx-bg-primary:       #080808;
+  --ctx-bg-secondary:     #0a0a0a;
+  --ctx-bg-card:          #0d0d0d;
+  --ctx-bg-elevated:      #111111;
+  --ctx-bg-hover:         #151515;
+
+  --ctx-text-primary:     #e0e0e0;
+  --ctx-text-secondary:   #aaaaaa;
+  --ctx-text-muted:       #444444;
+  --ctx-text-inverse:     #080808;
+
+  --ctx-accent-primary:   var(--rz-emerald-glow);
+  --ctx-accent-secondary: var(--rz-gold);
+  --ctx-accent-tertiary:  var(--rz-danger);
+
+  --ctx-border-subtle:    rgba(255, 255, 255, 0.04);
+  --ctx-border-medium:    rgba(255, 255, 255, 0.08);
+  --ctx-border-strong:    rgba(201, 162, 39, 0.25);
+
+  --ctx-shadow-sm:        none;
+  --ctx-shadow-md:        0 2px 8px rgba(0,0,0,0.8);
+  --ctx-shadow-lg:        0 4px 16px rgba(0,0,0,0.9);
+  --ctx-shadow-gold:      none;
+
+  --ctx-geometry-opacity: 0.0;    /* ZERO decoration */
+  --ctx-gold-density:     0.05;   /* Gold only on CTAs */
+  --ctx-corner-radius:    0.5rem; /* 8px — sharp, fast */
+  --ctx-spacing-density:  0.75;   /* Tighter */
+  --ctx-typography-scale: 0.92;   /* Compact */
+}
+
+/* SPIRITUAL — Warm, Devotional, Amber Illumination */
+[data-context="spiritual"] {
+  --ctx-bg-primary:       #0c0a08;
+  --ctx-bg-secondary:     #12100d;
+  --ctx-bg-card:          linear-gradient(145deg, #1a1612 0%, #141210 100%);
+  --ctx-bg-elevated:      #1e1a14;
+  --ctx-bg-hover:         #252018;
+
+  --ctx-text-primary:     #f0e6d3;
+  --ctx-text-secondary:   var(--rz-bronze-light);
+  --ctx-text-muted:       #6b6050;
+  --ctx-text-inverse:     #0c0a08;
+
+  --ctx-accent-primary:   var(--rz-bronze);
+  --ctx-accent-secondary: var(--rz-gold);
+  --ctx-accent-tertiary:  var(--rz-emerald-glow);
+
+  --ctx-border-subtle:    rgba(205, 127, 50, 0.12);
+  --ctx-border-medium:    rgba(205, 127, 50, 0.25);
+  --ctx-border-strong:    rgba(205, 127, 50, 0.4);
+
+  --ctx-shadow-sm:        0 4px 24px rgba(0,0,0,0.5);
+  --ctx-shadow-md:        0 8px 32px rgba(0,0,0,0.6), 0 0 30px rgba(205,127,50,0.05);
+  --ctx-shadow-lg:        0 16px 48px rgba(0,0,0,0.7), 0 0 40px rgba(205,127,50,0.08);
+  --ctx-shadow-gold:      0 0 30px rgba(205,127,50,0.15);
+
+  --ctx-geometry-opacity: 0.05;
+  --ctx-gold-density:     0.2;    /* Bronze-gold warmth */
+  --ctx-corner-radius:    1.25rem;/* 20px — softer */
+  --ctx-spacing-density:  1.1;
+  --ctx-typography-scale: 1.05;
+}
+
+/* SECURITY — Cold, Technical, Fortress */
+[data-context="security"] {
+  --ctx-bg-primary:       #070707;
+  --ctx-bg-secondary:     #0a0a0a;
+  --ctx-bg-card:          #0d0d0f;
+  --ctx-bg-elevated:      #111114;
+  --ctx-bg-hover:         #15151a;
+
+  --ctx-text-primary:     #d0d0d8;
+  --ctx-text-secondary:   #8888a0;
+  --ctx-text-muted:       #444450;
+  --ctx-text-inverse:     #070707;
+
+  --ctx-accent-primary:   var(--rz-emerald-glow);
+  --ctx-accent-secondary: var(--rz-info);
+  --ctx-accent-tertiary:  var(--rz-danger);
+
+  --ctx-border-subtle:    rgba(255, 255, 255, 0.05);
+  --ctx-border-medium:    rgba(255, 255, 255, 0.1);
+  --ctx-border-strong:    rgba(77, 182, 172, 0.3);
+
+  --ctx-shadow-sm:        inset 0 1px 0 rgba(255,255,255,0.02);
+  --ctx-shadow-md:        0 4px 24px rgba(0,0,0,0.8);
+  --ctx-shadow-lg:        0 8px 32px rgba(0,0,0,0.9);
+  --ctx-shadow-gold:      none;   /* NO gold glow */
+
+  --ctx-geometry-opacity: 0.0;
+  --ctx-gold-density:     0.0;    /* ZERO gold */
+  --ctx-corner-radius:    0.75rem;/* 12px — utilitarian */
+  --ctx-spacing-density:  0.85;
+  --ctx-typography-scale: 0.95;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   3. COMPONENT TOKENS — Reusable Patterns
+   These reference context tokens, never base primitives directly.
+   ───────────────────────────────────────────────────────────────── */
+
+/* Card System */
+.sovereign-card {
+  background: var(--ctx-bg-card);
+  border: 1px solid var(--ctx-border-subtle);
+  border-radius: var(--ctx-corner-radius);
+  box-shadow: var(--ctx-shadow-sm);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.sovereign-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--ctx-border-medium), transparent);
+  opacity: var(--ctx-gold-density);
+}
+
+.sovereign-card:hover {
+  border-color: var(--ctx-border-medium);
+  box-shadow: var(--ctx-shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Button System */
+.btn-primary {
+  background: linear-gradient(135deg, var(--rz-gold) 0%, var(--rz-gold-dark) 100%);
+  color: var(--rz-black);
+  font-weight: 800;
+  border-radius: calc(var(--ctx-corner-radius) * 0.75);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  box-shadow: var(--ctx-shadow-gold);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: rgba(201, 162, 39, calc(var(--ctx-gold-density) * 0.3));
+  border: 1px solid var(--ctx-border-medium);
+  color: var(--ctx-accent-secondary);
+  font-weight: 700;
+  border-radius: calc(var(--ctx-corner-radius) * 0.75);
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(201, 162, 39, calc(var(--ctx-gold-density) * 0.5));
+  border-color: var(--ctx-border-strong);
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--ctx-border-subtle);
+  color: var(--ctx-text-muted);
+  font-weight: 600;
+  border-radius: calc(var(--ctx-corner-radius) * 0.75);
+  transition: all 0.3s ease;
+}
+
+.btn-ghost:hover {
+  border-color: var(--ctx-border-medium);
+  color: var(--ctx-text-primary);
+}
+
+/* Text Utilities */
+.text-gold-gradient {
+  background: linear-gradient(135deg, var(--rz-gold-light) 0%, var(--rz-gold) 50%, var(--rz-gold-dark) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-accent-gradient {
+  background: linear-gradient(135deg, var(--ctx-accent-primary) 0%, var(--ctx-accent-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Input System */
+.input-sovereign {
+  background: var(--ctx-bg-elevated);
+  border: 1px solid var(--ctx-border-subtle);
+  color: var(--ctx-text-primary);
+  border-radius: calc(var(--ctx-corner-radius) * 0.75);
+  padding: 0.875rem 1rem;
+  font-weight: 500;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input-sovereign:focus {
+  border-color: var(--ctx-border-strong);
+  box-shadow: 0 0 0 3px rgba(201, 162, 39, calc(var(--ctx-gold-density) * 0.15));
+}
+
+/* Badge System */
+.badge {
+  font-size: 0.625rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+}
+
+.badge-gold {
+  background: rgba(201, 162, 39, calc(var(--ctx-gold-density) * 0.25));
+  border-color: rgba(201, 162, 39, calc(var(--ctx-gold-density) * 0.4));
+  color: var(--rz-gold);
+}
+
+.badge-emerald {
+  background: var(--rz-emerald-dim);
+  border-color: rgba(0, 77, 64, 0.3);
+  color: var(--rz-emerald-glow);
+}
+
+.badge-bronze {
+  background: var(--rz-bronze-dim);
+  border-color: rgba(205, 127, 50, 0.3);
+  color: var(--rz-bronze-light);
+}
+
+/* Geometry Overlay */
+.geometry-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--ctx-geometry-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a227' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+  mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+}
+
+/* Glow Effects */
+.glow-gold {
+  box-shadow: 0 0 calc(20px * var(--ctx-gold-density)) rgba(201, 162, 39, calc(0.2 * var(--ctx-gold-density)));
+}
+
+.glow-emerald {
+  box-shadow: 0 0 20px rgba(77, 182, 172, 0.15);
+}
+
+/* Status Colors */
+.status-success { color: var(--rz-success); }
+.status-warning { color: var(--rz-warning); }
+.status-danger  { color: var(--rz-danger); }
+.status-info    { color: var(--rz-info); }
+
+/* Animations */
+@keyframes shimmer-gold {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-gold {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.4); }
+  50%       { box-shadow: 0 0 0 8px rgba(201, 162, 39, 0); }
+}
+
+.animate-pulse-gold { animation: pulse-gold 2s infinite; }

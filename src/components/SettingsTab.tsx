@@ -11,7 +11,24 @@ interface SettingsTabProps {
   eligibility?: any;
 }
 
-export default function SettingsTab({ lang, darkMode, onLangChange, onDarkToggle, onLock, isPremium, eligibility }: SettingsTabProps) {
+interface SettingItem {
+  icon: string;
+  labelEn: string;
+  labelUr: string;
+  descEn: string;
+  descUr: string;
+  action?: (() => void) | null;
+  badge?: string | null;
+  toggle?: { value: boolean; onToggle: () => void } | null;
+}
+
+interface SettingSection {
+  titleEn: string;
+  titleUr: string;
+  items: SettingItem[];
+}
+
+export default function SettingsTab({ lang, darkMode, onLangChange, onDarkToggle, onLock, isPremium }: SettingsTabProps) {
   const isRtl = lang === 'ur';
   const t = (en: string, ur: string) => isRtl ? ur : en;
 
@@ -42,7 +59,7 @@ export default function SettingsTab({ lang, darkMode, onLangChange, onDarkToggle
     setTimeout(() => { setShowPinChange(false); setPinMsg(null); }, 1500);
   };
 
-  const sections = [
+  const sections: SettingSection[] = [
     {
       titleEn: 'Elite Services', titleUr: 'ایلیٹ سروسز',
       items: [

@@ -109,44 +109,45 @@ export default function FamilyHealthSaving({ balance, onSave, lang = 'en', cnic 
   };
 
   return (
-    <div className="space-y-2.5 sm:space-y-4 animate-in fade-in duration-500 mb-3 sm:mb-6" dir={isUrdu ? 'rtl' : 'ltr'}>
+    <div className="space-y-3 sm:space-y-4 animate-in fade-in duration-300 mb-4 sm:mb-6" dir={isUrdu ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div>
-        <div className="inline-flex items-center gap-1 sm:gap-2 px-2.5 py-0.5 bg-emerald-50 text-emerald-700 rounded-full text-[9px] sm:text-xs font-bold mb-1 border border-emerald-100 shadow-inner">
-          <span>🩺</span> {t('Takaful Protection', 'تکافل تحفظ')}
+        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-semibold mb-1 border border-emerald-100">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          <span>{t('Takaful Mutual Protection', 'تکافل باہمی تحفظ')}</span>
         </div>
-        <h2 className="text-sm sm:text-2xl font-black text-slate-800 tracking-tight">
-          {t('Family Health Savings', 'فیملی ہیلتھ سیونگز')}
+        <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+          {t('Family Health Savings Pool', 'فیملی ہیلتھ سیونگز پول')}
         </h2>
-        <p className="text-slate-500 text-[10px] sm:text-xs mt-0.5 leading-relaxed max-w-2xl">
+        <p className="text-slate-500 text-xs mt-0.5 leading-relaxed max-w-xl">
           {t('A Shariah-compliant emergency medical fund for your family. Earn Halal dividends while keeping funds liquid.', 'آپ کے خاندان کے لیے شریعہ کے مطابق ہنگامی طبی فنڈ۔ صحت کی دیکھ بھال کی ضروریات کے لیے فنڈز کو مائع رکھتے ہوئے حلال منافع کمائیں۔')}
         </p>
       </div>
 
-      {/* Overview Card — Compact Mobile Padding */}
-      <div className="bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl sm:rounded-[2.5rem] p-3 sm:p-5 text-white shadow-lg shadow-emerald-900/20 relative overflow-hidden border border-emerald-500/20">
-        <div className="absolute top-0 right-0 w-24 h-24 sm:w-48 sm:h-48 bg-white/10 rounded-full blur-[30px] pointer-events-none" />
-        <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2 sm:gap-0 mb-2.5 sm:mb-5">
+      {/* Overview Card */}
+      <div className="bg-gradient-to-br from-emerald-700 via-emerald-800 to-teal-900 rounded-2xl p-4 sm:p-5 text-white shadow-md border border-emerald-600/30 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2.5 sm:gap-0 mb-3">
           <div>
-            <p className="text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-emerald-200 mb-0.5">
+            <p className="text-[9px] font-semibold uppercase tracking-wider text-emerald-200/90 mb-0.5">
               {t('Available Health Pool', 'دستیاب ہیلتھ پول')}
             </p>
-            <h3 className="text-base sm:text-3xl font-black tracking-tight">Rs {poolBalance.toLocaleString()}</h3>
+            <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-white font-sans">Rs {poolBalance.toLocaleString()}</h3>
           </div>
           <button onClick={() => setShowDeposit(true)}
-            className="w-full sm:w-auto px-3 py-1.5 sm:px-5 sm:py-2.5 bg-white text-emerald-700 rounded-xl sm:rounded-2xl font-black text-[10px] sm:text-xs shadow-md hover:bg-emerald-50 transition-all active:scale-95 text-center flex-shrink-0">
+            className="w-full sm:w-auto px-4 py-2 bg-white text-emerald-900 rounded-xl font-semibold text-xs shadow-sm hover:bg-emerald-50 transition-all active:scale-95 text-center flex-shrink-0">
             + {t('Add Funds (PIN Locked)', 'فنڈز شامل کریں')}
           </button>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 sm:gap-4 pt-2 sm:pt-4 border-t border-white/15 text-[10px] sm:text-xs">
+        <div className="grid grid-cols-2 gap-3 pt-3 border-t border-emerald-600/40 text-xs">
           <div>
-            <p className="text-emerald-200 font-medium">{t('Active Covered Members', 'فعال زیر کفالت ارکان')}</p>
-            <p className="font-bold text-xs sm:text-base mt-0.5">{members.length} {t('Members', 'ارکان')}</p>
+            <p className="text-emerald-200/80 font-medium text-[10px]">{t('Active Covered Members', 'فعال زیر کفالت ارکان')}</p>
+            <p className="font-bold text-sm text-white mt-0.5">{members.length} {t('Members', 'ارکان')}</p>
           </div>
           <div>
-            <p className="text-emerald-200 font-medium">{t('Total Medical Claims', 'کل طبی کلیمز')}</p>
-            <p className="font-bold text-xs sm:text-base mt-0.5">Rs {members.reduce((s,m) => s + m.claimed, 0).toLocaleString()}</p>
+            <p className="text-emerald-200/80 font-medium text-[10px]">{t('Total Medical Claims', 'کل طبی کلیمز')}</p>
+            <p className="font-bold text-sm text-white mt-0.5">Rs {members.reduce((s,m) => s + m.claimed, 0).toLocaleString()}</p>
           </div>
         </div>
       </div>
@@ -221,55 +222,55 @@ export default function FamilyHealthSaving({ balance, onSave, lang = 'en', cnic 
           </div>
         )}
 
-        {/* Member List - Responsive 2-Column Grid on Desktop */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-4 items-start">
+        {/* Member List - Responsive 2-Column Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 sm:gap-3 items-start">
           {members.map(m => (
-            <div key={m.id} className="p-2.5 sm:p-4 bg-white rounded-xl sm:rounded-3xl border border-slate-100 shadow-sm hover:border-emerald-200 transition-all space-y-2 flex flex-col justify-between h-full">
+            <div key={m.id} className="p-3 bg-white rounded-2xl border border-slate-100 shadow-sm hover:border-emerald-200 transition-all space-y-2 flex flex-col justify-between h-full">
               <div>
-                <div className="flex justify-between items-center mb-1.5 sm:mb-2">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs sm:text-base font-bold flex-shrink-0 border border-emerald-100">
+                <div className="flex justify-between items-center mb-1.5">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs font-black flex-shrink-0 border border-emerald-100">
                       {m.name.charAt(0)}
                     </div>
                     <div>
-                      <h4 className="font-bold text-xs sm:text-sm text-slate-800 tracking-tight">{m.name}</h4>
-                      <p className="text-[9px] sm:text-[10px] text-slate-400 font-medium">{m.relation} · {m.age} {t('years old', 'سال عمر')}</p>
+                      <h4 className="font-bold text-xs text-slate-800 tracking-tight">{m.name}</h4>
+                      <p className="text-[9px] text-slate-400 font-medium">{m.relation} · {m.age} {t('years old', 'سال عمر')}</p>
                     </div>
                   </div>
                   <button onClick={() => setShowClaim(m.id)}
-                    className="px-2 py-1 sm:px-3.5 sm:py-1.5 bg-slate-50 hover:bg-emerald-50 text-emerald-700 rounded-xl font-bold text-[9px] sm:text-xs border border-slate-100 hover:border-emerald-200 transition-all flex-shrink-0 active:scale-95 shadow-sm">
+                    className="px-2.5 py-1 bg-slate-50 hover:bg-emerald-50 text-emerald-700 rounded-lg font-bold text-[10px] border border-slate-100 hover:border-emerald-200 transition-all flex-shrink-0 active:scale-95 shadow-sm">
                     {t('File Claim', 'کلیم کریں')}
                   </button>
                 </div>
 
                 {/* Claim Form */}
                 {showClaim === m.id && (
-                  <div className="pt-2 sm:pt-2.5 border-t border-slate-100 space-y-2 animate-in fade-in duration-200 mb-1.5 sm:mb-2">
+                  <div className="pt-2 border-t border-slate-100 space-y-2 animate-in fade-in duration-200 mb-1.5">
                     <div className="flex justify-between items-center">
-                      <p className="text-[10px] sm:text-xs font-bold text-slate-700">{t('File Medical Claim', 'طبی کلیم جمع کریں')}</p>
+                      <p className="text-[10px] font-bold text-slate-700">{t('File Medical Claim', 'طبی کلیم جمع کریں')}</p>
                       <button onClick={() => setShowClaim(null)} className="text-slate-400 hover:text-slate-600 text-xs">✕</button>
                     </div>
-                    {error && <p className="text-[10px] sm:text-xs font-bold text-red-500 bg-red-50 p-1.5 rounded-xl">{error}</p>}
+                    {error && <p className="text-[10px] font-bold text-red-500 bg-red-50 p-1.5 rounded-xl">{error}</p>}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                       <div>
                         <label className="text-[8px] font-bold text-slate-400 block mb-0.5">{t('Claim Amount', 'کلیم کی رقم')}</label>
                         <input type="number" value={claimAmount} onChange={e => setClaimAmount(e.target.value)} placeholder="15000"
-                          className="w-full p-1.5 sm:p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold outline-none focus:border-emerald-500" />
+                          className="w-full p-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold outline-none focus:border-emerald-500" />
                       </div>
                       <div>
                         <label className="text-[8px] font-bold text-slate-400 block mb-0.5">{t('Medical Reason', 'طبی وجہ')}</label>
                         <input type="text" value={claimReason} onChange={e => setClaimReason(e.target.value)} placeholder="Doctor Visit / Meds"
-                          className="w-full p-1.5 sm:p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:border-emerald-500" />
+                          className="w-full p-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:border-emerald-500" />
                       </div>
                     </div>
-                    <button onClick={() => handleClaim(m.id)} className="w-full py-1.5 sm:py-2 bg-emerald-600 text-white font-bold rounded-xl text-xs hover:bg-emerald-500 shadow-md active:scale-95 transition-all">
+                    <button onClick={() => handleClaim(m.id)} className="w-full py-1.5 bg-emerald-600 text-white font-bold rounded-xl text-xs hover:bg-emerald-500 shadow-md active:scale-95 transition-all">
                       {t('Submit Claim Request', 'کلیم کی درخواست جمع کریں')}
                     </button>
                   </div>
                 )}
               </div>
 
-              <div className="flex justify-between items-center pt-1.5 sm:pt-2 border-t border-slate-50 text-[9px] sm:text-[10px]">
+              <div className="flex justify-between items-center pt-1.5 border-t border-slate-50 text-[9px]">
                 <span className="text-slate-400">{t('Monthly Alloc:', 'ماہانہ مختص:')} <strong className="text-slate-700 font-bold">Rs {m.monthlyAllocation.toLocaleString()}</strong></span>
                 <span className="text-slate-400">{t('Claimed:', 'کلیم کردہ:')} <strong className="text-emerald-600 font-bold">Rs {m.claimed.toLocaleString()}</strong></span>
               </div>

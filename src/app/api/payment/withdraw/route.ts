@@ -14,6 +14,8 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
+      amount: Number(amount),
+      method: String(method),
       ref: `RW-${Date.now().toString().slice(-6)}`,
       message: 'Withdrawal approved by gateway',
     });

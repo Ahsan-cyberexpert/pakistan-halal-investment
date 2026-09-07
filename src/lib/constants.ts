@@ -1,0 +1,8 @@
+export const ZAKAT_NISAB_PKR = 300_000;
+export const ZAKAT_RATE = 0.025;
+export const WALI_INVESTED_THRESHOLD = 250_000_000;
+export const WALI_PROFIT_THRESHOLD = 500_000_000;
+export const MIN_DEPOSIT_PKR = 100;
+export const MAX_DEPOSIT_PKR = 5_000_000;
+export const DEBT_TO_ASSET_THRESHOLD = 0.33;
+export const IMPURE_INCOME_THRESHOLD = 0.05;
