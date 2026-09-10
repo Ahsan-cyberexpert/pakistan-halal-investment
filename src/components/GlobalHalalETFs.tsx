@@ -6,7 +6,7 @@ interface GlobalHalalETFsProps {
 
 export default function GlobalHalalETFs({ onInvest }: GlobalHalalETFsProps) {
   return (
-    <div className="bg-white rounded-2xl p-4 sm:p-5 text-slate-900 shadow-sm border border-slate-200/80 mb-4 sm:mb-6 animate-in fade-in duration-300">
+    <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 text-slate-900 shadow-sm border border-slate-200/80 animate-in fade-in duration-300">
       <div className="flex justify-between items-start mb-4">
         <div>
           <div className="flex items-center gap-1.5 mb-1">

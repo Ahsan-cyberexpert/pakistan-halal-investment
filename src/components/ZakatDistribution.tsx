@@ -46,7 +46,7 @@ export default function ZakatDistribution({ balance, portfolioValue }: { balance
   };
 
   return (
-    <div className="premium-card p-0 bg-slate-950 border border-emerald-500/10 text-white relative overflow-hidden rounded-2xl sm:rounded-3xl shadow-lg mb-4 sm:mb-6">
+    <div className="premium-card p-0 bg-slate-950 border border-emerald-500/10 text-white relative overflow-hidden rounded-2xl sm:rounded-3xl shadow-lg">
       
       {/* National Vault Header */}
       <div className="p-4 sm:p-5 bg-gradient-to-br from-emerald-900/40 to-slate-900 border-b border-white/5">

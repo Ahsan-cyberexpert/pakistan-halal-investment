@@ -126,10 +126,10 @@ export default function Home() {
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ background: "var(--bg-primary)" }}>
       {/* Navigation */}
-      <nav className="fixed w-full z-[100] px-4 sm:px-6 py-4">
-        <div className="max-w-7xl mx-auto glass rounded-[2rem] border border-white/40 px-6 sm:px-8 py-3 flex justify-between items-center shadow-2xl">
-          <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center text-lg sm:text-xl shadow-lg shadow-emerald-200">
+      <nav className="fixed w-full z-[100] px-3 sm:px-6 py-3 sm:py-4">
+        <div className="max-w-7xl mx-auto glass rounded-[2rem] border border-white/40 px-4 sm:px-8 py-2.5 sm:py-3 flex justify-between items-center shadow-2xl">
+          <div className="flex items-center space-x-2.5 sm:space-x-3">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center text-lg sm:text-xl shadow-lg shadow-emerald-200 flex-shrink-0">
               🇵🇰
             </div>
             <div>
@@ -147,7 +147,7 @@ export default function Home() {
 
           <Link
             href="/dashboard"
-            className="px-5 sm:px-8 py-2.5 sm:py-3 bg-slate-900 text-white rounded-2xl font-bold text-sm hover:bg-emerald-700 hover:shadow-xl hover:shadow-emerald-900/20 hover:-translate-y-0.5 transition-all"
+            className="px-4 sm:px-8 py-2 sm:py-3 bg-slate-900 text-white rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm hover:bg-emerald-700 hover:shadow-xl hover:shadow-emerald-900/20 hover:-translate-y-0.5 transition-all flex-shrink-0"
           >
             Open App →
           </Link>
@@ -155,53 +155,53 @@ export default function Home() {
       </nav>
 
       {/* HERO */}
-      <section className="relative pt-32 sm:pt-40 lg:pt-44 pb-16 sm:pb-24 lg:pb-32 overflow-hidden">
+      <section className="relative pt-28 sm:pt-40 lg:pt-44 pb-14 sm:pb-24 lg:pb-32 overflow-hidden">
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-0 right-0 w-[500px] h-[500px] sm:w-[700px] sm:h-[700px] bg-emerald-100/40 rounded-full blur-[120px] -translate-y-1/3 translate-x-1/4" />
           <div className="absolute bottom-0 left-0 w-[350px] h-[350px] sm:w-[550px] sm:h-[550px] bg-teal-100/30 rounded-full blur-[90px] translate-y-1/4 -translate-x-1/4" />
         </div>
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 text-center">
-          <div className="inline-flex items-center space-x-2 bg-emerald-50 border border-emerald-100 px-3.5 py-1.5 rounded-xl mb-6 animate-in fade-in duration-500">
+          <div className="inline-flex items-center space-x-2 bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-xl mb-5 sm:mb-6 animate-in fade-in duration-500">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
-            <span className="text-[10px] font-black text-emerald-700 uppercase tracking-widest">
+            <span className="text-[9px] sm:text-[10px] font-black text-emerald-700 uppercase tracking-wider sm:tracking-widest">
               Pakistan&apos;s First Halal Wealth Operating System
             </span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight mb-4 sm:mb-6 animate-in fade-in duration-700 leading-tight">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight mb-3.5 sm:mb-6 animate-in fade-in duration-700 leading-tight">
             <span className="text-slate-900">Wealth that</span>{" "}
             <span className="text-gradient">stays Pure.</span>
           </h1>
 
-          <p className="max-w-xl text-sm sm:text-base text-slate-500 mx-auto mb-8 leading-relaxed font-medium">
+          <p className="max-w-xl text-xs sm:text-base text-slate-500 mx-auto mb-6 sm:mb-8 leading-relaxed font-medium">
             The sovereign financial OS designed for the modern Muslim. Build your future with 
             Shariah-compliant tools, automated Zakat, and Riba-free growth — powered by AI.
           </p>
 
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-3 animate-in fade-in duration-700 mb-12 sm:mb-16">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-2.5 sm:gap-3 animate-in fade-in duration-700 mb-10 sm:mb-16">
             <Link
               href="/dashboard"
-              className="w-full sm:w-auto px-8 py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-emerald-700 shadow-lg shadow-slate-900/20 hover:-translate-y-0.5 transition-all"
+              className="w-full sm:w-auto px-7 py-3 bg-slate-900 text-white rounded-xl font-bold text-xs sm:text-sm hover:bg-emerald-700 shadow-lg shadow-slate-900/20 hover:-translate-y-0.5 transition-all text-center"
             >
               🚀 Launch App Free
             </Link>
             <a
               href="#features"
-              className="w-full sm:w-auto px-8 py-3 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold text-sm hover:border-emerald-300 hover:text-emerald-700 hover:-translate-y-0.5 transition-all shadow-sm"
+              className="w-full sm:w-auto px-7 py-3 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold text-xs sm:text-sm hover:border-emerald-300 hover:text-emerald-700 hover:-translate-y-0.5 transition-all shadow-sm text-center"
             >
               Explore Features →
             </a>
           </div>
 
           {/* Stats Row */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 max-w-3xl mx-auto">
             {stats.map((s) => (
-              <div key={s.label} className="bg-white/70 backdrop-blur-sm border border-slate-100 rounded-2xl p-3.5 sm:p-4 shadow-sm">
-                <div className="text-xl sm:text-2xl font-black text-slate-900 mb-0.5">{s.value}</div>
+              <div key={s.label} className="bg-white/70 backdrop-blur-sm border border-slate-100 rounded-2xl p-3 sm:p-4 shadow-sm">
+                <div className="text-lg sm:text-2xl font-black text-slate-900 mb-0.5">{s.value}</div>
                 <div className="text-xs font-black text-slate-700">{s.label}</div>
                 <div className="text-[10px] text-slate-400 font-medium">{s.sub}</div>
               </div>
@@ -323,14 +323,14 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="bg-white/5 border border-white/10 rounded-[3rem] p-8 sm:p-12 backdrop-blur-3xl">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-3 h-3 rounded-full bg-red-500 shadow-lg shadow-red-500/50" />
-                <div className="w-3 h-3 rounded-full bg-amber-500 shadow-lg shadow-amber-500/50" />
-                <div className="w-3 h-3 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50" />
-                <span className="ml-2 text-slate-500 text-xs font-mono">roziq_security.log</span>
+            <div className="bg-white/5 border border-white/10 rounded-2xl sm:rounded-[3rem] p-5 sm:p-12 backdrop-blur-3xl overflow-x-auto">
+              <div className="flex items-center gap-3 mb-6 sm:mb-8">
+                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-500 shadow-lg shadow-red-500/50" />
+                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-amber-500 shadow-lg shadow-amber-500/50" />
+                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50" />
+                <span className="ml-2 text-slate-500 text-[11px] sm:text-xs font-mono">roziq_security.log</span>
               </div>
-              <div className="space-y-4 font-mono text-xs sm:text-sm">
+              <div className="space-y-3 sm:space-y-4 font-mono text-[11px] sm:text-sm">
                 <p className="text-slate-400"><span className="text-emerald-400">[INFO]</span> Initializing Shariah Screener v2.0...</p>
                 <p className="text-slate-400"><span className="text-blue-400">[SCAN]</span> Checking 847 PSX stocks against AAOIFI standards...</p>
                 <p className="text-emerald-400"><span className="text-emerald-500">[PASS]</span> 312 stocks cleared — 100% Halal Verified ✓</p>

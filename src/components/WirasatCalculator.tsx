@@ -71,7 +71,7 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
   const results = calculated ? calculateShares() : [];
 
   return (
-    <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/80 mb-4 sm:mb-6 animate-in fade-in duration-300">
+    <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-sm border border-slate-200/80 animate-in fade-in duration-300">
       <div className="flex justify-between items-start mb-4">
         <div>
           <div className="flex items-center gap-1.5 mb-1">
@@ -94,7 +94,7 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
               <input 
                 type="number" 
                 placeholder="0"
-                className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 outline-none focus:border-emerald-500"
+                className="w-full p-2.5 sm:p-2 bg-slate-50 border border-slate-200 rounded-xl text-sm sm:text-xs font-semibold text-slate-900 outline-none focus:border-emerald-500"
                 onChange={(e) => setDebt(Number(e.target.value))}
               />
             </div>
@@ -103,7 +103,7 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
               <input 
                 type="number" 
                 placeholder="0"
-                className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 outline-none focus:border-emerald-500"
+                className="w-full p-2.5 sm:p-2 bg-slate-50 border border-slate-200 rounded-xl text-sm sm:text-xs font-semibold text-slate-900 outline-none focus:border-emerald-500"
                 onChange={(e) => setWasiyyat(Number(e.target.value))}
               />
             </div>
@@ -113,7 +113,7 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
             <div>
               <label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block mb-1">Spouse</label>
               <select 
-                className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 outline-none focus:border-emerald-500"
+                className="w-full p-2.5 sm:p-2 bg-slate-50 border border-slate-200 rounded-xl text-sm sm:text-xs font-semibold text-slate-900 outline-none focus:border-emerald-500"
                 onChange={(e) => setHeirs({ ...heirs, wife: e.target.value === 'wife' ? 1 : 0, husband: e.target.value === 'husband' })}
               >
                 <option value="wife">Wife Alive</option>
@@ -125,7 +125,7 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
             <div>
               <label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block mb-1">Parents</label>
               <select 
-                className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 outline-none focus:border-emerald-500"
+                className="w-full p-2.5 sm:p-2 bg-slate-50 border border-slate-200 rounded-xl text-sm sm:text-xs font-semibold text-slate-900 outline-none focus:border-emerald-500"
                 onChange={(e) => setHeirs({ ...heirs, father: e.target.value !== 'mother', mother: e.target.value !== 'father' })}
               >
                 <option value="both">Both Alive</option>
@@ -140,7 +140,7 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
               <input 
                 type="number" 
                 value={heirs.sons}
-                className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 outline-none focus:border-emerald-500"
+                className="w-full p-2.5 sm:p-2 bg-slate-50 border border-slate-200 rounded-xl text-sm sm:text-xs font-semibold text-slate-900 outline-none focus:border-emerald-500"
                 onChange={(e) => setHeirs({ ...heirs, sons: Number(e.target.value) })}
               />
             </div>
@@ -150,7 +150,7 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
               <input 
                 type="number" 
                 value={heirs.daughters}
-                className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 outline-none focus:border-emerald-500"
+                className="w-full p-2.5 sm:p-2 bg-slate-50 border border-slate-200 rounded-xl text-sm sm:text-xs font-semibold text-slate-900 outline-none focus:border-emerald-500"
                 onChange={(e) => setHeirs({ ...heirs, daughters: Number(e.target.value) })}
               />
             </div>

@@ -223,18 +223,18 @@ export default function Dashboard() {
 
       <div className="min-h-screen text-slate-900 selection:bg-emerald-100 selection:text-emerald-900 overflow-x-hidden pb-32" style={{ background: 'var(--bg-primary)' }} dir={lang === 'ur' ? 'rtl' : 'ltr'}>
         {/* Top Header */}
-        <header className="sticky top-0 z-50 backdrop-blur-xl border-b px-4 sm:px-6 py-3 flex justify-between items-center shadow-sm" style={{ background: 'var(--bg-primary)', borderColor: 'var(--border-color)' }}>
+        <header className="sticky top-0 z-50 backdrop-blur-xl border-b px-3 sm:px-6 py-2.5 sm:py-3 flex justify-between items-center shadow-sm" style={{ background: 'var(--bg-primary)', borderColor: 'var(--border-color)' }}>
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl sm:rounded-2xl flex items-center justify-center text-base sm:text-lg shadow-md shadow-emerald-900/20">🇵🇰</div>
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl sm:rounded-2xl flex items-center justify-center text-base sm:text-lg shadow-md shadow-emerald-900/20 flex-shrink-0">🇵🇰</div>
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 <h1 className="text-sm sm:text-base font-black tracking-tighter" style={{ color: 'var(--text-primary)' }}>ROZIQ</h1>
-                <div className="hidden sm:flex items-center gap-1 bg-emerald-50 border border-emerald-100 rounded-lg px-2 py-0.5">
+                <div className="flex items-center gap-1 bg-emerald-50 border border-emerald-100 rounded-lg px-1.5 sm:px-2 py-0.5">
                   <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                  <span className="text-[8px] font-black text-emerald-600 uppercase tracking-wider">Live</span>
+                  <span className="text-[7.5px] sm:text-[8px] font-black text-emerald-600 uppercase tracking-wider">Live</span>
                 </div>
               </div>
-              <p className="text-[8px] sm:text-[9px] font-black text-emerald-600 uppercase tracking-[0.2em]">
+              <p className="text-[8px] sm:text-[9px] font-black text-emerald-600 uppercase tracking-[0.2em] truncate max-w-[120px] sm:max-w-none">
                 {currentUser ? currentUser.name : t('Wealth OS', 'ویلتھ او ایس')}
               </p>
             </div>
@@ -247,16 +247,16 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             {currentUser?.isOverseas && (
-              <span className="px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-[9px] font-black uppercase tracking-widest hidden sm:inline-flex items-center gap-1">
-                🌍 {currentUser.country || 'Overseas'}
+              <span className="px-2 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-[8.5px] sm:text-[9px] font-black uppercase tracking-wider inline-flex items-center gap-1">
+                <span>🌍</span> <span className="hidden sm:inline">{currentUser.country || 'Overseas'}</span>
               </span>
             )}
 
             {isPremium && (
-              <span className="hidden md:inline-flex items-center gap-1 px-2.5 py-1 bg-gradient-to-r from-amber-400 to-yellow-500 text-amber-900 rounded-xl text-[9px] font-black uppercase tracking-widest shadow-sm">
-                ⭐ Elite
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-amber-400 to-yellow-500 text-amber-900 rounded-xl text-[8.5px] sm:text-[9px] font-black uppercase tracking-wider shadow-sm">
+                <span>⭐</span> <span className="hidden sm:inline">Elite</span>
               </span>
             )}
 
@@ -275,6 +275,7 @@ export default function Dashboard() {
 
             <button
               onClick={() => setActiveTab('settings')}
+              title={t('Settings', 'سیٹنگز')}
               className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 border-2 shadow-md transition-all active:scale-90 ${activeTab === 'settings' ? 'border-emerald-400 scale-105 shadow-emerald-500/30' : 'border-white'}`}
             >
               <div className="w-full h-full rounded-xl border border-black/10 flex items-center justify-center text-white text-xs font-black">
@@ -285,11 +286,11 @@ export default function Dashboard() {
         </header>
 
         {/* Widescreen Responsive Layout Grid (max-w-7xl) */}
-        <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 animate-in fade-in duration-500">
+        <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3.5 sm:py-6 animate-in fade-in duration-500">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8 items-start">
             
             {/* Left Column: Wallet Overview & Navigation */}
-            <div className="lg:col-span-4 space-y-4 sm:space-y-6 sticky top-20 z-10">
+            <div className="lg:col-span-4 space-y-4 sm:space-y-6 lg:sticky lg:top-20 z-10">
               <BalanceCard balance={balance} portfolioValue={totalPortfolioValue} onDeposit={() => setModal('deposit')} onWithdraw={() => setModal('withdraw')} />
               
               {isPremium && (
@@ -495,23 +496,36 @@ export default function Dashboard() {
         )}
 
         {/* Bottom Navigation Bar (Visible only on mobile/tablet) */}
-        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[96%] max-w-lg z-50 block lg:hidden">
-          <nav className="glass-dark rounded-[2rem] p-1.5 flex justify-between items-center shadow-2xl border-white/10 overflow-hidden bg-slate-900/90 backdrop-blur-lg text-white">
+        <div className="fixed bottom-3 left-1/2 -translate-x-1/2 w-[95%] max-w-md z-50 block lg:hidden">
+          <nav className="glass-dark rounded-2xl sm:rounded-[2rem] p-1 sm:p-1.5 flex justify-between items-center shadow-2xl border border-white/10 bg-slate-900/95 backdrop-blur-xl text-white">
             {[
-              { id: 'home', icon: '🏠', labelEn: 'Home', labelUr: 'ہوم' },
-              { id: 'portfolio', icon: '💼', labelEn: 'Stocks', labelUr: 'اسٹاکس' },
-              { id: 'assets', icon: '🚜', labelEn: 'Assets', labelUr: 'اثاثے' },
+              { id: 'home', icon: '🏠', labelEn: 'Dashboard', labelUr: 'ڈیش بورڈ' },
+              { id: 'portfolio', icon: '📈', labelEn: 'Stocks', labelUr: 'اسٹاکس' },
+              { id: 'assets', icon: '🏛️', labelEn: 'Assets', labelUr: 'اثاثے' },
               { id: 'kameti', icon: '🤝', labelEn: 'Family', labelUr: 'خاندان' },
               { id: 'zakat', icon: '🕋', labelEn: 'Zakat', labelUr: 'زکوٰۃ' },
-            ].map((tab) => (
-              <button key={tab.id} onClick={() => setActiveTab(tab.id as any)}
-                className={`relative flex flex-col items-center justify-center py-2 px-3 rounded-2xl transition-all duration-300 group ${activeTab === tab.id ? 'bg-emerald-600 text-white shadow-md shadow-emerald-900/20' : 'text-slate-400 hover:text-white'}`}>
-                <span className={`text-base sm:text-lg transition-transform duration-300 ${activeTab === tab.id ? 'scale-110 -translate-y-0.5' : 'group-hover:scale-110'}`}>{tab.icon}</span>
-                <span className={`text-[7px] font-black uppercase tracking-widest absolute transition-all duration-300 ${activeTab === tab.id ? 'opacity-100 translate-y-2.5' : 'opacity-0 translate-y-5'}`}>
-                  {lang === 'ur' ? tab.labelUr : tab.labelEn}
-                </span>
-              </button>
-            ))}
+              { id: 'settings', icon: '⚙️', labelEn: 'Settings', labelUr: 'سیٹنگز' },
+            ].map((tab) => {
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={`flex-1 py-1.5 px-1 rounded-xl sm:rounded-2xl flex flex-col items-center justify-center transition-all duration-200 active:scale-95 ${
+                    isActive
+                      ? 'bg-emerald-600 text-white shadow-md shadow-emerald-900/40'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <span className={`text-base sm:text-lg leading-none transition-transform duration-200 ${isActive ? 'scale-110' : ''}`}>
+                    {tab.icon}
+                  </span>
+                  <span className={`text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider mt-1 truncate max-w-[50px] leading-tight ${isActive ? 'text-white' : 'text-slate-400'}`}>
+                    {lang === 'ur' ? tab.labelUr : tab.labelEn}
+                  </span>
+                </button>
+              );
+            })}
           </nav>
         </div>
 

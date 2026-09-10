@@ -131,7 +131,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
       {/* Floating Action Button */}
       <button 
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-24 right-6 w-14 h-14 bg-gradient-to-br from-emerald-600 to-teal-700 text-white rounded-2xl shadow-2xl shadow-emerald-900/40 flex items-center justify-center text-2xl z-[100] hover:scale-110 active:scale-90 transition-all border border-emerald-400/30 group"
+        className="fixed bottom-20 right-4 sm:bottom-24 sm:right-6 w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-emerald-600 to-teal-700 text-white rounded-2xl shadow-2xl shadow-emerald-900/40 flex items-center justify-center text-xl sm:text-2xl z-[100] hover:scale-110 active:scale-90 transition-all border border-emerald-400/30 group"
         title="Roziq AI Master Guardian"
       >
         <div className="absolute inset-0 bg-emerald-400 rounded-2xl animate-ping opacity-25 group-hover:opacity-40"></div>
@@ -220,7 +220,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
                     onChange={(e) => setPrompt(e.target.value)}
                     onKeyDown={handleKeyPress}
                     placeholder={lang === 'ur' ? 'لکھ کر سوال پوچھیں (زکوٰۃ، حلال اسٹاکس، بیلنس)...' : 'Write a question (Zakat, Halal stocks, Balance)...'}
-                    className="flex-1 bg-white text-slate-800 placeholder-slate-400 rounded-xl px-4 py-3 text-xs font-bold outline-none border border-slate-200 focus:border-emerald-500 shadow-inner transition-colors"
+                    className="flex-1 bg-white text-slate-800 placeholder-slate-400 rounded-xl px-4 py-3 text-sm sm:text-xs font-bold outline-none border border-slate-200 focus:border-emerald-500 shadow-inner transition-colors"
                   />
 
                   <button 

@@ -18,7 +18,7 @@ export default function FractionalSukuk({ balance, onBuy }: { balance: number, o
   };
 
   return (
-    <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/80 mb-4 sm:mb-6">
+    <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-sm border border-slate-200/80">
       <div className="flex justify-between items-start mb-4">
         <div>
           <div className="flex items-center gap-1.5 mb-1">
@@ -63,7 +63,7 @@ export default function FractionalSukuk({ balance, onBuy }: { balance: number, o
               value={amount}
               onChange={(e) => setAmount(Number(e.target.value))}
               placeholder={`Min ${selected.minInvestment}`}
-              className="w-full pl-10 pr-3 py-2 bg-white border border-slate-200 rounded-lg focus:border-emerald-500 font-semibold text-xs text-slate-900 outline-none"
+              className="w-full pl-10 pr-3 py-2 bg-white border border-slate-200 rounded-lg focus:border-emerald-500 font-semibold text-sm sm:text-xs text-slate-900 outline-none"
             />
           </div>
           <button 
