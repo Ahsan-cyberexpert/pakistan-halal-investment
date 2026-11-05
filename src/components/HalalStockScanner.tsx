@@ -86,7 +86,7 @@ export default function HalalStockScanner({ balance, onBuy }: { balance: number;
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5 sm:gap-2">
           <div className={`w-2 h-2 rounded-full ${isLive ? 'bg-emerald-500 animate-pulse' : 'bg-amber-400'}`} />
-          <span className="text-[10px] sm:text-xs font-bold text-slate-400">{isLive ? `Live · ${lastUpdated}` : `Simulated · ${lastUpdated}`}</span>
+          <span className="text-[10px] sm:text-xs font-bold text-slate-400">{isLive ? `Market feed · ${lastUpdated}` : `Simulated demo prices · ${lastUpdated}`}</span>
         </div>
         <button onClick={fetchStocks} className="text-[10px] sm:text-xs text-emerald-600 font-bold hover:underline">↻ Refresh</button>
       </div>
@@ -97,6 +97,7 @@ export default function HalalStockScanner({ balance, onBuy }: { balance: number;
         <input
           type="text"
           placeholder="Search stocks..."
+          aria-label="Search demo stocks"
           value={search}
           onChange={e => setSearch(e.target.value)}
           className="w-full pl-8 pr-3 py-2 sm:py-2.5 rounded-xl border border-slate-200 focus:border-emerald-400 outline-none text-xs font-medium shadow-inner"
@@ -150,7 +151,8 @@ export default function HalalStockScanner({ balance, onBuy }: { balance: number;
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-black text-xs">₨</span>
                     <input
                       type="number"
-                      placeholder="Investment amount"
+                      placeholder="Demo investment amount"
+                      inputMode="decimal"
                       value={buyAmount}
                       onChange={e => setBuyAmount(e.target.value)}
                       className="w-full pl-6 pr-3 py-2 rounded-xl border border-slate-200 focus:border-emerald-400 outline-none font-bold text-slate-800 text-xs"
@@ -169,10 +171,10 @@ export default function HalalStockScanner({ balance, onBuy }: { balance: number;
                     disabled={buying || !buyAmount || parseFloat(buyAmount) > balance}
                     className="py-2 rounded-xl bg-emerald-600 text-white font-black hover:bg-emerald-700 disabled:opacity-50 active:scale-95 transition-all text-xs shadow-md"
                   >
-                    {buying ? 'Buying...' : 'Buy ✓'}
+                    {buying ? 'Simulating...' : 'Simulate purchase'}
                   </button>
                 </div>
-                <p className="text-center text-[9px] sm:text-[10px] text-emerald-600 font-bold tracking-widest uppercase">✓ AAOIFI Shariah Certified</p>
+                <p className="text-center text-[9px] sm:text-[10px] text-amber-700 font-bold tracking-widest uppercase">Demo action · virtual holdings only</p>
               </div>
             )}
           </div>

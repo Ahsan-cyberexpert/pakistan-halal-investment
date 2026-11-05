@@ -28,9 +28,12 @@ import {
   OverseasInvest,
   ToastContainer,
 } from '@/components';
+import DemoModeBanner from '@/components/DemoModeBanner';
+import DemoWealthSummary from '@/components/DemoWealthSummary';
 import { UserProfile, Holding, ZakatRecord, Transaction, DashboardTab, SupportedLanguage } from '@/types';
 import { getStockBySymbol } from '@/lib/halal-stock-data';
 import { ZAKAT_NISAB_PKR, WALI_INVESTED_THRESHOLD, WALI_PROFIT_THRESHOLD } from '@/lib/constants';
+import { createDemoReference, demoStorage } from '@/lib/demo-storage';
 
 
 export default function Dashboard() {
@@ -70,6 +73,18 @@ export default function Dashboard() {
     if (savedDark === '1') { setDarkMode(true); document.documentElement.classList.add('dark'); }
   }, []);
 
+  useEffect(() => {
+    if (!modal && !showResetModal) return;
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setModal(null);
+        setShowResetModal(false);
+      }
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [modal, showResetModal]);
+
   const handleAuthSuccess = (user: UserProfile) => {
     setCurrentUser(user); setIsAuthorized(true);
     const cnicKey = user.cnic || 'default';
@@ -108,6 +123,7 @@ export default function Dashboard() {
   const totalInvestedHistory = holdings.reduce((sum, h) => sum + h.invested, 0);
   const totalRealizedProfit = transactions.reduce((sum, t) => sum + (t.profit || 0), 0);
   const isPremium = totalInvestedHistory >= WALI_INVESTED_THRESHOLD && totalRealizedProfit >= WALI_PROFIT_THRESHOLD;
+  const pendingDemoAmount = transactions.filter((tx) => tx.status === 'PENDING').reduce((sum, tx) => sum + (tx.amount || 0), 0);
 
   const handleTransactionSuccess = async (data: any) => {
     if (['buy_stock', 'buy_sukuk', 'zakat', 'withdraw', 'health_save', 'overseas_invest'].includes(data.type)) {
@@ -125,6 +141,8 @@ export default function Dashboard() {
       symbol: data.symbol || data.name || data.type,
       status: 'SUCCESS',
       date: new Date().toISOString(),
+      reference: data.txRef || createDemoReference(data.type),
+      note: 'Simulated demo transaction. No real funds moved.',
     };
 
     if (data.type === 'deposit') { newBal += data.amount; newTxs.unshift(txRecord); }
@@ -171,8 +189,7 @@ export default function Dashboard() {
   const handleKametiContribute = (amount: number) => initiateSecureTransaction({ type: 'buy_sukuk', amount, symbol: 'KAMETI' });
 
   const executeReset = () => {
-    localStorage.clear();
-    sessionStorage.clear();
+    demoStorage.clear();
     setCurrentUser(null);
     setIsAuthorized(false);
     setBalance(5000000);
@@ -221,7 +238,7 @@ export default function Dashboard() {
       {/* Master AI Agent (Voice + Write + Linked Accounts) */}
       <RoziqAI balance={balance} holdings={holdings} transactions={transactions} lang={lang} />
 
-      <div className="min-h-screen text-slate-900 selection:bg-emerald-100 selection:text-emerald-900 overflow-x-hidden pb-32" style={{ background: 'var(--bg-primary)' }} dir={lang === 'ur' ? 'rtl' : 'ltr'}>
+      <div className="min-h-screen mobile-content-safe text-slate-900 selection:bg-emerald-100 selection:text-emerald-900 overflow-x-hidden" style={{ background: 'var(--bg-primary)' }} dir={lang === 'ur' ? 'rtl' : 'ltr'}>
         {/* Top Header */}
         <header className="sticky top-0 z-50 backdrop-blur-xl border-b px-3 sm:px-6 py-2.5 sm:py-3 flex justify-between items-center shadow-sm" style={{ background: 'var(--bg-primary)', borderColor: 'var(--border-color)' }}>
           <div className="flex items-center gap-2 sm:gap-3">
@@ -229,9 +246,9 @@ export default function Dashboard() {
             <div>
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <h1 className="text-sm sm:text-base font-black tracking-tighter" style={{ color: 'var(--text-primary)' }}>ROZIQ</h1>
-                <div className="flex items-center gap-1 bg-emerald-50 border border-emerald-100 rounded-lg px-1.5 sm:px-2 py-0.5">
-                  <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                  <span className="text-[7.5px] sm:text-[8px] font-black text-emerald-600 uppercase tracking-wider">Live</span>
+                <div className="flex items-center gap-1 bg-amber-50 border border-amber-200 rounded-lg px-1.5 sm:px-2 py-0.5" role="status">
+                  <div className="w-1.5 h-1.5 bg-amber-500 rounded-full" />
+                  <span className="text-[10px] font-black text-amber-700 uppercase tracking-wider">Demo</span>
                 </div>
               </div>
               <p className="text-[8px] sm:text-[9px] font-black text-emerald-600 uppercase tracking-[0.2em] truncate max-w-[120px] sm:max-w-none">
@@ -264,19 +281,21 @@ export default function Dashboard() {
             <button
               onClick={() => setShowResetModal(true)}
               title={t('Delete Account & Reset Demo Data', 'اکاؤنٹ ڈیلیٹ کریں اور ڈیٹا ری سیٹ کریں')}
-              className="px-2.5 py-1.5 sm:px-3 sm:py-2 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white border border-red-200 hover:border-red-500 rounded-xl text-[10px] sm:text-xs font-black transition-all active:scale-95 flex items-center gap-1 shadow-sm"
+              aria-label={t('Reset demo account', 'ڈیمو اکاؤنٹ ری سیٹ کریں')}
+              className="touch-target px-2.5 py-1.5 sm:px-3 sm:py-2 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white border border-red-200 hover:border-red-500 rounded-xl text-[10px] sm:text-xs font-black transition-all active:scale-95 flex items-center gap-1 shadow-sm"
             >
               <span>🗑️</span> <span className="hidden sm:inline">{t('Reset Demo', 'ری سیٹ')}</span>
             </button>
 
-            <button className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center border border-slate-200 hover:bg-slate-50 transition-all active:scale-90 text-xs sm:text-sm shadow-sm" style={{ background: 'var(--bg-card)' }}>
+            <button aria-label={t('Notifications', 'اطلاعات')} className="touch-target rounded-xl border border-slate-200 hover:bg-slate-50 transition-all active:scale-90 text-xs sm:text-sm shadow-sm" style={{ background: 'var(--bg-card)' }}>
               🔔
             </button>
 
             <button
               onClick={() => setActiveTab('settings')}
               title={t('Settings', 'سیٹنگز')}
-              className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 border-2 shadow-md transition-all active:scale-90 ${activeTab === 'settings' ? 'border-emerald-400 scale-105 shadow-emerald-500/30' : 'border-white'}`}
+              aria-label={t('Open settings', 'سیٹنگز کھولیں')}
+              className={`touch-target rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 border-2 shadow-md transition-all active:scale-90 ${activeTab === 'settings' ? 'border-emerald-400 scale-105 shadow-emerald-500/30' : 'border-white'}`}
             >
               <div className="w-full h-full rounded-xl border border-black/10 flex items-center justify-center text-white text-xs font-black">
                 {currentUser ? currentUser.name.charAt(0).toUpperCase() : '⚙'}
@@ -285,6 +304,9 @@ export default function Dashboard() {
           </div>
         </header>
 
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-3 sm:pt-4">
+          <DemoModeBanner lang={lang} />
+        </div>
         {/* Widescreen Responsive Layout Grid (max-w-7xl) */}
         <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3.5 sm:py-6 animate-in fade-in duration-500">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8 items-start">
@@ -370,6 +392,21 @@ export default function Dashboard() {
                     {isPremium && <WaliAutopilot lang={lang} />}
                   </div>
 
+                  <DemoWealthSummary cash={balance} invested={totalPortfolioValue} pending={pendingDemoAmount} zakatDue={isZakatEligible} lang={lang} />
+
+                  <section className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 sm:p-5" aria-labelledby="next-demo-action-title" dir={lang === 'ur' ? 'rtl' : 'ltr'}>
+                    <div className="flex items-start gap-3">
+                      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-emerald-600 text-white" aria-hidden="true">→</div>
+                      <div className="min-w-0">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-emerald-700">{t('Next demo action', 'اگلا ڈیمو ایکشن')}</p>
+                        <h2 id="next-demo-action-title" className="mt-1 text-base font-black text-emerald-950">
+                          {holdings.length === 0 ? t('Explore a halal stock before reviewing your portfolio.', 'پورٹ فولیو دیکھنے سے پہلے حلال اسٹاک دیکھیں۔') : t('Review your simulated portfolio and recent activity.', 'اپنا فرضی پورٹ فولیو اور حالیہ سرگرمی دیکھیں۔')}
+                        </h2>
+                        <p className="mt-1 text-xs font-medium leading-relaxed text-emerald-800">{t('Every action is reversible demo data and does not move real money.', 'ہر ایکشن فرضی ہے اور حقیقی رقم منتقل نہیں کرتا۔')}</p>
+                      </div>
+                    </div>
+                  </section>
+
                   <PortfolioChart balance={balance} holdings={holdings} totalValue={totalPortfolioValue} />
 
                   <section className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-slate-200 shadow-sm">
@@ -395,6 +432,9 @@ export default function Dashboard() {
                                 </div>
                                 <div className="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase mt-0.5">
                                   {new Date(tx.date).toLocaleDateString(lang === 'ur' ? 'ur-PK' : 'en-US', { day: 'numeric', month: 'short' })}
+                                </div>
+                                <div className="text-[8px] font-bold text-amber-600 mt-0.5">
+                                  {tx.status === 'PENDING' ? t('Pending demo', 'زیر التوا ڈیمو') : t('Simulated demo', 'فرضی ڈیمو')} {tx.reference ? `· ${tx.reference}` : ''}
                                 </div>
                               </div>
                             </div>
@@ -485,9 +525,9 @@ export default function Dashboard() {
         </main>
 
         {modal && (
-          <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 z-[60] animate-in fade-in">
-            <div className="relative w-full max-w-sm sm:max-w-md bg-white rounded-t-3xl sm:rounded-3xl p-4 sm:p-5 shadow-2xl animate-in slide-in-from-bottom-full duration-200">
-              <button onClick={() => setModal(null)} className="absolute top-4 right-5 text-slate-400 hover:text-slate-600 transition-colors p-1 text-sm">✕</button>
+          <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 z-[60] animate-in fade-in" role="presentation">
+            <div className="mobile-modal-safe relative w-full max-w-sm sm:max-w-md bg-white rounded-t-3xl sm:rounded-3xl p-4 sm:p-5 shadow-2xl animate-in slide-in-from-bottom-full duration-200" role="dialog" aria-modal="true" aria-label={modal === 'deposit' ? t('Demo deposit', 'ڈیمو ڈیپازٹ') : t('Demo withdrawal', 'ڈیمو وِڈڈرا') }>
+              <button onClick={() => setModal(null)} aria-label={t('Close dialog', 'ڈائیلاگ بند کریں')} className="touch-target absolute top-2 right-3 text-slate-400 hover:text-slate-600 transition-colors p-1 text-sm">✕</button>
               <div className="mt-1">
                 {modal === 'deposit' ? <DepositFlow onSuccess={handleTransactionSuccess} /> : <WithdrawFlow onSuccess={handleTransactionSuccess} />}
               </div>
@@ -496,22 +536,23 @@ export default function Dashboard() {
         )}
 
         {/* Bottom Navigation Bar (Visible only on mobile/tablet) */}
-        <div className="fixed bottom-3 left-1/2 -translate-x-1/2 w-[95%] max-w-md z-50 block lg:hidden">
-          <nav className="glass-dark rounded-2xl sm:rounded-[2rem] p-1 sm:p-1.5 flex justify-between items-center shadow-2xl border border-white/10 bg-slate-900/95 backdrop-blur-xl text-white">
+        <div className="mobile-bottom-nav fixed left-1/2 -translate-x-1/2 w-[95%] max-w-md z-50 block lg:hidden">
+          <nav className="glass-dark rounded-2xl sm:rounded-[2rem] p-1 sm:p-1.5 flex justify-between items-center shadow-2xl border border-white/10 bg-slate-900/95 backdrop-blur-xl text-white" aria-label={t('Primary navigation', 'بنیادی نیویگیشن')}>
             {[
               { id: 'home', icon: '🏠', labelEn: 'Dashboard', labelUr: 'ڈیش بورڈ' },
               { id: 'portfolio', icon: '📈', labelEn: 'Stocks', labelUr: 'اسٹاکس' },
               { id: 'assets', icon: '🏛️', labelEn: 'Assets', labelUr: 'اثاثے' },
               { id: 'kameti', icon: '🤝', labelEn: 'Family', labelUr: 'خاندان' },
               { id: 'zakat', icon: '🕋', labelEn: 'Zakat', labelUr: 'زکوٰۃ' },
-              { id: 'settings', icon: '⚙️', labelEn: 'Settings', labelUr: 'سیٹنگز' },
             ].map((tab) => {
               const isActive = activeTab === tab.id;
               return (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex-1 py-1.5 px-1 rounded-xl sm:rounded-2xl flex flex-col items-center justify-center transition-all duration-200 active:scale-95 ${
+                  aria-current={isActive ? 'page' : undefined}
+                  aria-label={lang === 'ur' ? tab.labelUr : tab.labelEn}
+                  className={`touch-target flex-1 py-1.5 px-1 rounded-xl sm:rounded-2xl flex flex-col items-center justify-center transition-all duration-200 active:scale-95 ${
                     isActive
                       ? 'bg-emerald-600 text-white shadow-md shadow-emerald-900/40'
                       : 'text-slate-400 hover:text-slate-200'

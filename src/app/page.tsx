@@ -1,10 +1,10 @@
 import Link from "next/link";
 
 const stats = [
-  { value: "100%", label: "Shariah Certified", sub: "AAOIFI Standards" },
-  { value: "₨0", label: "Commission", sub: "Zero brokerage fees" },
-  { value: "36+", label: "Features", sub: "Tools & modules" },
-  { value: "2.5M+", label: "Nisab Threshold", sub: "Auto Zakat calc" },
+  { value: "Demo", label: "Interactive experience", sub: "Explore with virtual money" },
+  { value: "0", label: "Real payments", sub: "No money moves in demo" },
+  { value: "36+", label: "Feature concepts", sub: "Tools & modules to explore" },
+  { value: "2.5M+", label: "Example Nisab", sub: "Demo calculation only" },
 ];
 
 const features = [
@@ -168,18 +168,18 @@ export default function Home() {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
             <span className="text-[9px] sm:text-[10px] font-black text-emerald-700 uppercase tracking-wider sm:tracking-widest">
-              Pakistan&apos;s First Halal Wealth Operating System
+              Interactive demo · Roziq Halal Wealth OS
             </span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight mb-3.5 sm:mb-6 animate-in fade-in duration-700 leading-tight">
-            <span className="text-slate-900">Wealth that</span>{" "}
-            <span className="text-gradient">stays Pure.</span>
+            <span className="text-slate-900">Explore your</span>{" "}
+            <span className="text-gradient">halal wealth journey.</span>
           </h1>
 
           <p className="max-w-xl text-xs sm:text-base text-slate-500 mx-auto mb-6 sm:mb-8 leading-relaxed font-medium">
-            The sovereign financial OS designed for the modern Muslim. Build your future with 
-            Shariah-compliant tools, automated Zakat, and Riba-free growth — powered by AI.
+            Explore investing, savings, Zakat, and financial goals in one guided experience.
+            This presentation demo uses virtual money and simulated activity.
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center items-center gap-2.5 sm:gap-3 animate-in fade-in duration-700 mb-10 sm:mb-16">
@@ -187,14 +187,19 @@ export default function Home() {
               href="/dashboard"
               className="w-full sm:w-auto px-7 py-3 bg-slate-900 text-white rounded-xl font-bold text-xs sm:text-sm hover:bg-emerald-700 shadow-lg shadow-slate-900/20 hover:-translate-y-0.5 transition-all text-center"
             >
-              🚀 Launch App Free
+              Try the interactive demo →
             </Link>
             <a
               href="#features"
               className="w-full sm:w-auto px-7 py-3 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold text-xs sm:text-sm hover:border-emerald-300 hover:text-emerald-700 hover:-translate-y-0.5 transition-all shadow-sm text-center"
             >
-              Explore Features →
+              See how it works →
             </a>
+          </div>
+
+          <div className="max-w-2xl mx-auto mb-8 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-left sm:text-center" role="status">
+            <p className="text-xs sm:text-sm font-black text-amber-800">DEMO MODE · Virtual money only</p>
+            <p className="mt-1 text-xs sm:text-sm leading-relaxed text-amber-700">Balances, market prices, payments, investments, and AI answers are simulated. No real account or transaction is created.</p>
           </div>
 
           {/* Stats Row */}
@@ -216,14 +221,14 @@ export default function Home() {
           <div className="text-center mb-16 sm:mb-24">
             <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-100 px-4 py-2 rounded-2xl mb-6">
               <span className="text-emerald-600 text-xs">⚡</span>
-              <span className="text-xs font-black text-emerald-700 uppercase tracking-widest">36+ Halal Features</span>
+                <span className="text-xs font-black text-emerald-700 uppercase tracking-widest">Explore the demo features</span>
             </div>
             <h2 className="text-4xl sm:text-6xl font-black text-slate-900 tracking-tight mb-4">
               Built on Faith.{" "}
               <span className="text-gradient">Powered by AI.</span>
             </h2>
             <p className="text-slate-500 text-lg max-w-2xl mx-auto font-medium">
-              Every feature is designed from the ground up to respect Islamic finance principles while delivering world-class fintech.
+              Explore the product vision through four simple goals: invest, plan, purify, and learn.
             </p>
           </div>
 
@@ -296,7 +301,7 @@ export default function Home() {
             <div>
               <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-2xl mb-8">
                 <span className="text-emerald-400 text-xs">🛡️</span>
-                <span className="text-xs font-black text-emerald-400 uppercase tracking-widest">Bank-Grade Security</span>
+                <span className="text-xs font-black text-emerald-400 uppercase tracking-widest">Demo safety and transparency</span>
               </div>
               <h2 className="text-4xl sm:text-6xl font-black tracking-tight mb-8 leading-tight">
                 Your wealth,<br />
@@ -305,10 +310,10 @@ export default function Home() {
               </h2>
               <div className="space-y-6">
                 {[
-                  { icon: "🔐", title: "CNIC-Verified Identity", desc: "Every account is tied to a real CNIC. No fake accounts, no fraud — just verified Pakistani identities." },
-                  { icon: "📍", title: "PIN-Secured Transactions", desc: "Your custom 4-digit PIN gates every trade and withdrawal. We never store it in plain text." },
-                  { icon: "👁️", title: "CNIC Heir-Lock", desc: "Inheritance is secured by CNIC verification. Only your legal heirs can access your estate." },
-                  { icon: "⚖️", title: "100% Shariah Audit Trail", desc: "Every transaction is logged and tagged with its Shariah compliance status for full accountability." },
+                  { icon: "🧪", title: "Interactive simulation", desc: "Try deposits, withdrawals, stock actions, Zakat, and portfolio updates without moving real money." },
+                  { icon: "🔁", title: "Repeatable demo", desc: "Reset the demo account and replay the same journey for presentations and feedback." },
+                  { icon: "📊", title: "Transparent states", desc: "Demo balances, simulated prices, and example calculations are designed to be clearly labeled." },
+                  { icon: "⚖️", title: "Shariah-focused vision", desc: "Production screening and scholar review will be documented separately before any real service launches." },
                 ].map((item) => (
                   <div key={item.title} className="flex gap-5 group">
                     <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-xl flex-shrink-0 group-hover:bg-emerald-600/20 group-hover:border-emerald-500/30 transition-all duration-300">
@@ -332,12 +337,12 @@ export default function Home() {
               </div>
               <div className="space-y-3 sm:space-y-4 font-mono text-[11px] sm:text-sm">
                 <p className="text-slate-400"><span className="text-emerald-400">[INFO]</span> Initializing Shariah Screener v2.0...</p>
-                <p className="text-slate-400"><span className="text-blue-400">[SCAN]</span> Checking 847 PSX stocks against AAOIFI standards...</p>
-                <p className="text-emerald-400"><span className="text-emerald-500">[PASS]</span> 312 stocks cleared — 100% Halal Verified ✓</p>
-                <p className="text-slate-400"><span className="text-red-400">[BLOCK]</span> 535 stocks flagged — Riba/Gharar detected ✗</p>
-                <p className="text-slate-400"><span className="text-amber-400">[AUTH]</span> secure_pin_bridge: active</p>
-                <p className="text-slate-400"><span className="text-blue-400">[CNIC]</span> heir_lock: verified</p>
-                <p className="text-emerald-400"><span className="text-emerald-500">[SECURE]</span> All systems operational 🛡️</p>
+                <p className="text-slate-400"><span className="text-blue-400">[DEMO]</span> Loading example PSX screening data...</p>
+                <p className="text-emerald-400"><span className="text-emerald-500">[INFO]</span> Example screened stocks available for exploration</p>
+                <p className="text-slate-400"><span className="text-amber-400">[DATA]</span> Prices may be simulated or delayed</p>
+                <p className="text-slate-400"><span className="text-amber-400">[SAFE]</span> No bank, broker, or payment call is made</p>
+                <p className="text-slate-400"><span className="text-blue-400">[RESET]</span> Demo state can be replayed anytime</p>
+                <p className="text-emerald-400"><span className="text-emerald-500">[READY]</span> Safe interactive walkthrough available</p>
                 <p className="animate-pulse text-emerald-400">_</p>
               </div>
             </div>
@@ -414,8 +419,8 @@ export default function Home() {
                   <div className="text-[8px] font-black text-emerald-600 uppercase tracking-[0.2em]">Halal Wealth OS</div>
                 </div>
               </div>
-              <p className="text-slate-500 text-sm font-medium leading-relaxed max-w-xs">
-                Pakistan&apos;s first sovereign Islamic financial operating system. Built with pride for the Muslim Ummah. 🕌
+            <p className="text-slate-500 text-sm font-medium leading-relaxed max-w-xs">
+                An interactive prototype for exploring halal wealth tools, savings goals, Zakat, and investing concepts. 🕌
               </p>
             </div>
             <div>
@@ -438,7 +443,7 @@ export default function Home() {
 
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-8 border-t" style={{ borderColor: "var(--border-color)" }}>
             <p className="text-slate-400 text-sm font-medium">
-              © 2026 Roziq. Built with pride for Pakistan. All investments are Shariah-screened.
+              © 2026 Roziq. Interactive prototype — demo balances, prices, transactions, and recommendations are simulated and not financial advice.
             </p>
             <div className="flex space-x-6 text-slate-400">
               <a href="#" className="hover:text-emerald-600 font-bold text-sm transition-colors">Twitter</a>

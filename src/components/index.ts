@@ -12,6 +12,7 @@ export type { UserProfile } from './AuthGate';
 export { default as BalanceCard } from './BalanceCard';
 export { default as CommunityChallenges } from './CommunityChallenges';
 export { default as DepositFlow } from './DepositFlow';
+export { default as DemoWealthSummary } from './DemoWealthSummary';
 export { default as DigitalCommittee } from './DigitalCommittee';
 export { default as FamilyHealthSaving } from './FamilyHealthSaving';
 export { default as FinancialHealthScore } from './FinancialHealthScore';

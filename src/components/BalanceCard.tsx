@@ -31,11 +31,12 @@ export default function BalanceCard({ balance, onDeposit, onWithdraw, portfolioV
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="text-[10px] sm:text-[11px] font-semibold tracking-wider text-emerald-200/90 uppercase">
-                Available Cash Balance
+                Available Demo Cash
               </span>
               <button
                 onClick={() => setShowBalance(!showBalance)}
-                className="text-emerald-300/70 hover:text-white transition-colors p-0.5"
+                aria-label={showBalance ? "Hide demo cash balance" : "Show demo cash balance"}
+                className="touch-target text-emerald-300/70 hover:text-white transition-colors p-0.5"
                 title={showBalance ? "Hide Balance" : "Show Balance"}
               >
                 {showBalance ? (
@@ -66,7 +67,7 @@ export default function BalanceCard({ balance, onDeposit, onWithdraw, portfolioV
 
             {portfolioValue > 0 && showBalance && (
               <p className="text-[11px] text-emerald-200/90 font-medium mt-1">
-                + ₨{formatPKR(portfolioValue)} in Halal Assets · Net: <strong className="text-white font-semibold">₨{formatPKR(totalWealth)}</strong>
+                + ₨{formatPKR(portfolioValue)} in demo assets · Total: <strong className="text-white font-semibold">₨{formatPKR(totalWealth)}</strong>
               </p>
             )}
           </div>
@@ -78,14 +79,14 @@ export default function BalanceCard({ balance, onDeposit, onWithdraw, portfolioV
           </div>
         </div>
 
-        {/* Shariah Verification Tag */}
+        {/* Demo status tags */}
         <div className="flex items-center gap-2 mb-4 flex-wrap">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-900/50 border border-emerald-400/20 rounded-lg text-[10px] font-semibold text-emerald-100">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            AAOIFI Shariah Certified
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-900/40 border border-amber-300/30 rounded-lg text-[10px] font-semibold text-amber-100">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-300"></span>
+            Virtual Demo Balance
           </span>
           <span className="inline-flex items-center px-2 py-1 bg-emerald-900/40 border border-emerald-400/20 rounded-lg text-[10px] font-semibold text-emerald-200/90">
-            Zero Brokerage Fees
+            No real funds
           </span>
         </div>
 
@@ -93,7 +94,7 @@ export default function BalanceCard({ balance, onDeposit, onWithdraw, portfolioV
         <div className="grid grid-cols-2 gap-2.5">
           <button
             onClick={onDeposit}
-            className="py-2.5 bg-white text-emerald-900 rounded-xl font-semibold text-xs sm:text-sm hover:bg-emerald-50 transition-all active:scale-95 flex items-center justify-center gap-1.5 shadow-sm"
+            className="touch-target py-2.5 bg-white text-emerald-900 rounded-xl font-semibold text-xs sm:text-sm hover:bg-emerald-50 transition-all active:scale-95 flex items-center justify-center gap-1.5 shadow-sm"
           >
             <svg className="w-4 h-4 text-emerald-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M12 4v16m8-8H4" />
@@ -103,7 +104,7 @@ export default function BalanceCard({ balance, onDeposit, onWithdraw, portfolioV
 
           <button
             onClick={onWithdraw}
-            className="py-2.5 bg-emerald-900/60 border border-emerald-400/30 text-white rounded-xl font-semibold text-xs sm:text-sm hover:bg-emerald-900/80 transition-all active:scale-95 flex items-center justify-center gap-1.5"
+            className="touch-target py-2.5 bg-emerald-900/60 border border-emerald-400/30 text-white rounded-xl font-semibold text-xs sm:text-sm hover:bg-emerald-900/80 transition-all active:scale-95 flex items-center justify-center gap-1.5"
           >
             <svg className="w-4 h-4 text-emerald-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M20 12H4" />
