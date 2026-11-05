@@ -131,7 +131,10 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
       {/* Floating Action Button */}
       <button 
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-20 right-4 sm:bottom-24 sm:right-6 w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-emerald-600 to-teal-700 text-white rounded-2xl shadow-2xl shadow-emerald-900/40 flex items-center justify-center text-xl sm:text-2xl z-[100] hover:scale-110 active:scale-90 transition-all border border-emerald-400/30 group"
+        aria-label={lang === 'ur' ? 'روزق اے آئی کھولیں' : 'Open Roziq AI help'}
+        aria-haspopup="dialog"
+        aria-expanded={isOpen}
+        className="touch-target fixed bottom-[calc(6rem+env(safe-area-inset-bottom))] right-4 lg:bottom-6 lg:right-6 w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-emerald-600 to-teal-700 text-white rounded-2xl shadow-2xl shadow-emerald-900/40 flex items-center justify-center text-xl sm:text-2xl z-[100] hover:scale-105 active:scale-95 transition-transform border border-emerald-400/30 group"
         title="Roziq AI Master Guardian"
       >
         <div className="absolute inset-0 bg-emerald-400 rounded-2xl animate-ping opacity-25 group-hover:opacity-40"></div>
@@ -161,7 +164,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
                     <p className="text-[9px] sm:text-[10px] font-bold text-emerald-100/80">{lang === 'ur' ? 'شرعی و مالیاتی مشیر (اکاؤنٹ سے منسلک)' : 'Sovereign Wealth Guardian (Account Linked)'}</p>
                   </div>
                 </div>
-                <button onClick={() => setIsOpen(false)} className="text-white/70 hover:text-white text-sm p-1 bg-white/10 rounded-xl w-7 h-7 flex items-center justify-center backdrop-blur-sm border border-white/10">✕</button>
+                <button onClick={() => setIsOpen(false)} aria-label={lang === 'ur' ? 'بند کریں' : 'Close AI help'} className="touch-target text-white/80 hover:text-white text-sm bg-white/10 rounded-xl backdrop-blur-sm border border-white/10">✕</button>
               </div>
               
               {/* AI Response Display Area */}

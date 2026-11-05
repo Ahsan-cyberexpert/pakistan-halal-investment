@@ -16,6 +16,8 @@
 - [x] Transaction dialogs now support Escape-to-close, dialog semantics, labeled inputs, helper text, `aria-describedby`, `aria-invalid`, alert messages, and live processing/result regions for keyboard and TalkBack users.
 - [x] Website and dashboard routes plus `public/manus-routes.json` build successfully; the same shared frontend is the source for the Capacitor Android app.
 - [x] Shared UI typography and spacing tokens now define 12px metadata, 14px compact text, 16px body text, 18–24px headings, 28–40px display values, readable line heights, and a 4–48px spacing rhythm; reusable UI classes expose the scale.
+- [x] Landing-page mobile navigation now uses a keyboard-accessible disclosure menu; primary links have larger tap targets, anchor sections account for the fixed header, and mobile section spacing is tighter.
+- [x] Dashboard header and floating AI controls now respect device safe areas; mobile toasts stay clear of the AI button and bottom navigation, and mobile navigation labels are 12px.
 
 ## Demo boundary and status
 

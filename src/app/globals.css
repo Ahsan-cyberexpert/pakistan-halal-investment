@@ -37,6 +37,7 @@ html.dark {
 @layer base {
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
     -webkit-tap-highlight-color: transparent;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     -webkit-text-size-adjust: 100%;
@@ -303,6 +304,28 @@ html.dark {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* Keep persistent controls inside device safe areas and out of the mobile nav. */
+.app-header-safe {
+  padding-top: max(0.625rem, env(safe-area-inset-top));
+}
+
+.site-nav-safe {
+  padding-top: max(0.75rem, env(safe-area-inset-top));
+}
+
+@media (max-width: 1023px) {
+  .toast-container {
+    left: max(1rem, env(safe-area-inset-left));
+    right: calc(4rem + env(safe-area-inset-right));
+    bottom: calc(6rem + env(safe-area-inset-bottom));
+  }
+
+  .toast {
+    width: 100%;
+    max-width: none;
   }
 }
 

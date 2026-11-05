@@ -276,7 +276,7 @@ export default function Dashboard() {
 
       <div className="min-h-screen mobile-content-safe text-slate-900 selection:bg-emerald-100 selection:text-emerald-900 overflow-x-hidden" style={{ background: 'var(--bg-primary)' }} dir={lang === 'ur' ? 'rtl' : 'ltr'}>
         {/* Top Header */}
-        <header className="sticky top-0 z-50 backdrop-blur-xl border-b px-3 sm:px-6 py-2.5 sm:py-3 flex justify-between items-center shadow-sm" style={{ background: 'var(--bg-primary)', borderColor: 'var(--border-color)' }}>
+        <header className="app-header-safe sticky top-0 z-50 backdrop-blur-xl border-b px-3 sm:px-6 py-2.5 sm:py-3 flex justify-between items-center shadow-sm" style={{ background: 'var(--bg-primary)', borderColor: 'var(--border-color)' }}>
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl sm:rounded-2xl flex items-center justify-center text-base sm:text-lg shadow-md shadow-emerald-900/20 flex-shrink-0">🇵🇰</div>
             <div>
@@ -588,7 +588,7 @@ export default function Dashboard() {
         <div className="mobile-bottom-nav fixed left-1/2 -translate-x-1/2 w-[95%] max-w-md z-50 block lg:hidden">
           <nav className="glass-dark rounded-2xl sm:rounded-[2rem] p-1 sm:p-1.5 flex justify-between items-center shadow-2xl border border-white/10 bg-slate-900/95 backdrop-blur-xl text-white" aria-label={t('Primary navigation', 'بنیادی نیویگیشن')}>
             {[
-              { id: 'home', icon: '🏠', labelEn: 'Dashboard', labelUr: 'ڈیش بورڈ' },
+              { id: 'home', icon: '🏠', labelEn: 'Home', labelUr: 'ڈیش بورڈ' },
               { id: 'portfolio', icon: '📈', labelEn: 'Stocks', labelUr: 'اسٹاکس' },
               { id: 'assets', icon: '🏛️', labelEn: 'Assets', labelUr: 'اثاثے' },
               { id: 'kameti', icon: '🤝', labelEn: 'Family', labelUr: 'خاندان' },
@@ -610,7 +610,7 @@ export default function Dashboard() {
                   <span className={`text-base sm:text-lg leading-none transition-transform duration-200 ${isActive ? 'scale-110' : ''}`}>
                     {tab.icon}
                   </span>
-                  <span className={`text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider mt-1 truncate max-w-[50px] leading-tight ${isActive ? 'text-white' : 'text-slate-400'}`}>
+                  <span className={`text-xs font-black uppercase tracking-wide mt-1 truncate max-w-[56px] leading-tight ${isActive ? 'text-white' : 'text-slate-300'}`}>
                     {lang === 'ur' ? tab.labelUr : tab.labelEn}
                   </span>
                 </button>

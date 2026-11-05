@@ -4,6 +4,7 @@ import './globals.css';
 export const viewport = {
   themeColor: '#059669',
   width: 'device-width',
+  viewportFit: 'cover',
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
