@@ -276,8 +276,10 @@ export default function Dashboard() {
 
       <div className="min-h-screen mobile-content-safe text-slate-900 selection:bg-emerald-100 selection:text-emerald-900 overflow-x-hidden" style={{ background: 'var(--bg-primary)' }} dir={lang === 'ur' ? 'rtl' : 'ltr'}>
         {/* Top Header */}
-        <header className="sticky top-0 z-50 backdrop-blur-xl border-b px-3 sm:px-6 py-2.5 sm:py-3 flex justify-between items-center shadow-sm" style={{ background: 'var(--bg-primary)', borderColor: 'var(--border-color)' }}>
-          <div className="flex items-center gap-2 sm:gap-3">
+        <header className="app-header-safe sticky top-0 z-50 backdrop-blur-xl border-b py-2.5 sm:py-3 shadow-sm" style={{ background: 'var(--bg-primary)', borderColor: 'var(--border-color)' }}>
+          <div className="max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-2 sm:gap-3">
             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl sm:rounded-2xl flex items-center justify-center text-base sm:text-lg shadow-md shadow-emerald-900/20 flex-shrink-0">🇵🇰</div>
             <div>
               <div className="flex items-center gap-1.5 sm:gap-2">
@@ -300,7 +302,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 sm:gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
             {currentUser?.isOverseas && (
               <span className="px-2 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-[8.5px] sm:text-[9px] font-black uppercase tracking-wider inline-flex items-center gap-1">
                 <span>🌍</span> <span className="hidden sm:inline">{currentUser.country || 'Overseas'}</span>
@@ -337,18 +339,19 @@ export default function Dashboard() {
                 {currentUser ? currentUser.name.charAt(0).toUpperCase() : '⚙'}
               </div>
             </button>
+              </div>
+            </div>
+            <div className="pt-2">
+              <DemoModeBanner lang={lang} />
+            </div>
           </div>
         </header>
-
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-3 sm:pt-4">
-          <DemoModeBanner lang={lang} />
-        </div>
         {/* Widescreen Responsive Layout Grid (max-w-7xl) */}
         <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3.5 sm:py-6 animate-in fade-in duration-500">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8 items-start">
             
             {/* Left Column: Wallet Overview & Navigation */}
-            <div className="lg:col-span-4 space-y-4 sm:space-y-6 lg:sticky lg:top-20 z-10">
+            <div className="lg:col-span-4 space-y-4 sm:space-y-6 lg:sticky lg:top-36 z-10">
               <BalanceCard balance={balance} portfolioValue={totalPortfolioValue} onDeposit={() => setModal('deposit')} onWithdraw={() => setModal('withdraw')} />
               
               {isPremium && (
@@ -588,7 +591,7 @@ export default function Dashboard() {
         <div className="mobile-bottom-nav fixed left-1/2 -translate-x-1/2 w-[95%] max-w-md z-50 block lg:hidden">
           <nav className="glass-dark rounded-2xl sm:rounded-[2rem] p-1 sm:p-1.5 flex justify-between items-center shadow-2xl border border-white/10 bg-slate-900/95 backdrop-blur-xl text-white" aria-label={t('Primary navigation', 'بنیادی نیویگیشن')}>
             {[
-              { id: 'home', icon: '🏠', labelEn: 'Dashboard', labelUr: 'ڈیش بورڈ' },
+              { id: 'home', icon: '🏠', labelEn: 'Home', labelUr: 'ڈیش بورڈ' },
               { id: 'portfolio', icon: '📈', labelEn: 'Stocks', labelUr: 'اسٹاکس' },
               { id: 'assets', icon: '🏛️', labelEn: 'Assets', labelUr: 'اثاثے' },
               { id: 'kameti', icon: '🤝', labelEn: 'Family', labelUr: 'خاندان' },
@@ -610,7 +613,7 @@ export default function Dashboard() {
                   <span className={`text-base sm:text-lg leading-none transition-transform duration-200 ${isActive ? 'scale-110' : ''}`}>
                     {tab.icon}
                   </span>
-                  <span className={`text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider mt-1 truncate max-w-[50px] leading-tight ${isActive ? 'text-white' : 'text-slate-400'}`}>
+                  <span className={`text-xs font-black uppercase tracking-wide mt-1 truncate max-w-[56px] leading-tight ${isActive ? 'text-white' : 'text-slate-300'}`}>
                     {lang === 'ur' ? tab.labelUr : tab.labelEn}
                   </span>
                 </button>

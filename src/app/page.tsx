@@ -1,4 +1,5 @@
 import Link from "next/link";
+import DemoModeBanner from "@/components/DemoModeBanner";
 
 const stats = [
   { value: "Demo", label: "Interactive experience", sub: "Explore with virtual money" },
@@ -126,15 +127,15 @@ export default function Home() {
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ background: "var(--bg-primary)" }}>
       {/* Navigation */}
-      <nav className="fixed w-full z-[100] px-3 sm:px-6 py-3 sm:py-4">
-        <div className="max-w-7xl mx-auto glass rounded-[2rem] border border-white/40 px-4 sm:px-8 py-2.5 sm:py-3 flex justify-between items-center shadow-2xl">
+      <nav className="site-nav-safe fixed w-full z-[100] px-3 sm:px-6 py-3 sm:py-4" aria-label="Main navigation">
+        <div className="relative max-w-7xl mx-auto glass rounded-[2rem] border border-white/40 px-4 sm:px-8 py-2.5 sm:py-3 flex justify-between items-center shadow-2xl">
           <div className="flex items-center space-x-2.5 sm:space-x-3">
             <div className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center text-lg sm:text-xl shadow-lg shadow-emerald-200 flex-shrink-0">
               🇵🇰
             </div>
             <div>
               <span className="text-lg sm:text-xl font-black text-slate-800 tracking-tighter">Roziq</span>
-              <div className="text-[8px] font-black text-emerald-600 uppercase tracking-[0.2em] -mt-0.5">Halal Wealth OS</div>
+              <div className="text-xs font-black text-emerald-700 uppercase tracking-[0.12em] -mt-0.5">Halal Wealth OS</div>
             </div>
           </div>
 
@@ -147,10 +148,23 @@ export default function Home() {
 
           <Link
             href="/dashboard"
-            className="px-4 sm:px-8 py-2 sm:py-3 bg-slate-900 text-white rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm hover:bg-emerald-700 hover:shadow-xl hover:shadow-emerald-900/20 hover:-translate-y-0.5 transition-all flex-shrink-0"
+            className="touch-target px-4 sm:px-8 py-2 sm:py-3 bg-slate-900 text-white rounded-xl sm:rounded-2xl font-bold text-sm hover:bg-emerald-700 hover:shadow-xl hover:shadow-emerald-900/20 hover:-translate-y-0.5 transition-all flex-shrink-0"
           >
-            Open App →
+            Try demo →
           </Link>
+
+          <details className="relative md:hidden">
+            <summary aria-label="Open navigation menu" className="touch-target list-none [&::-webkit-details-marker]:hidden cursor-pointer gap-2 rounded-xl border border-slate-200 bg-white/80 px-3 text-sm font-bold text-slate-700 shadow-sm">
+              <span aria-hidden="true" className="text-base">☰</span>
+              <span>Menu</span>
+            </summary>
+            <div className="absolute right-0 top-full z-[110] mt-2 w-64 max-w-[calc(100vw-1.5rem)] rounded-2xl border border-slate-200 bg-white p-2 shadow-xl">
+              <a href="#features" className="touch-target w-full justify-start rounded-xl px-3 text-sm font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-800">Features</a>
+              <a href="#how-it-works" className="touch-target w-full justify-start rounded-xl px-3 text-sm font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-800">How It Works</a>
+              <a href="#security" className="touch-target w-full justify-start rounded-xl px-3 text-sm font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-800">Demo Safety</a>
+              <a href="#mission" className="touch-target w-full justify-start rounded-xl px-3 text-sm font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-800">Mission</a>
+            </div>
+          </details>
         </div>
       </nav>
 
@@ -167,7 +181,7 @@ export default function Home() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
-            <span className="text-[9px] sm:text-[10px] font-black text-emerald-700 uppercase tracking-wider sm:tracking-widest">
+            <span className="text-xs font-black text-emerald-700 uppercase tracking-wide sm:tracking-widest">
               Interactive demo · Roziq Halal Wealth OS
             </span>
           </div>
@@ -177,7 +191,7 @@ export default function Home() {
             <span className="text-gradient">halal wealth journey.</span>
           </h1>
 
-          <p className="max-w-xl text-xs sm:text-base text-slate-500 mx-auto mb-6 sm:mb-8 leading-relaxed font-medium">
+          <p className="max-w-xl text-sm sm:text-base text-slate-600 mx-auto mb-6 sm:mb-8 leading-relaxed font-medium">
             Explore investing, savings, Zakat, and financial goals in one guided experience.
             This presentation demo uses virtual money and simulated activity.
           </p>
@@ -185,21 +199,20 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row justify-center items-center gap-2.5 sm:gap-3 animate-in fade-in duration-700 mb-10 sm:mb-16">
             <Link
               href="/dashboard"
-              className="w-full sm:w-auto px-7 py-3 bg-slate-900 text-white rounded-xl font-bold text-xs sm:text-sm hover:bg-emerald-700 shadow-lg shadow-slate-900/20 hover:-translate-y-0.5 transition-all text-center"
+              className="touch-target w-full sm:w-auto px-7 py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-emerald-700 shadow-lg shadow-slate-900/20 hover:-translate-y-0.5 transition-all text-center"
             >
               Try the interactive demo →
             </Link>
             <a
               href="#features"
-              className="w-full sm:w-auto px-7 py-3 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold text-xs sm:text-sm hover:border-emerald-300 hover:text-emerald-700 hover:-translate-y-0.5 transition-all shadow-sm text-center"
+              className="touch-target w-full sm:w-auto px-7 py-3 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold text-sm hover:border-emerald-300 hover:text-emerald-700 hover:-translate-y-0.5 transition-all shadow-sm text-center"
             >
               See how it works →
             </a>
           </div>
 
-          <div className="max-w-2xl mx-auto mb-8 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-left sm:text-center" role="status">
-            <p className="text-xs sm:text-sm font-black text-amber-800">DEMO MODE · Virtual money only</p>
-            <p className="mt-1 text-xs sm:text-sm leading-relaxed text-amber-700">Balances, market prices, payments, investments, and AI answers are simulated. No real account or transaction is created.</p>
+          <div className="max-w-2xl mx-auto mb-8">
+            <DemoModeBanner />
           </div>
 
           {/* Stats Row */}
@@ -208,7 +221,7 @@ export default function Home() {
               <div key={s.label} className="bg-white/70 backdrop-blur-sm border border-slate-100 rounded-2xl p-3 sm:p-4 shadow-sm">
                 <div className="text-lg sm:text-2xl font-black text-slate-900 mb-0.5">{s.value}</div>
                 <div className="text-xs font-black text-slate-700">{s.label}</div>
-                <div className="text-[10px] text-slate-400 font-medium">{s.sub}</div>
+                <div className="text-xs text-slate-500 font-medium leading-snug">{s.sub}</div>
               </div>
             ))}
           </div>
@@ -216,7 +229,7 @@ export default function Home() {
       </section>
 
       {/* FEATURES */}
-      <section id="features" className="py-24 sm:py-32" style={{ background: "var(--bg-secondary)" }}>
+      <section id="features" className="scroll-mt-28 py-14 sm:py-24 lg:py-32" style={{ background: "var(--bg-secondary)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-16 sm:mb-24">
             <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-100 px-4 py-2 rounded-2xl mb-6">
@@ -257,7 +270,7 @@ export default function Home() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section id="how-it-works" className="py-24 sm:py-32" style={{ background: "var(--bg-primary)" }}>
+      <section id="how-it-works" className="scroll-mt-28 py-14 sm:py-24 lg:py-32" style={{ background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-16 sm:mb-20">
             <div className="inline-flex items-center gap-2 bg-teal-50 border border-teal-100 px-4 py-2 rounded-2xl mb-6">
@@ -292,7 +305,7 @@ export default function Home() {
       </section>
 
       {/* SECURITY */}
-      <section id="security" className="py-24 sm:py-32 bg-slate-950 text-white overflow-hidden relative">
+      <section id="security" className="scroll-mt-28 py-14 sm:py-24 lg:py-32 bg-slate-950 text-white overflow-hidden relative">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-600/10 rounded-full blur-[120px] translate-x-1/3 -translate-y-1/4" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-teal-600/10 rounded-full blur-[100px] -translate-x-1/4 translate-y-1/4" />
 
@@ -383,7 +396,7 @@ export default function Home() {
       </section>
 
       {/* MISSION */}
-      <section id="mission" className="py-24 sm:py-32" style={{ background: "var(--bg-primary)" }}>
+      <section id="mission" className="scroll-mt-28 py-14 sm:py-24 lg:py-32" style={{ background: "var(--bg-primary)" }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-100 px-4 py-2 rounded-2xl mb-8">
             <span className="text-emerald-600">🕌</span>
