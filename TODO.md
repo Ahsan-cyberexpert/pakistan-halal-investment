@@ -2,6 +2,8 @@
 
 ## Current progress
 
+> **Priority change:** UI/GUI comes first now. Finish visual scale, spacing, hierarchy, responsive behavior, mobile ergonomics, dark mode, and Urdu RTL checks before building additional Hajj, Zakat, Takaful, Wali, or overseas feature flows.
+
 - [x] Shared Demo Mode contract, dashboard banner, public-site disclosure, focus ring, touch-target utility, and reduced-motion foundation are implemented and build-verified.
 - [x] Deposit, withdrawal, and stock-buy demo actions now use truthful simulated wording, virtual-money warnings, review summaries, mobile numeric input behavior, and demo-only result language without changing their existing simulated outcomes.
 - [x] Dashboard home now leads with Available Demo Cash, Invested Value, Total Demo Wealth, Pending Demo, Zakat status, and a Next Demo Action card.
@@ -23,6 +25,14 @@
 - [ ] Create an explicit landing-page choice between `Try interactive demo` and `Create real account`; the demo path must not require CNIC or GPS.
 
 ## GUI and visual system
+
+### UI-first work order
+
+- [ ] Audit every page and shared component for typography size, line height, spacing, control height, contrast, card hierarchy, and modal width.
+- [ ] Normalize visual tokens and shared classes before changing individual feature flows.
+- [ ] Verify responsive layouts at 320px, 375px, 768px, 1024px, and desktop widths.
+- [ ] Verify keyboard/focus order, 400% zoom, dark mode, Urdu RTL, reduced motion, and Android safe areas.
+- [ ] Only resume remaining feature-flow work after the UI audit and visual regression pass are complete.
 
 - [ ] Add shared typography floors: body 14–16px, metadata at least 12px, buttons at least 14px, primary values 28–40px.
 - [ ] Add shared touch-target utility with 44px preferred target and visible focus ring; use it for important touch controls.

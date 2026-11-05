@@ -6,17 +6,21 @@ Roziq remains a fully interactive demo for presentations. Demo balances, holding
 
 A future real-account path will be structurally separate. It will not share demo credentials, localStorage secrets, simulated provider success, or demo copy. It will require server authentication, user-owned records, KYC, verified payment/broker integrations, auditability, and truthful pending/settled states before activation.
 
+## Current priority
+
+UI/GUI quality is now the first priority. Complete the visual system and responsive experience before building additional Hajj, Zakat, Takaful, Wali, or overseas feature flows. Review typography sizes, spacing, card hierarchy, button hierarchy, status colors, modal sizing, touch targets, mobile safe areas, dark mode, Urdu RTL, and 320px layouts as one visual-quality batch.
+
 ## Implementation approach
 
 1. Establish a first-class demo status contract and shared visual language.
-2. Improve GUI foundations: typography floors, touch targets, focus states, reduced motion, status semantics, and modal conventions.
-3. Improve the public website: clear Demo versus Real paths, goal-led explanation, accurate claims, product previews, safety disclosure, FAQ, and responsive mobile navigation.
-4. Improve the dashboard information hierarchy: Demo status, available cash/invested/total/pending summaries, next action, and progressive disclosure of advanced tools.
-5. Standardize transaction flows: amount → method/asset → review → simulated processing → demo receipt/history, without changing the current demo behavior.
-6. Improve accessibility and bilingual UX: labels, IDs, live regions, dialog semantics, keyboard focus, RTL language metadata, and reduced motion.
-7. Harden demo boundaries: namespace/reset only demo state, remove ambiguous live/verified copy, and keep future production adapters behind explicit account mode.
-8. Deliver the same responsive experience to the Capacitor Android app, adding mobile-specific safe-area spacing, Android back behavior, keyboard handling, offline/demo persistence, touch feedback, status-bar theming, and mobile accessibility.
-9. Validate with typecheck/build, responsive screenshots where available, Android packaging checks, accessibility checks, and task walkthroughs for a judge, new investor, and Urdu user.
+2. Complete the UI/GUI quality pass: typography floors, spacing, card hierarchy, button hierarchy, status semantics, modal sizing, focus states, reduced motion, dark mode, Urdu RTL, and responsive touch layouts.
+3. Validate the visual system at 320px, desktop widths, 400% zoom, keyboard navigation, and Android safe-area layouts.
+4. Improve the public website: clear Demo versus Real paths, goal-led explanation, accurate claims, product previews, safety disclosure, FAQ, and responsive mobile navigation.
+5. Improve the dashboard information hierarchy: Demo status, available cash/invested/total/pending summaries, next action, and progressive disclosure of advanced tools.
+6. Standardize remaining transaction and feature flows only after the UI pass: amount → method/asset → review → simulated processing → demo receipt/history.
+7. Improve accessibility and bilingual UX: labels, IDs, live regions, dialog semantics, keyboard focus, RTL language metadata, and reduced motion.
+8. Harden demo boundaries: namespace/reset only demo state, remove ambiguous live/verified copy, and keep future production adapters behind explicit account mode.
+9. Deliver and validate the same responsive experience to the Capacitor Android app, including safe areas, Android back behavior, keyboard handling, offline/demo persistence, touch feedback, status-bar theming, and mobile accessibility.
 
 ## Design decisions
 
