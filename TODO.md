@@ -15,6 +15,7 @@
 - [x] Sukuk now uses a standardized demo flow: select an instrument, enter amount, review example yield/maturity/risk and virtual cash after purchase, simulate purchase, confirm through the existing security step, update virtual balance, and create a full demo receipt.
 - [x] Transaction dialogs now support Escape-to-close, dialog semantics, labeled inputs, helper text, `aria-describedby`, `aria-invalid`, alert messages, and live processing/result regions for keyboard and TalkBack users.
 - [x] Website and dashboard routes plus `public/manus-routes.json` build successfully; the same shared frontend is the source for the Capacitor Android app.
+- [x] Shared UI typography and spacing tokens now define 12px metadata, 14px compact text, 16px body text, 18–24px headings, 28–40px display values, readable line heights, and a 4–48px spacing rhythm; reusable UI classes expose the scale.
 
 ## Demo boundary and status
 
@@ -34,7 +35,7 @@
 - [ ] Verify keyboard/focus order, 400% zoom, dark mode, Urdu RTL, reduced motion, and Android safe areas.
 - [ ] Only resume remaining feature-flow work after the UI audit and visual regression pass are complete.
 
-- [ ] Add shared typography floors: body 14–16px, metadata at least 12px, buttons at least 14px, primary values 28–40px.
+- [x] Add shared typography floors and reusable scale classes: body 14–16px, metadata at least 12px, headings 18–24px, and primary values 28–40px. Individual component migration remains part of the UI audit.
 - [ ] Add shared touch-target utility with 44px preferred target and visible focus ring; use it for important touch controls.
 - [ ] Add consistent status colors and text/icons for Demo, Pending, Processing, Complete, and Failed; never use color alone.
 - [ ] Reduce unnecessary gradients, glass effects, hover lift, and decorative animation so primary financial surfaces have the strongest hierarchy.
