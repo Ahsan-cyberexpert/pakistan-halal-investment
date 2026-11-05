@@ -9,6 +9,7 @@
 - [x] Mobile dashboard navigation now uses five primary destinations with accessible active-state semantics, 44px touch targets, Android safe-area spacing, and a labeled transaction dialog.
 - [x] Reset Demo now removes only Roziq-prefixed demo/session keys instead of clearing unrelated browser storage; new simulated transactions receive stable references and explicit no-real-funds notes in activity history.
 - [x] Every newly recorded simulated transaction now stores a full demo receipt with reference, timestamp, action, amount, method/asset details, status, before balance, after balance, and explicit no-real-funds disclosure; Recent Activity opens the receipt viewer.
+- [x] Stock holdings now support a standardized demo sell flow: choose units, review estimated proceeds and P&L, simulate the sale, confirm through the existing trading PIN, update virtual balance/holdings, and create a full demo receipt.
 - [x] Transaction dialogs now support Escape-to-close, dialog semantics, labeled inputs, helper text, `aria-describedby`, `aria-invalid`, alert messages, and live processing/result regions for keyboard and TalkBack users.
 - [x] Website and dashboard routes plus `public/manus-routes.json` build successfully; the same shared frontend is the source for the Capacitor Android app.
 
@@ -60,7 +61,7 @@
 ## Transaction and feature flows
 
 - [ ] Standardize deposit and withdrawal as Amount → Method → Review → Processing → Result.
-- [ ] Standardize stock buy/sell with quote status, timestamp, units, fees, risk, resulting balance, and explicit `Simulate purchase/sale` wording.
+- [ ] Standardize stock buy/sell with quote status, timestamp, units, fees, risk, resulting balance, and explicit `Simulate purchase/sale` wording. Buy and sell wording/results are implemented; quote risk/fees metadata remains.
 - [ ] Add truthful pending/failure/retry states and preserve important results in activity history.
 - [ ] Add starter stock shortlist, risk/time filters, and `Why this is shown?` explanation.
 - [ ] Add chart text summaries and clearly identify simulated data, time range, and update timestamp.

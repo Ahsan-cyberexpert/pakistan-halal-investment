@@ -36,6 +36,7 @@ export { default as PortfolioDashboard } from './PortfolioDashboard';
 export { default as PurificationTracker } from './PurificationTracker';
 export { default as RoziqAI } from './RoziqAI';
 export { default as SettingsTab } from './SettingsTab';
+export { default as SellStockFlow } from './SellStockFlow';
 export { default as ShariahScreener } from './ShariahScreener';
 export { default as SovereignScan } from './SovereignScan';
 export { default as ToastContainer, toast } from './Toast';

@@ -28,6 +28,7 @@ import {
   OverseasInvest,
   ToastContainer,
   DemoReceipt,
+  SellStockFlow,
 } from '@/components';
 import DemoModeBanner from '@/components/DemoModeBanner';
 import DemoWealthSummary from '@/components/DemoWealthSummary';
@@ -57,6 +58,7 @@ export default function Dashboard() {
   const [pendingTx, setPendingTx] = useState<any>(null);
   const [showResetModal, setShowResetModal] = useState(false);
   const [selectedReceipt, setSelectedReceipt] = useState<Transaction | null>(null);
+  const [selectedSellHolding, setSelectedSellHolding] = useState<Holding | null>(null);
 
   const t = (en: string, ur: string) => lang === 'ur' ? ur : en;
 
@@ -76,17 +78,18 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    if (!modal && !showResetModal && !selectedReceipt) return;
+    if (!modal && !showResetModal && !selectedReceipt && !selectedSellHolding) return;
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setModal(null);
         setShowResetModal(false);
         setSelectedReceipt(null);
+        setSelectedSellHolding(null);
       }
     };
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
-  }, [modal, showResetModal, selectedReceipt]);
+  }, [modal, showResetModal, selectedReceipt, selectedSellHolding]);
 
   const handleAuthSuccess = (user: UserProfile) => {
     setCurrentUser(user); setIsAuthorized(true);
@@ -129,7 +132,7 @@ export default function Dashboard() {
   const pendingDemoAmount = transactions.filter((tx) => tx.status === 'PENDING').reduce((sum, tx) => sum + (tx.amount || 0), 0);
 
   const handleTransactionSuccess = async (data: any) => {
-    if (['buy_stock', 'buy_sukuk', 'zakat', 'withdraw', 'health_save', 'overseas_invest'].includes(data.type)) {
+    if (['buy_stock', 'sell_stock', 'buy_sukuk', 'zakat', 'withdraw', 'health_save', 'overseas_invest'].includes(data.type)) {
       setPendingTx(data); setIsScanning(true); return;
     }
     await processTransaction(data);
@@ -163,6 +166,19 @@ export default function Dashboard() {
       else { newHoldings.push({ symbol: data.symbol, name: data.name, invested: data.amount, currentPrice: data.amount / data.units, units: data.units, pnl: 0 }); }
       newTxs.unshift(txRecord);
     }
+    else if (data.type === 'sell_stock') {
+      const existing = newHoldings.find(h => h.symbol === data.symbol);
+      if (existing) {
+        const remainingUnits = Math.max(0, existing.units - data.units);
+        existing.invested = Math.max(0, existing.invested - data.costBasis);
+        existing.pnl = existing.pnl - data.realizedPnl;
+        existing.units = remainingUnits;
+        if (remainingUnits === 0) newHoldings = newHoldings.filter(h => h.symbol !== data.symbol);
+      }
+      newBal += data.amount;
+      txRecord.profit = data.realizedPnl;
+      newTxs.unshift(txRecord);
+    }
     else if (['buy_sukuk', 'health_save', 'overseas_invest'].includes(data.type)) { newBal -= data.amount; newTxs.unshift(txRecord); }
     else if (data.type === 'zakat') { newBal -= data.amount; newZk.unshift({ date: new Date().toISOString(), amount: data.amount, recipient: data.recipient }); newTxs.unshift(txRecord); }
 
@@ -174,6 +190,12 @@ export default function Dashboard() {
   };
 
   const onScanComplete = () => { if (pendingTx) processTransaction(pendingTx); };
+
+  const handleSellRequest = (data: any) => {
+    setSelectedSellHolding(null);
+    setPendingTrade(data);
+    setShowTradingPin(true);
+  };
 
   const initiateBuyStock = (symbol: string, amount: number) => {
     const stock = getStockBySymbol(symbol); if (!stock) return;
@@ -495,7 +517,7 @@ export default function Dashboard() {
                     <h2 className="text-xl sm:text-2xl font-black text-slate-800 tracking-tight">{t('My Portfolio', 'میرا پورٹ فولیو')}</h2>
                     <p className="text-slate-500 text-xs mt-0.5">{t('Real-time tracking of your Halal wealth.', 'آپ کی حلال دولت کی اصل وقت میں ٹریکنگ۔')}</p>
                   </div>
-                  <PortfolioDashboard holdings={holdings} totalValue={totalPortfolioValue} dailyPnl={dailyPnl} />
+                  <PortfolioDashboard holdings={holdings} totalValue={totalPortfolioValue} dailyPnl={dailyPnl} onSell={setSelectedSellHolding} />
                   <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 items-start">
                     <div className="md:col-span-7">
                       <PortfolioChart balance={balance} holdings={holdings} totalValue={totalPortfolioValue} />
@@ -549,6 +571,14 @@ export default function Dashboard() {
               <div className="mt-1">
                 {modal === 'deposit' ? <DepositFlow onSuccess={handleTransactionSuccess} /> : <WithdrawFlow onSuccess={handleTransactionSuccess} />}
               </div>
+            </div>
+          </div>
+        )}
+
+        {selectedSellHolding && (
+          <div className="fixed inset-0 z-[65] flex items-end justify-center bg-slate-900/50 p-0 backdrop-blur-sm sm:items-center sm:p-4" role="presentation">
+            <div className="mobile-modal-safe relative w-full max-w-md rounded-t-3xl bg-white p-4 shadow-2xl sm:rounded-3xl sm:p-5" role="dialog" aria-modal="true" aria-label={t('Sell demo holding', 'ڈیمو ہولڈنگ فروخت کریں')}>
+              <SellStockFlow holding={selectedSellHolding} onSuccess={handleSellRequest} onCancel={() => setSelectedSellHolding(null)} />
             </div>
           </div>
         )}

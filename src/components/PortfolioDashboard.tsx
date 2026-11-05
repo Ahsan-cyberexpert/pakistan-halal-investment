@@ -14,6 +14,7 @@ interface PortfolioDashboardProps {
   holdings: Holding[];
   totalValue: number;
   dailyPnl: number;
+  onSell?: (holding: Holding) => void;
 }
 
 const COLORS = [
@@ -21,7 +22,7 @@ const COLORS = [
   "bg-blue-500", "bg-indigo-500", "bg-violet-500",
 ];
 
-export default function PortfolioDashboard({ holdings, totalValue, dailyPnl }: PortfolioDashboardProps) {
+export default function PortfolioDashboard({ holdings, totalValue, dailyPnl, onSell }: PortfolioDashboardProps) {
   const formatPKR = (n: number) =>
     n >= 10_000_000
       ? `${(n / 10_000_000).toFixed(2)} Cr`
@@ -170,6 +171,7 @@ export default function PortfolioDashboard({ holdings, totalValue, dailyPnl }: P
                 >
                   {h.pnl >= 0 ? "+" : ""}{pnlPct}%
                 </div>
+                {onSell && <button onClick={() => onSell(h)} className="touch-target mt-1 min-h-0 h-7 rounded-lg px-2 text-[9px] font-black text-amber-700 hover:bg-amber-50">Sell demo</button>}
               </div>
             </div>
           );
