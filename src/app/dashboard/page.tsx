@@ -145,10 +145,11 @@ export default function Dashboard() {
       type: data.type,
       amount: data.amount,
       symbol: data.symbol || data.name || data.type,
+      name: data.name,
       status: 'SUCCESS',
       date: new Date().toISOString(),
       reference: data.txRef || createDemoReference(data.type),
-      note: 'Simulated demo transaction. No real funds moved.',
+      note: data.note || 'Simulated demo transaction. No real funds moved.',
       method: data.method,
       units: data.units,
       recipient: data.recipient,
@@ -213,7 +214,7 @@ export default function Dashboard() {
     if (pendingTrade) { handleTransactionSuccess(pendingTrade); setPendingTrade(null); }
   };
 
-  const handleBuySukuk = (amount: number) => initiateSecureTransaction({ type: 'buy_sukuk', amount, symbol: 'SUKUK' });
+  const handleBuySukuk = (purchase: any) => initiateSecureTransaction(purchase);
   const handleZakatDonation = (amount: number, recipient: string) => initiateSecureTransaction({ type: 'zakat', amount, recipient, symbol: 'ZAKAT' });
   const handleHealthSave = (amount: number) => initiateSecureTransaction({ type: 'health_save', amount, symbol: 'HEALTH' });
   const handleOverseasInvest = (amount: number, asset: string) => initiateSecureTransaction({ type: 'overseas_invest', amount, name: asset, symbol: asset });

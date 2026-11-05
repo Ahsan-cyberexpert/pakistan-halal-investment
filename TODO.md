@@ -10,6 +10,7 @@
 - [x] Reset Demo now removes only Roziq-prefixed demo/session keys instead of clearing unrelated browser storage; new simulated transactions receive stable references and explicit no-real-funds notes in activity history.
 - [x] Every newly recorded simulated transaction now stores a full demo receipt with reference, timestamp, action, amount, method/asset details, status, before balance, after balance, and explicit no-real-funds disclosure; Recent Activity opens the receipt viewer.
 - [x] Stock holdings now support a standardized demo sell flow: choose units, review estimated proceeds and P&L, simulate the sale, confirm through the existing trading PIN, update virtual balance/holdings, and create a full demo receipt.
+- [x] Sukuk now uses a standardized demo flow: select an instrument, enter amount, review example yield/maturity/risk and virtual cash after purchase, simulate purchase, confirm through the existing security step, update virtual balance, and create a full demo receipt.
 - [x] Transaction dialogs now support Escape-to-close, dialog semantics, labeled inputs, helper text, `aria-describedby`, `aria-invalid`, alert messages, and live processing/result regions for keyboard and TalkBack users.
 - [x] Website and dashboard routes plus `public/manus-routes.json` build successfully; the same shared frontend is the source for the Capacitor Android app.
 
@@ -65,7 +66,7 @@
 - [ ] Add truthful pending/failure/retry states and preserve important results in activity history.
 - [ ] Add starter stock shortlist, risk/time filters, and `Why this is shown?` explanation.
 - [ ] Add chart text summaries and clearly identify simulated data, time range, and update timestamp.
-- [ ] Label Wali, Zakat, purification, Hajj, Sukuk, and AI actions according to demo status and add contextual help.
+- [ ] Label Wali, Zakat, purification, Hajj, Sukuk, and AI actions according to demo status and add contextual help. Sukuk is now standardized; the remaining feature labels still need review.
 
 ## Accessibility and bilingual UX
 
