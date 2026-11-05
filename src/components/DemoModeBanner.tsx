@@ -1,6 +1,6 @@
 'use client';
 
-import { demoStatusText } from '@/lib/app-mode';
+import { demoStatusShortText, demoStatusText } from '@/lib/app-mode';
 
 type DemoModeBannerProps = {
   lang?: 'en' | 'ur';
@@ -14,16 +14,16 @@ export default function DemoModeBanner({ lang = 'en', compact = false }: DemoMod
     <aside
       className={`demo-mode-banner ${compact ? 'demo-mode-banner-compact' : ''}`}
       role="status"
-      aria-label={isUrdu ? 'ڈیمو اکاؤنٹ کی معلومات' : 'Demo account information'}
+      aria-label={isUrdu ? 'ڈیمو موڈ: تمام کارروائیاں فرضی ہیں اور حقیقی رقم منتقل نہیں ہوتی' : 'Demo mode: activity is simulated and no real money moves'}
       dir={isUrdu ? 'rtl' : 'ltr'}
     >
       <div className="demo-mode-banner-icon" aria-hidden="true">◉</div>
       <div className="min-w-0">
         <p className="demo-mode-banner-title">
-          {isUrdu ? 'ڈیمو اکاؤنٹ' : 'DEMO ACCOUNT'}
+          {isUrdu ? 'ڈیمو موڈ · کوئی حقیقی رقم نہیں' : 'DEMO MODE · NO REAL MONEY'}
         </p>
         <p className="demo-mode-banner-copy">
-          {demoStatusText[lang]}. {isUrdu ? 'تمام بیلنس اور کارروائیاں صرف نمونہ ہیں۔' : 'Balances, prices, payments, and orders are simulated.'}
+          {compact ? demoStatusShortText[lang] : demoStatusText[lang]}
         </p>
       </div>
     </aside>

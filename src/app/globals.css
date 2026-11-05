@@ -100,9 +100,9 @@ html.dark {
     gap: 0.75rem;
     width: 100%;
     padding: 0.75rem 1rem;
-    color: #78350f;
-    background: #fffbeb;
-    border: 1px solid #fcd34d;
+    color: #451a03;
+    background: #fef3c7;
+    border: 1px solid #b45309;
     border-radius: 1rem;
   }
 
@@ -118,15 +118,15 @@ html.dark {
     width: 1.5rem;
     height: 1.5rem;
     margin-top: 0.05rem;
-    color: #92400e;
+    color: #451a03;
     font-size: 0.75rem;
-    background: #fde68a;
+    background: #fbbf24;
     border-radius: 999px;
   }
 
   .demo-mode-banner-title {
     margin: 0;
-    color: #92400e;
+    color: #451a03;
     font-size: 0.75rem;
     font-weight: 900;
     letter-spacing: 0.08em;
@@ -134,7 +134,7 @@ html.dark {
 
   .demo-mode-banner-copy {
     margin: 0.15rem 0 0;
-    color: #a16207;
+    color: #713f12;
     font-size: 0.75rem;
     line-height: 1.45;
     font-weight: 600;
@@ -358,6 +358,19 @@ html.dark input, html.dark textarea, html.dark select {
   background-color: var(--bg-muted);
   color: var(--text-primary);
   border-color: var(--border-color);
+}
+html.dark .demo-mode-banner {
+  color: #fef3c7;
+  background: #451a03;
+  border-color: #f59e0b;
+}
+html.dark .demo-mode-banner-title,
+html.dark .demo-mode-banner-copy {
+  color: #fef3c7;
+}
+html.dark .demo-mode-banner-icon {
+  color: #451a03;
+  background: #fbbf24;
 }
 html.dark .glass {
   background: var(--glass-bg);

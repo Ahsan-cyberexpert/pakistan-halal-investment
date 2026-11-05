@@ -18,10 +18,11 @@
 - [x] Shared UI typography and spacing tokens now define 12px metadata, 14px compact text, 16px body text, 18–24px headings, 28–40px display values, readable line heights, and a 4–48px spacing rhythm; reusable UI classes expose the scale.
 - [x] Landing-page mobile navigation now uses a keyboard-accessible disclosure menu; primary links have larger tap targets, anchor sections account for the fixed header, and mobile section spacing is tighter.
 - [x] Dashboard header and floating AI controls now respect device safe areas; mobile toasts stay clear of the AI button and bottom navigation, and mobile navigation labels are 12px.
+- [x] Persistent high-contrast Demo Mode disclosure now remains in the sticky dashboard header, appears on the landing page, lists simulated domains, and states that no real money moves.
 
 ## Demo boundary and status
 
-- [ ] Add a persistent, high-contrast Demo Mode banner stating that balances, prices, payments, orders, Zakat, Wali actions, and AI context are simulated and no real money moves.
+- [x] Add a persistent, high-contrast Demo Mode banner stating that balances, prices, payments, orders, Zakat, Wali actions, and AI context are simulated and no real money moves.
 - [ ] Replace ambiguous demo labels such as `Live`, `Live Cash Balance`, `Account Linked`, `Deposit Successful`, and `Order Executed` with truthful demo wording while preserving current demo outcomes.
 - [ ] Keep demo state in a clearly namespaced storage path and keep `Reset demo only` scoped to demo data.
 - [x] Add demo receipts with stable references, timestamp, action, amount, resulting balance, and simulated status.

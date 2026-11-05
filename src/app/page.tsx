@@ -1,4 +1,5 @@
 import Link from "next/link";
+import DemoModeBanner from "@/components/DemoModeBanner";
 
 const stats = [
   { value: "Demo", label: "Interactive experience", sub: "Explore with virtual money" },
@@ -210,9 +211,8 @@ export default function Home() {
             </a>
           </div>
 
-          <div className="max-w-2xl mx-auto mb-8 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-left sm:text-center" role="status">
-            <p className="text-xs sm:text-sm font-black text-amber-800">DEMO MODE · Virtual money only</p>
-            <p className="mt-1 text-xs sm:text-sm leading-relaxed text-amber-700">Balances, market prices, payments, investments, and AI answers are simulated. No real account or transaction is created.</p>
+          <div className="max-w-2xl mx-auto mb-8">
+            <DemoModeBanner />
           </div>
 
           {/* Stats Row */}
