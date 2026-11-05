@@ -27,6 +27,7 @@ import {
   FamilyHealthSaving,
   OverseasInvest,
   ToastContainer,
+  DemoReceipt,
 } from '@/components';
 import DemoModeBanner from '@/components/DemoModeBanner';
 import DemoWealthSummary from '@/components/DemoWealthSummary';
@@ -55,6 +56,7 @@ export default function Dashboard() {
   const [isScanning, setIsScanning] = useState(false);
   const [pendingTx, setPendingTx] = useState<any>(null);
   const [showResetModal, setShowResetModal] = useState(false);
+  const [selectedReceipt, setSelectedReceipt] = useState<Transaction | null>(null);
 
   const t = (en: string, ur: string) => lang === 'ur' ? ur : en;
 
@@ -74,16 +76,17 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    if (!modal && !showResetModal) return;
+    if (!modal && !showResetModal && !selectedReceipt) return;
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setModal(null);
         setShowResetModal(false);
+        setSelectedReceipt(null);
       }
     };
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
-  }, [modal, showResetModal]);
+  }, [modal, showResetModal, selectedReceipt]);
 
   const handleAuthSuccess = (user: UserProfile) => {
     setCurrentUser(user); setIsAuthorized(true);
@@ -143,6 +146,12 @@ export default function Dashboard() {
       date: new Date().toISOString(),
       reference: data.txRef || createDemoReference(data.type),
       note: 'Simulated demo transaction. No real funds moved.',
+      method: data.method,
+      units: data.units,
+      recipient: data.recipient,
+      isDemo: true,
+      receiptVersion: 1,
+      balanceBefore: balance,
     };
 
     if (data.type === 'deposit') { newBal += data.amount; newTxs.unshift(txRecord); }
@@ -156,6 +165,8 @@ export default function Dashboard() {
     }
     else if (['buy_sukuk', 'health_save', 'overseas_invest'].includes(data.type)) { newBal -= data.amount; newTxs.unshift(txRecord); }
     else if (data.type === 'zakat') { newBal -= data.amount; newZk.unshift({ date: new Date().toISOString(), amount: data.amount, recipient: data.recipient }); newTxs.unshift(txRecord); }
+
+    txRecord.balanceAfter = newBal;
 
     setBalance(newBal); setHoldings(newHoldings); setTransactions(newTxs); setZakatHistory(newZk);
     persistUserData(newBal, newHoldings, newTxs, newZk);
@@ -234,6 +245,8 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+
+      {selectedReceipt && <DemoReceipt transaction={selectedReceipt} onClose={() => setSelectedReceipt(null)} lang={lang} />}
 
       {/* Master AI Agent (Voice + Write + Linked Accounts) */}
       <RoziqAI balance={balance} holdings={holdings} transactions={transactions} lang={lang} />
@@ -421,7 +434,7 @@ export default function Dashboard() {
                         </div>
                       ) : (
                         transactions.slice(0, 5).map((tx) => (
-                          <div key={tx.id} className="group flex justify-between items-center p-3 sm:p-3.5 bg-slate-50/50 rounded-2xl border border-slate-100 hover:border-emerald-100 hover:bg-white hover:shadow-md transition-all duration-200">
+                          <div key={tx.id} className="group flex justify-between items-center gap-3 p-3 sm:p-3.5 bg-slate-50/50 rounded-2xl border border-slate-100 hover:border-emerald-100 hover:bg-white hover:shadow-md transition-all duration-200">
                             <div className="flex items-center gap-3">
                               <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-sm sm:text-base shadow-sm ${tx.type === 'deposit' ? 'bg-emerald-50 text-emerald-600' : tx.type === 'withdraw' ? 'bg-slate-50 text-slate-600' : tx.type === 'zakat_vault' ? 'bg-amber-50 text-amber-600' : 'bg-blue-50 text-blue-600'}`}>
                                 {tx.type === 'deposit' ? '➕' : tx.type === 'withdraw' ? '➖' : tx.type === 'zakat_vault' ? '🏛️' : '📈'}
@@ -438,8 +451,13 @@ export default function Dashboard() {
                                 </div>
                               </div>
                             </div>
-                            <div className={`font-black text-xs ${tx.type === 'deposit' ? 'text-emerald-600' : 'text-slate-800'}`}>
-                              {tx.type === 'deposit' ? '+' : '-'} {tx.amount.toLocaleString()}
+                            <div className="text-right shrink-0">
+                              <div className={`font-black text-xs ${tx.type === 'deposit' ? 'text-emerald-600' : 'text-slate-800'}`}>
+                                {tx.type === 'deposit' ? '+' : '-'} {tx.amount.toLocaleString()}
+                              </div>
+                              <button onClick={() => setSelectedReceipt(tx)} className="touch-target mt-1 min-h-0 h-7 px-2 rounded-lg text-[9px] font-black text-emerald-700 hover:bg-emerald-50" aria-label={t('View demo receipt', 'ڈیمو رسید دیکھیں')}>
+                                {t('Receipt', 'رسید')} ↗
+                              </button>
                             </div>
                           </div>
                         ))

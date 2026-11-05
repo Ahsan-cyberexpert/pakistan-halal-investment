@@ -40,6 +40,10 @@ export interface Transaction {
   reference?: string;
   note?: string;
   notes?: string;
+  balanceBefore?: number;
+  balanceAfter?: number;
+  isDemo?: boolean;
+  receiptVersion?: number;
 }
 
 export interface ZakatRecord {

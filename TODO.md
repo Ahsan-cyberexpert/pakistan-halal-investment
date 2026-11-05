@@ -8,6 +8,7 @@
 - [x] Balance card status badges now say Virtual Demo Balance and No Real Funds instead of unsupported certification or fee claims.
 - [x] Mobile dashboard navigation now uses five primary destinations with accessible active-state semantics, 44px touch targets, Android safe-area spacing, and a labeled transaction dialog.
 - [x] Reset Demo now removes only Roziq-prefixed demo/session keys instead of clearing unrelated browser storage; new simulated transactions receive stable references and explicit no-real-funds notes in activity history.
+- [x] Every newly recorded simulated transaction now stores a full demo receipt with reference, timestamp, action, amount, method/asset details, status, before balance, after balance, and explicit no-real-funds disclosure; Recent Activity opens the receipt viewer.
 - [x] Transaction dialogs now support Escape-to-close, dialog semantics, labeled inputs, helper text, `aria-describedby`, `aria-invalid`, alert messages, and live processing/result regions for keyboard and TalkBack users.
 - [x] Website and dashboard routes plus `public/manus-routes.json` build successfully; the same shared frontend is the source for the Capacitor Android app.
 
@@ -16,7 +17,7 @@
 - [ ] Add a persistent, high-contrast Demo Mode banner stating that balances, prices, payments, orders, Zakat, Wali actions, and AI context are simulated and no real money moves.
 - [ ] Replace ambiguous demo labels such as `Live`, `Live Cash Balance`, `Account Linked`, `Deposit Successful`, and `Order Executed` with truthful demo wording while preserving current demo outcomes.
 - [ ] Keep demo state in a clearly namespaced storage path and keep `Reset demo only` scoped to demo data.
-- [ ] Add demo receipts with stable references, timestamp, action, amount, resulting balance, and simulated status.
+- [x] Add demo receipts with stable references, timestamp, action, amount, resulting balance, and simulated status.
 - [ ] Create an explicit landing-page choice between `Try interactive demo` and `Create real account`; the demo path must not require CNIC or GPS.
 
 ## GUI and visual system
