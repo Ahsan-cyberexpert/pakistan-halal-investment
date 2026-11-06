@@ -75,7 +75,7 @@ function StartModal({ onClose }: { onClose: () => void }) {
               Practise with PKR 5,000,000 of virtual cash. No CNIC or bank account needed.
             </p>
             <button
-              onClick={() => { onClose(); router.push('/dashboard'); }}
+              onClick={() => { onClose(); router.push('/dashboard?mode=demo'); }}
               className="w-full rounded-lg bg-white py-2.5 text-sm font-semibold text-black hover:bg-slate-100 transition-colors"
             >
               Start demo
