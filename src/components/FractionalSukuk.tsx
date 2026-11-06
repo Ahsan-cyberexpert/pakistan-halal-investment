@@ -58,7 +58,7 @@ export default function FractionalSukuk({ balance, onBuy }: { balance: number; o
 
           <div className="mb-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
             {SUKUKS.map((s) => (
-              <button key={s.id} onClick={() => { setSelected(s); setError(''); }} aria-pressed={selected.id === s.id} className={`touch-target rounded-xl border p-3.5 text-left transition-all ${selected.id === s.id ? 'border-amber-500 bg-amber-50/60 shadow-sm' : 'border-slate-200 bg-slate-50/50 hover:border-slate-300'}`}>
+              <button key={s.id} onClick={() => { setSelected(s); setError(''); }} aria-pressed={selected.id === s.id} className={`flex flex-col justify-between min-h-[80px] w-full rounded-xl border p-3.5 text-left transition-all ${selected.id === s.id ? 'border-amber-500 bg-amber-50/60 shadow-sm' : 'border-slate-200 bg-slate-50/50 hover:border-slate-300'}`}>
                 <div className="mb-1 flex items-center justify-between gap-2"><span className="truncate text-xs font-bold text-slate-800">{s.name}</span><span className="rounded border border-slate-200 bg-white px-1.5 py-0.5 text-xs font-semibold text-slate-500">{s.maturity}</span></div>
                 <div className="text-lg font-bold text-amber-700">{s.yield} <span className="text-xs font-normal text-slate-500">example p.a.</span></div>
                 <div className="mt-0.5 text-xs text-slate-500">{s.type} · {s.risk} risk · demo terms</div>
