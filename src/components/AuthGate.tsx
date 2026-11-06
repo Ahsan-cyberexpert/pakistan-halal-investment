@@ -39,6 +39,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
   const [loading, setLoading] = useState(false);
   const [biometricAvailable, setBiometricAvailable] = useState(false);
   const [pendingUser, setPendingUser] = useState<UserProfile | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   // Format CNIC as 42101-1234567-1
   const formatCnic = (val: string) => {
@@ -208,148 +209,149 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-[2000] bg-[#0a0a0c] flex flex-col items-center justify-center p-4 overflow-y-auto">
-      {/* Ambient background glow */}
-      <div className="absolute top-1/4 right-1/4 w-80 h-80 bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/4 left-1/4 w-72 h-72 bg-teal-500/5 rounded-full blur-[100px] pointer-events-none" />
+    <div className="fixed inset-0 z-[2000] bg-[#0d0d0f] flex flex-col items-center justify-center p-4 overflow-y-auto">
+      {/* Ambient glow */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-96 h-96 bg-emerald-500/8 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="relative z-10 w-full max-w-sm my-auto py-6">
-        {/* Brand Logo & Header */}
-        <div className="flex flex-col items-center mb-6 text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500 text-black shadow-lg shadow-emerald-500/20 mb-3">
-            <svg width="22" height="22" viewBox="0 0 14 14" fill="none">
-              <path d="M7 1.5C4 1.5 1.5 4 1.5 7S4 12.5 7 12.5 12.5 10 12.5 7 10 1.5 7 1.5z" stroke="#000" strokeWidth="1.5"/>
-              <circle cx="7" cy="7" r="2" fill="#000"/>
-            </svg>
-          </div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Roziq</h1>
-          <p className="text-xs font-semibold uppercase tracking-widest text-emerald-400 mt-1">
-            Pakistan&apos;s Halal Wealth OS
-          </p>
-        </div>
+      <div className="relative z-10 w-full max-w-[340px] my-auto py-6">
 
         {/* ── LOGIN SCREEN ── */}
         {screen === 'login' && (
-          <div className="bg-[#121316] border border-white/10 rounded-3xl p-6 sm:p-7 space-y-4 shadow-2xl backdrop-blur-xl">
-            <div className="text-center">
-              <h2 className="text-lg font-bold text-white">Welcome Back</h2>
-              <p className="text-xs text-slate-400 mt-0.5 font-medium">Choose how you would like to sign in</p>
-            </div>
-
-            {/* Dedicated Demo Mode Section */}
-            <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-4 text-center space-y-2.5">
-              <div className="flex items-center justify-between text-left">
-                <div>
-                  <p className="text-xs font-bold text-white">Instant Demo Account</p>
-                  <p className="text-[11px] text-slate-400">Pre-funded with PKR 5,000,000</p>
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  No CNIC
-                </span>
-              </div>
-              <button
-                type="button"
-                onClick={handleInstantDemo}
-                className="w-full py-2.5 px-4 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-xl text-xs sm:text-sm shadow-md transition-all active:scale-95 flex items-center justify-center gap-2"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12h14"/>
-                  <path d="m12 5 7 7-7 7"/>
+          <div className="space-y-5">
+            {/* Logo */}
+            <div className="flex flex-col items-center text-center mb-2">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/30 mb-4">
+                {/* Crescent moon icon matching reference */}
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" className="text-[#0d0d0f]">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
                 </svg>
-                <span>Enter Instant Demo</span>
-              </button>
+              </div>
+              <h1 className="text-2xl font-bold text-white tracking-tight">Welcome back</h1>
+              <p className="text-sm text-slate-400 mt-1">Log in with your CNIC and password</p>
             </div>
 
-            {/* Divider */}
-            <div className="flex items-center gap-2 pt-1">
-              <div className="flex-1 h-px bg-white/10" />
-              <span className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider">or sign in with</span>
-              <div className="flex-1 h-px bg-white/10" />
+            {error && (
+              <p className="text-red-400 text-xs font-semibold text-center bg-red-500/10 border border-red-500/20 py-2.5 px-4 rounded-2xl">
+                {error}
+              </p>
+            )}
+
+            {/* CNIC */}
+            <div>
+              <label className="text-sm font-medium text-white block mb-2">CNIC</label>
+              <input
+                type="text"
+                inputMode="numeric"
+                value={cnic}
+                onChange={e => setCnic(formatCnic(e.target.value))}
+                placeholder="42101-1234567-1"
+                className="w-full px-4 py-3 bg-[#1a1c20] border border-white/10 rounded-2xl text-white font-mono text-sm focus:outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/20 transition-all placeholder:text-slate-600"
+              />
             </div>
 
-            {/* Separate Google Login Button (Clean, no "(Demo)" suffix) */}
+            {/* Password */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-sm font-medium text-white">Password</label>
+                <button type="button" className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition-colors">
+                  Forgot password?
+                </button>
+              </div>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && handleLogin()}
+                  placeholder="Enter your password"
+                  className="w-full px-4 py-3 pr-11 bg-[#1a1c20] border border-white/10 rounded-2xl text-white text-sm focus:outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/20 transition-all placeholder:text-slate-600"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(v => !v)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M1 1l22 22"/>
+                    </svg>
+                  ) : (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Primary Log In button */}
             <button
-              onClick={handleGoogleLogin}
-              className="w-full py-2.5 px-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold rounded-xl transition-all active:scale-95 text-xs sm:text-sm flex items-center justify-center gap-2.5 shadow-xs"
+              onClick={handleLogin}
+              className="w-full py-3.5 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-full transition-all active:scale-[0.98] text-sm shadow-lg shadow-emerald-500/20"
             >
-              {/* Google G logo SVG */}
-              <svg width="18" height="18" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.66v3.05h3.9c2.28-2.1 3.64-5.2 3.64-9.15z"/>
-                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.9-3.05c-1.08.72-2.45 1.16-4.03 1.16-3.1 0-5.74-2.09-6.68-4.91H1.26v3.15C3.26 21.36 7.36 24 12 24z"/>
-                <path fill="#FBBC05" d="M5.32 14.29c-.24-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.56H1.26C.46 8.15 0 9.99 0 12s.46 3.85 1.26 5.44l4.06-3.15z"/>
-                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.36 0 3.26 2.64 1.26 6.56l4.06 3.15c.94-2.82 3.58-4.96 6.68-4.96z"/>
-              </svg>
-              <span>Continue with Google</span>
+              Log in
             </button>
 
-            {/* Biometric Button (if available) with clean SVG icon */}
-            {biometricAvailable && (
+            {/* OR divider */}
+            <div className="flex items-center gap-3">
+              <div className="flex-1 h-px bg-white/10" />
+              <span className="text-xs text-slate-500 font-medium">or</span>
+              <div className="flex-1 h-px bg-white/10" />
+            </div>
+
+            {/* Biometric + Google side-by-side */}
+            <div className="grid grid-cols-2 gap-3">
+              {/* Biometric */}
               <button
-                onClick={handleBiometricLogin}
-                className="w-full py-2.5 px-4 bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white font-semibold rounded-xl transition-all active:scale-95 text-xs sm:text-sm flex items-center justify-center gap-2 shadow-xs"
+                onClick={biometricAvailable ? handleBiometricLogin : handleInstantDemo}
+                className="flex items-center justify-center gap-2 py-3 bg-[#1a1c20] border border-white/10 hover:border-white/20 text-white text-sm font-semibold rounded-2xl transition-all active:scale-95"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-400">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-400">
                   <path d="M12 11c0-1.66-1.34-3-3-3S6 9.34 6 11c0 2.22 1.2 4.15 3 5.19"/>
                   <path d="M12 2a10 10 0 0 0-10 10c0 3.38 1.7 6.37 4.29 8.16"/>
                   <path d="M12 17c1.66 0 3-1.34 3-3 0-.75-.28-1.44-.75-1.96"/>
                   <path d="M18 12c0-3.31-2.69-6-6-6"/>
                   <path d="M22 12c0-5.52-4.48-10-10-10"/>
                 </svg>
-                <span>Fingerprint / Face ID</span>
+                <span>Biometric</span>
               </button>
-            )}
 
-            {/* Divider for CNIC */}
-            <div className="flex items-center gap-2 pt-1">
-              <div className="flex-1 h-px bg-white/10" />
-              <span className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider">or CNIC &amp; Password</span>
-              <div className="flex-1 h-px bg-white/10" />
-            </div>
-
-            {error && (
-              <p className="text-red-400 text-xs font-semibold text-center bg-red-500/10 border border-red-500/20 py-2 px-3 rounded-xl">
-                {error}
-              </p>
-            )}
-
-            <div className="space-y-3">
-              <div>
-                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">CNIC</label>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  value={cnic}
-                  onChange={e => setCnic(formatCnic(e.target.value))}
-                  placeholder="42101-1234567-1"
-                  className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-emerald-500 transition-colors"
-                />
-              </div>
-              <div>
-                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">Password</label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && handleLogin()}
-                  placeholder="••••••••"
-                  className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white text-xs focus:outline-none focus:border-emerald-500 transition-colors"
-                />
-              </div>
+              {/* Google */}
               <button
-                onClick={handleLogin}
-                className="w-full py-2.5 bg-white hover:bg-slate-100 text-black font-bold rounded-xl transition-all active:scale-95 text-xs sm:text-sm shadow-md"
+                onClick={handleGoogleLogin}
+                className="flex items-center justify-center gap-2 py-3 bg-[#1a1c20] border border-white/10 hover:border-white/20 text-white text-sm font-semibold rounded-2xl transition-all active:scale-95"
               >
-                Sign In
+                <svg width="16" height="16" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.66v3.05h3.9c2.28-2.1 3.64-5.2 3.64-9.15z"/>
+                  <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.9-3.05c-1.08.72-2.45 1.16-4.03 1.16-3.1 0-5.74-2.09-6.68-4.91H1.26v3.15C3.26 21.36 7.36 24 12 24z"/>
+                  <path fill="#FBBC05" d="M5.32 14.29c-.24-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.56H1.26C.46 8.15 0 9.99 0 12s.46 3.85 1.26 5.44l4.06-3.15z"/>
+                  <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.36 0 3.26 2.64 1.26 6.56l4.06 3.15c.94-2.82 3.58-4.96 6.68-4.96z"/>
+                </svg>
+                <span>Google</span>
               </button>
             </div>
 
-            <p className="text-center text-xs text-slate-400 font-medium pt-2">
-              Don&apos;t have an account?{' '}
+            {/* Register link */}
+            <p className="text-center text-sm text-slate-400">
+              New to Roziq?{' '}
               <button
                 onClick={() => { setScreen('register'); setError(''); }}
-                className="text-emerald-400 font-bold hover:underline ml-1"
+                className="text-emerald-400 font-semibold hover:text-emerald-300 transition-colors"
               >
-                Register
+                Create an account
+              </button>
+            </p>
+
+            {/* Demo account link */}
+            <p className="text-center text-sm text-slate-500">
+              Just exploring?{' '}
+              <button
+                onClick={handleInstantDemo}
+                className="text-slate-300 font-semibold underline underline-offset-2 hover:text-white transition-colors"
+              >
+                Use a demo account
               </button>
             </p>
           </div>
