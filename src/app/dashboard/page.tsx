@@ -20,7 +20,6 @@ import {
   PinSecurity,
   LanguageSelect,
   Onboarding,
-  SettingsTab,
   WaliAutopilot,
   AuthGate,
   FamilyHealthSaving,
@@ -136,7 +135,6 @@ export default function Dashboard() {
   const [lang, setLangState] = useState<SupportedLanguage>('en');
   const [showLangSelect, setShowLangSelect] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const [darkMode, setDarkMode] = useState(true); // default dark
   const [showTradingPin, setShowTradingPin] = useState(false);
   const [pendingTrade, setPendingTrade] = useState<any>(null);
   const [isScanning, setIsScanning] = useState(false);
@@ -149,21 +147,12 @@ export default function Dashboard() {
 
   const t = (en: string, ur: string) => lang === 'ur' ? ur : en;
 
-  const toggleDark = (val: boolean) => {
-    setDarkMode(val);
-    localStorage.setItem('roziq_dark', val ? '1' : '0');
-    if (val) document.documentElement.classList.add('dark');
-    else document.documentElement.classList.remove('dark');
-  };
-
   useEffect(() => {
     document.documentElement.classList.add('dark');
     const savedLang = localStorage.getItem('roziq_lang') as 'en' | 'ur';
     const hasOnboarded = localStorage.getItem('roziq_onboarded');
-    const savedDark = localStorage.getItem('roziq_dark');
     if (!savedLang) setShowLangSelect(true);
     else { setLangState(savedLang); if (!hasOnboarded) setShowOnboarding(true); }
-    if (savedDark === '0') { setDarkMode(false); document.documentElement.classList.remove('dark'); }
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       if (params.get('mode') === 'demo' || params.get('demo') === '1') {
@@ -718,19 +707,88 @@ export default function Dashboard() {
             </main>
           )}
 
-          {/* ── Settings Tab (user will provide design) ── */}
+          {/* ── Tab 6: Settings ── */}
           {activeTab === 'settings' && (
             <main className="flex-1 px-4 py-5 lg:px-6 pb-32 lg:pb-8 space-y-5">
-              <h1 className="text-xl font-bold text-white">Settings & Security</h1>
-              <SettingsTab
-                lang={lang}
-                darkMode={darkMode}
-                onLangChange={handleLangChange}
-                onDarkToggle={toggleDark}
-                onLock={() => setIsAuthorized(false)}
-                isPremium={isPremium}
-                eligibility={{ totalInvested: totalInvestedHistory, totalProfit: totalRealizedProfit, reqInvest: 250000000, reqProfit: 500000000 }}
-              />
+              <h1 className="text-xl font-bold text-white">Settings</h1>
+
+              {/* Settings card */}
+              <div className="rounded-xl border border-white/8 overflow-hidden" style={{ background: '#1a1a1a' }}>
+
+                {/* Account type */}
+                <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
+                  <div>
+                    <p className="text-sm font-semibold text-white">Account type</p>
+                    <p className="text-xs text-slate-500 mt-0.5">Switch between demo and real</p>
+                  </div>
+                  <div className="flex items-center gap-1 rounded-full border border-white/10 bg-white/5 p-1">
+                    <button className="rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-black transition-colors">
+                      Demo
+                    </button>
+                    <button
+                      className="rounded-full px-4 py-1.5 text-xs font-medium text-slate-400 hover:text-white transition-colors"
+                      onClick={() => alert('Real accounts opening soon. Join the waitlist from the landing page.')}
+                    >
+                      Real
+                    </button>
+                  </div>
+                </div>
+
+                {/* Language */}
+                <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
+                  <p className="text-sm font-semibold text-white">Language</p>
+                  <div className="flex items-center gap-1 rounded-full border border-white/10 bg-white/5 p-1">
+                    <button
+                      onClick={() => handleLangChange('en')}
+                      className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-colors ${
+                        lang === 'en' ? 'bg-white text-black' : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      English
+                    </button>
+                    <button
+                      onClick={() => handleLangChange('ur')}
+                      className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-colors ${
+                        lang === 'ur' ? 'bg-white text-black' : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      اردو
+                    </button>
+                  </div>
+                </div>
+
+                {/* Security PIN */}
+                <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
+                  <p className="text-sm font-semibold text-white">Security PIN</p>
+                  <button
+                    onClick={() => setIsAuthorized(false)}
+                    className="text-sm font-medium text-slate-400 hover:text-white transition-colors"
+                  >
+                    Change
+                  </button>
+                </div>
+
+                {/* Delete account */}
+                <button
+                  onClick={() => setShowResetModal(true)}
+                  className="flex w-full items-center justify-between px-5 py-4 hover:bg-white/3 transition-colors group"
+                >
+                  <span className="text-sm font-semibold text-red-400 group-hover:text-red-300 transition-colors">
+                    Delete account and data
+                  </span>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-red-400 group-hover:text-red-300 transition-colors">
+                    <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+
+              {/* Premium eligibility info (hidden detail) */}
+              {isPremium && (
+                <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 px-5 py-4">
+                  <p className="text-sm font-semibold text-emerald-400">Elite account active</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Wali Autopilot and advanced features unlocked.</p>
+                </div>
+              )}
             </main>
           )}
         </div>
