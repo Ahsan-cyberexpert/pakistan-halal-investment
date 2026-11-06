@@ -14,44 +14,50 @@ export default function DemoWealthSummary({ cash, invested, pending, zakatDue, l
   const urdu = lang === 'ur';
   const total = cash + invested;
   const items = [
-    { label: urdu ? 'دستیاب ڈیمو کیش' : 'Available demo cash', value: cash, tone: 'text-emerald-700' },
-    { label: urdu ? 'سرمایہ کاری' : 'Invested value', value: invested, tone: 'text-blue-700' },
-    { label: urdu ? 'زیر التوا ڈیمو' : 'Pending demo', value: pending, tone: 'text-amber-700' },
+    { label: urdu ? 'دستیاب ڈیمو کیش' : 'Available demo cash', value: cash, tone: 'text-emerald-600 dark:text-emerald-400' },
+    { label: urdu ? 'سرمایہ کاری' : 'Invested value', value: invested, tone: 'text-blue-600 dark:text-blue-400' },
+    { label: urdu ? 'زیر التوا ڈیمو' : 'Pending demo', value: pending, tone: 'text-amber-600 dark:text-amber-400' },
   ];
 
   return (
-    <section className="card p-4 sm:p-5" aria-labelledby="wealth-summary-title" dir={urdu ? 'rtl' : 'ltr'}>
+    <section className="rounded-2xl border border-slate-200 dark:border-white/10 p-5 bg-white dark:bg-[#16171b] shadow-xs" aria-labelledby="wealth-summary-title" dir={urdu ? 'rtl' : 'ltr'}>
       <div className="flex items-start justify-between gap-3 mb-4">
         <div>
-          <p className="text-xs font-black uppercase tracking-widest text-slate-400">
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
             {urdu ? 'مالی خلاصہ' : 'Financial summary'}
           </p>
-          <h2 id="wealth-summary-title" className="mt-1 text-xl sm:text-2xl font-black text-slate-900">
+          <h2 id="wealth-summary-title" className="mt-1 text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
             {urdu ? 'کل ڈیمو دولت' : 'Total demo wealth'}
           </h2>
-          <p className="mt-1 text-xs font-medium text-slate-500">
+          <p className="mt-0.5 text-xs font-medium text-slate-500 dark:text-slate-400">
             {urdu ? 'یہ رقم صرف پریزنٹیشن کے لیے فرضی ہے۔' : 'Virtual money for presentation only.'}
           </p>
         </div>
-        <span className="rounded-xl border border-amber-200 bg-amber-50 px-2.5 py-1 text-xs font-black uppercase tracking-wider text-amber-700">
+        <span className="rounded-md border border-amber-500/20 bg-amber-500/10 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-400">
           {urdu ? 'ڈیمو' : 'Demo'}
         </span>
       </div>
 
-      <p className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 mb-4">{formatPKR(total)}</p>
+      <p className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-4">{formatPKR(total)}</p>
 
       <div className="grid grid-cols-3 gap-2 sm:gap-3">
         {items.map((item) => (
-          <div key={item.label} className="min-w-0 rounded-xl bg-slate-50 border border-slate-100 p-2.5 sm:p-3">
-            <p className="text-xs leading-tight font-bold text-slate-500">{item.label}</p>
-            <p className={`mt-1 truncate text-xs sm:text-sm font-black ${item.tone}`}>{formatPKR(item.value)}</p>
+          <div key={item.label} className="min-w-0 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200/60 dark:border-white/5 p-3">
+            <p className="text-xs leading-tight font-medium text-slate-500 dark:text-slate-400">{item.label}</p>
+            <p className={`mt-1 truncate text-xs sm:text-sm font-bold ${item.tone}`}>{formatPKR(item.value)}</p>
           </div>
         ))}
       </div>
 
-      <div className={`mt-4 flex items-center gap-2 rounded-xl border px-3 py-2.5 ${zakatDue ? 'border-amber-200 bg-amber-50 text-amber-800' : 'border-emerald-200 bg-emerald-50 text-emerald-800'}`}>
-        <span aria-hidden="true">{zakatDue ? '🕋' : '✓'}</span>
-        <p className="text-xs font-bold">
+      <div className={`mt-4 flex items-center gap-2.5 rounded-xl border px-3.5 py-2.5 ${zakatDue ? 'border-amber-200 dark:border-amber-500/20 bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300' : 'border-emerald-200 dark:border-emerald-500/20 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-300'}`}>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+          {zakatDue ? (
+            <circle cx="12" cy="12" r="10"/>
+          ) : (
+            <polyline points="20 6 9 17 4 12"/>
+          )}
+        </svg>
+        <p className="text-xs font-medium">
           {zakatDue
             ? (urdu ? 'ڈیمو حساب کے مطابق زکوٰۃ کا جائزہ دستیاب ہے۔' : 'Zakat review is available for this demo balance.')
             : (urdu ? 'ڈیمو حساب نصاب سے کم ہے۔' : 'Demo calculation is below the Nisab example.')}

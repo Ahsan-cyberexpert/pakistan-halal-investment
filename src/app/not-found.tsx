@@ -8,7 +8,7 @@ export default function NotFound() {
     >
       <div className="text-center max-w-md">
         <div className="w-24 h-24 bg-emerald-50 rounded-[2rem] flex items-center justify-center text-5xl mx-auto mb-8 shadow-xl border border-emerald-100">
-          🕌
+          404
         </div>
         <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-100 px-4 py-2 rounded-2xl mb-6">
           <span className="text-xs font-black text-emerald-600 uppercase tracking-widest">404 — Page Not Found</span>

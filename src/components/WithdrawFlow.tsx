@@ -11,9 +11,9 @@ export default function WithdrawFlow({ onSuccess }: { onSuccess: (data: any) => 
   const [error, setError] = useState('');
 
   const methods = [
-    { id: 'jazzcash', name: 'JazzCash', icon: '📱' },
-    { id: 'easypaisa', name: 'EasyPaisa', icon: '🟢' },
-    { id: 'bank', name: 'Bank Account', icon: '🏦' }
+    { id: 'jazzcash', name: 'JazzCash', icon: 'JC' },
+    { id: 'easypaisa', name: 'EasyPaisa', icon: 'EP' },
+    { id: 'bank', name: 'Bank Account', icon: 'BANK' }
   ];
 
   const validate = () => {
@@ -36,7 +36,7 @@ export default function WithdrawFlow({ onSuccess }: { onSuccess: (data: any) => 
   return (
     <div className="w-full max-w-sm mx-auto p-6 bg-white rounded-2xl shadow-xl border border-gray-100">
       <DemoModeBanner compact lang="ur" />
-      <h2 className="text-xl font-bold mb-5 text-gray-800">💸 وِڈڈرا کریں</h2>
+      <h2 className="text-xl font-bold mb-5 text-gray-800">وِڈڈرا کریں</h2>
       {step === 1 && (
         <div className="space-y-4">
           <label htmlFor="withdraw-amount" className="block text-sm font-medium text-gray-700">رقم (PKR)</label>

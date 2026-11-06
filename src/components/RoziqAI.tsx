@@ -138,7 +138,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
         title="Roziq AI Master Guardian"
       >
         <div className="absolute inset-0 bg-emerald-400 rounded-2xl animate-ping opacity-25 group-hover:opacity-40"></div>
-        🤖
+        
       </button>
 
       {/* Unified AI Master Modal (Voice + Write + Account Context) */}
@@ -154,7 +154,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
               <div className="flex justify-between items-center mb-2.5 relative z-10">
                 <div className="flex items-center gap-2.5">
                   <div className={`w-9 h-9 sm:w-10 sm:h-10 bg-white/15 backdrop-blur-md rounded-2xl flex items-center justify-center text-xl sm:text-2xl shadow-inner border border-white/20 transition-transform duration-300 ${isListening ? 'rotate-12 scale-110 bg-amber-500' : isSpeaking ? 'animate-bounce bg-emerald-50' : ''}`}>
-                    🤖
+                    
                   </div>
                   <div>
                     <h3 className="font-black text-sm sm:text-base tracking-tight flex items-center gap-1.5">
@@ -187,7 +187,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
               {/* Live Context Badge */}
               <div className="mt-2 pt-2 border-t border-white/10 flex justify-between items-center text-xs font-bold text-emerald-100/90 relative z-10">
                 <span>🏦 {lang === 'ur' ? 'ورچوئل کیش بیلنس:' : 'Demo Cash Balance:'} PKR {balance.toLocaleString()}</span>
-                <span>💼 {holdings.length} {lang === 'ur' ? 'اسٹاکس' : 'Stocks'}</span>
+                <span> {holdings.length} {lang === 'ur' ? 'اسٹاکس' : 'Stocks'}</span>
               </div>
             </div>
 
@@ -202,7 +202,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
                       isListening === 'ur' ? 'bg-red-500 text-white animate-pulse border-red-600' : 'bg-white text-emerald-700 border-emerald-200 hover:bg-emerald-50'
                     }`}
                   >
-                    <span>{isListening === 'ur' ? '⏹️' : '🎤'}</span> Speak Urdu (اردو)
+                    <span>{isListening === 'ur' ? '■' : 'REC'}</span> Speak Urdu (اردو)
                   </button>
 
                   <button 
@@ -211,7 +211,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
                       isListening === 'en' ? 'bg-red-500 text-white animate-pulse border-red-600' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
                     }`}
                   >
-                    <span>{isListening === 'en' ? '⏹️' : '🎤'}</span> Speak English
+                    <span>{isListening === 'en' ? '■' : 'REC'}</span> Speak English
                   </button>
                 </div>
 

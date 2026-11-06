@@ -127,7 +127,7 @@ export default function WaliAutopilot({ lang }: WaliAutopilotProps) {
       <div className="flex items-center justify-between mb-3 sm:mb-4">
         <div className="flex items-center gap-2.5 sm:gap-3">
           <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-lg sm:text-xl transition-all duration-500 flex-shrink-0 ${status === 'scanning' ? 'bg-emerald-500 shadow-md shadow-emerald-900/40 rotate-12' : 'bg-slate-900 border border-white/5'}`}>
-            🤖
+            
           </div>
           <div>
             <h2 className="text-base sm:text-lg font-black text-white tracking-tight italic">WALI<span className="text-emerald-500 text-xs align-top ml-1">AI</span></h2>
@@ -176,7 +176,7 @@ export default function WaliAutopilot({ lang }: WaliAutopilotProps) {
       {/* Vault Stats */}
       <div className="grid grid-cols-5 gap-2 mb-3 sm:mb-4">
         <div className="col-span-3 bg-white/5 border border-white/5 rounded-xl p-3 sm:p-4 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-2.5 opacity-10 group-hover:opacity-20 transition-opacity text-xl pointer-events-none">🏦</div>
+          <div className="absolute top-0 right-0 p-2.5 opacity-10 group-hover:opacity-20 transition-opacity text-xl pointer-events-none"></div>
           <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{t('Wali Vault', 'ولی والٹ')}</p>
           <p className="text-base sm:text-xl font-black text-white tabular-nums tracking-tight">
             <span className="text-xs font-medium text-emerald-400 mr-1">PKR</span>
@@ -236,14 +236,14 @@ export default function WaliAutopilot({ lang }: WaliAutopilotProps) {
 
           <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
             <div className="flex items-center gap-2.5 sm:gap-3 bg-white/10 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-white/10">
-              <span className="text-xl sm:text-2xl flex-shrink-0">⚖️</span>
+              <span className="text-xl sm:text-2xl flex-shrink-0"></span>
               <p className="text-xs leading-relaxed font-medium">
                 {t('Shariah compliance verified. Debt-to-Equity is ', 'شریعت کی تعمیل کی تصدیق ہو گئی۔ قرض اور ایکویٹی کا تناسب ')}
                 <span className="font-bold underline">{proposal.debtToEquity}%</span>
               </p>
             </div>
             <div className="flex items-center gap-2.5 sm:gap-3 bg-emerald-400/20 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-white/20">
-              <span className="text-xl sm:text-2xl flex-shrink-0">🇵🇰</span>
+              <span className="text-xl sm:text-2xl flex-shrink-0">PK</span>
               <div>
                 <p className="text-xs font-black uppercase tracking-widest">{t('Sovereign GDP Impact', 'قومی جی ڈی پی پر اثر')}</p>
                 <p className="text-xs opacity-80 leading-relaxed mt-0.5">

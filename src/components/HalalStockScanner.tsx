@@ -93,7 +93,7 @@ export default function HalalStockScanner({ balance, onBuy }: { balance: number;
 
       {/* Search */}
       <div className="relative">
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs">🔍</span>
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
         <input
           type="text"
           placeholder="Search stocks..."
@@ -115,7 +115,7 @@ export default function HalalStockScanner({ balance, onBuy }: { balance: number;
               className={`w-full flex justify-between items-center p-2.5 sm:p-3 rounded-xl sm:rounded-2xl border transition-all duration-150 active:scale-95 ${
                 selectedStock?.symbol === stock.symbol
                   ? 'border-emerald-300 bg-emerald-50 shadow-sm shadow-emerald-100'
-                  : 'border-slate-100 bg-white hover:border-emerald-200 hover:shadow-sm'
+                  : 'border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 hover:border-emerald-500/50 hover:shadow-sm text-slate-900 dark:text-white'
               }`}
             >
               <div className="flex items-center gap-2 sm:gap-2.5 text-left">

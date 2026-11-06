@@ -52,7 +52,7 @@ export default function SovereignScan({ onComplete, isOpen }: SovereignScanProps
             style={{ clipPath: `inset(0 0 ${100 - progress}% 0)` }}
           ></div>
           <div className="absolute inset-0 flex items-center justify-center text-5xl">
-            {progress < 40 ? '🔐' : progress < 80 ? '👤' : '✅'}
+            {progress < 40 ? 'VERIFYING' : progress < 80 ? 'CHECKING' : 'COMPLETE'}
           </div>
           
           {/* Scanning Line */}

@@ -15,7 +15,7 @@ export default function LanguageSelect({ onSelect }: LanguageSelectProps) {
       <div className="relative z-10 w-full max-w-sm flex flex-col items-center">
         {/* Logo */}
         <div className="w-24 h-24 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-[2.5rem] flex items-center justify-center text-5xl mb-6 shadow-2xl shadow-emerald-900/60">
-          🕌
+          
         </div>
         <h1 className="text-4xl font-black text-white tracking-tighter mb-1">Roziq</h1>
         <p className="text-emerald-400 text-xs font-black uppercase tracking-[0.3em] mb-16">Halal Wealth OS</p>
@@ -33,7 +33,7 @@ export default function LanguageSelect({ onSelect }: LanguageSelectProps) {
             className="group w-full flex items-center justify-between p-6 bg-white/5 border border-white/10 rounded-3xl hover:bg-emerald-600 hover:border-emerald-500 transition-all duration-300 hover:scale-[1.02] active:scale-95 shadow-xl"
           >
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-2xl group-hover:bg-white/20 transition-colors">🇬🇧</div>
+              <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-2xl group-hover:bg-white/20 transition-colors"><span className="text-sm font-bold text-white">EN</span></div>
               <div className="text-left">
                 <div className="text-white font-black text-lg">English</div>
                 <div className="text-white/40 text-xs font-medium">Left to Right</div>
@@ -48,7 +48,7 @@ export default function LanguageSelect({ onSelect }: LanguageSelectProps) {
             dir="rtl"
           >
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-2xl group-hover:bg-white/20 transition-colors">🇵🇰</div>
+              <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-2xl group-hover:bg-white/20 transition-colors"><span className="text-sm font-bold text-white">UR</span></div>
               <div className="text-right">
                 <div className="text-white font-black text-lg">اردو</div>
                 <div className="text-white/40 text-xs font-medium">دائیں سے بائیں</div>

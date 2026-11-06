@@ -3,11 +3,11 @@ import { useState } from 'react';
 import DemoModeBanner from './DemoModeBanner';
 
 const PAYMENT_METHODS = [
-  { id: 'easypaisa', name: 'EasyPaisa', icon: '💚', color: 'bg-green-50 border-green-200', activeColor: 'bg-green-600', type: 'mobile' },
-  { id: 'jazzcash', name: 'JazzCash', icon: '🔴', color: 'bg-red-50 border-red-200', activeColor: 'bg-red-600', type: 'mobile' },
-  { id: 'meezan', name: 'Meezan Bank', icon: '🏦', color: 'bg-blue-50 border-blue-200', activeColor: 'bg-blue-600', type: 'bank' },
-  { id: 'hbl', name: 'HBL', icon: '🏛️', color: 'bg-emerald-50 border-emerald-200', activeColor: 'bg-emerald-600', type: 'bank' },
-  { id: 'ubl', name: 'UBL', icon: '💳', color: 'bg-indigo-50 border-indigo-200', activeColor: 'bg-indigo-600', type: 'bank' },
+  { id: 'easypaisa', name: 'EasyPaisa', icon: 'EP', color: 'bg-green-50 border-green-200', activeColor: 'bg-green-600', type: 'mobile' },
+  { id: 'jazzcash', name: 'JazzCash', icon: 'JC', color: 'bg-red-50 border-red-200', activeColor: 'bg-red-600', type: 'mobile' },
+  { id: 'meezan', name: 'Meezan Bank', icon: 'MBL', color: 'bg-blue-50 border-blue-200', activeColor: 'bg-blue-600', type: 'bank' },
+  { id: 'hbl', name: 'HBL', icon: 'HBL', color: 'bg-emerald-50 border-emerald-200', activeColor: 'bg-emerald-600', type: 'bank' },
+  { id: 'ubl', name: 'UBL', icon: 'UBL', color: 'bg-indigo-50 border-indigo-200', activeColor: 'bg-indigo-600', type: 'bank' },
 ];
 
 const QUICK_AMOUNTS = [5000, 10000, 25000, 50000, 100000, 500000];
@@ -177,7 +177,7 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
       {/* STEP: Success */}
       {step === 'success' && (
         <div className="flex flex-col items-center text-center py-8 space-y-4" role="status" aria-live="polite">
-          <div className="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center text-4xl">✅</div>
+          <div className="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
           <h2 className="text-2xl font-black text-slate-900">Demo deposit recorded</h2>
           <p className="text-slate-500">₨ {parseFloat(amount).toLocaleString()} added to your virtual demo balance</p>
           <p className="text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">No bank or mobile-wallet payment was processed.</p>

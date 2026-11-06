@@ -19,10 +19,10 @@ export const toast = {
 };
 
 const ICONS: Record<ToastType, string> = {
-  success: "✅",
-  error: "❌",
+  success: "✓",
+  error: "✕",
   info: "ℹ️",
-  warning: "⚠️",
+  warning: "!",
 };
 
 const COLORS: Record<ToastType, string> = {

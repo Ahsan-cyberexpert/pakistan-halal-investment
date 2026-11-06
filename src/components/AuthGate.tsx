@@ -84,17 +84,17 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
           // Simulate clean reverse geocoding for Pakistan / Hackathon demo
           const cities = ['Karachi, Sindh', 'Lahore, Punjab', 'Islamabad, Capital Territory', 'Peshawar, KPK'];
           const randomCity = cities[Math.floor(Math.random() * cities.length)];
-          setLocation(`${randomCity} (GPS Verified 📍)`);
+          setLocation(`${randomCity} (GPS Verified)`);
           setIsLocating(false);
         },
         () => {
-          setLocation('Karachi, Sindh (Default GPS 📍)');
+          setLocation('Karachi, Sindh (Default GPS)');
           setIsLocating(false);
         },
         { timeout: 5000 }
       );
     } else {
-      setLocation('Karachi, Sindh (Default GPS 📍)');
+      setLocation('Karachi, Sindh (Default GPS)');
       setIsLocating(false);
     }
   };
@@ -186,7 +186,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
       name: 'Muhammad Ahsan (Demo)',
       cnic: '4210112345671',
       mobile: '03001234567',
-      location: 'Karachi, Sindh (GPS Verified 📍)',
+      location: 'Karachi, Sindh (GPS Verified)',
       isOverseas: false,
       tradingPin: '1234'
     };
@@ -201,7 +201,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
       name: 'Demo Investor',
       cnic: '4210100000001',
       mobile: '03000000000',
-      location: 'Karachi, PK (Virtual Demo 📍)',
+      location: 'Karachi, PK (Virtual Demo)',
       isOverseas: false,
       tradingPin: '1234'
     };
@@ -220,7 +220,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
       <div className="relative z-10 w-full max-w-sm my-auto py-6">
         {/* Logo */}
         <div className="flex flex-col items-center mb-6">
-          <div className="w-14 h-14 bg-emerald-600 rounded-3xl flex items-center justify-center text-3xl shadow-2xl shadow-emerald-900/50 mb-3">🇵🇰</div>
+          <div className="w-14 h-14 bg-emerald-600 rounded-3xl flex items-center justify-center text-3xl shadow-2xl shadow-emerald-900/50 mb-3"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
           <h1 className="text-2xl font-black text-white tracking-tighter">Roziq</h1>
           <p className="text-emerald-400 text-xs font-black uppercase tracking-[0.25em] mt-1">Pakistan&apos;s Halal Wealth OS</p>
         </div>
@@ -234,14 +234,14 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
             {/* Instant Demo Option (No CNIC or GPS required) */}
             <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3 text-center">
               <p className="text-xs font-bold text-amber-300 mb-2">
-                ⚡ Exploring for review or presentation?
+                Exploring for review or presentation?
               </p>
               <button
                 type="button"
                 onClick={handleInstantDemo}
                 className="touch-target w-full py-2.5 px-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black rounded-xl text-xs sm:text-sm shadow-md transition-all active:scale-95 flex items-center justify-center gap-2"
               >
-                <span>🚀</span>
+                
                 <span>Enter Instant Demo Mode (No CNIC / GPS)</span>
               </button>
             </div>
@@ -284,7 +284,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
             )}
             <button onClick={handleGoogleLogin}
               className="w-full py-3 bg-slate-800 border border-white/10 text-slate-300 font-bold rounded-2xl transition-all active:scale-95 text-sm flex items-center justify-center gap-2 shadow-sm">
-              <span>🔵</span> Continue with Google (Demo)
+               Continue with Google (Demo)
             </button>
 
             <p className="text-center text-xs text-slate-500 font-medium pt-1">
@@ -332,7 +332,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
                   disabled={isLocating}
                   className="px-3 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-black transition-all active:scale-95 flex items-center gap-1 flex-shrink-0 shadow-md disabled:opacity-50"
                 >
-                  {isLocating ? '⏳ Locating...' : '📍 Get Live GPS'}
+                  {isLocating ? 'Locating...' : 'Get Live GPS'}
                 </button>
               </div>
             </div>
@@ -354,7 +354,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
             {/* Overseas toggle */}
             <div className="flex items-center justify-between p-3 bg-slate-800 rounded-xl border border-white/10">
               <div>
-                <p className="text-white font-bold text-xs">🌍 Overseas Pakistani?</p>
+                <p className="text-white font-bold text-xs">Overseas Pakistani?</p>
                 <p className="text-slate-400 text-xs mt-0.5">Living or working abroad</p>
               </div>
               <button onClick={() => setIsOverseas(v => !v)}
@@ -387,7 +387,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
         {/* ── TRADING PIN SETUP ── */}
         {screen === 'trading-pin' && (
           <div className="bg-slate-900 border border-white/10 rounded-3xl p-6 space-y-4 text-center shadow-xl">
-            <div className="text-3xl mb-1">🔑</div>
+            <div className="text-emerald-500 mb-1"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2l-2 2m-1.5 1.5L14 9l-3 3-2-2-4 4 3 3-4 4 3 3 7-7 3.5-3.5"/></svg></div>
             <h2 className="text-lg font-black text-white">Set Your 4-Digit Security PIN</h2>
             <p className="text-slate-400 text-xs font-medium leading-relaxed">
               This 4-digit PIN is required every time you <strong className="text-white">buy stocks, Sukuks, or transfer assets</strong>.
@@ -418,7 +418,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
         {/* ── BIOMETRIC QUICK LOGIN ── */}
         {screen === 'biometric' && pendingUser && (
           <div className="bg-slate-900 border border-white/10 rounded-3xl p-8 text-center space-y-6 shadow-xl">
-            <div className="text-5xl">👋</div>
+            
             <h2 className="text-lg font-black text-white">Welcome back,<br/><span className="text-emerald-400">{pendingUser.name}</span></h2>
             <button onClick={handleBiometricLogin} disabled={loading}
               className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-xl transition-all active:scale-95 text-sm flex items-center justify-center gap-3 shadow-md">
@@ -433,7 +433,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
         )}
 
         <p className="text-center text-slate-600 text-xs font-bold mt-6 uppercase tracking-widest">
-          🔒 End-to-end encrypted · CNIC &amp; GPS verified · AAOIFI Halal Certified
+          End-to-end encrypted · CNIC &amp; GPS verified · AAOIFI Halal Certified
         </p>
       </div>
     </div>

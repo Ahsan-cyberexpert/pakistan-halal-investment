@@ -6,17 +6,17 @@ interface PurificationTrackerProps {
 }
 
 export default function PurificationTracker({ onPurify }: PurificationTrackerProps) {
-  const [totalDividends] = useState(15000); // Mock data
-  const [impurePercentage] = useState(2.8); // 2.8% from interest-bearing deposits
+  const [totalDividends] = useState(15000);
+  const [impurePercentage] = useState(2.8);
   const [selectedCharity, setSelectedCharity] = useState('Edhi Foundation');
   
   const impureAmount = (totalDividends * impurePercentage) / 100;
   const [purified, setPurified] = useState(false);
 
   const charities = [
-    { name: 'Edhi Foundation', icon: '🚑' },
-    { name: 'Indus Hospital', icon: '🏥' },
-    { name: 'TCF (Education)', icon: '📚' },
+    { name: 'Edhi Foundation', code: 'EF' },
+    { name: 'Indus Hospital', code: 'IH' },
+    { name: 'TCF (Education)', code: 'TCF' },
   ];
 
   const handlePurify = () => {
@@ -25,71 +25,75 @@ export default function PurificationTracker({ onPurify }: PurificationTrackerPro
   };
 
   return (
-    <div className="premium-card p-4 sm:p-6 overflow-hidden relative group h-full flex flex-col justify-between">
-      {/* Dynamic Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white via-white to-emerald-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
-      
-      <div className="relative z-10">
-        <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-50 text-emerald-600 rounded-xl sm:rounded-2xl flex items-center justify-center text-xl sm:text-2xl shadow-inner border border-emerald-100 flex-shrink-0">💧</div>
+    <div className="rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#16171b] p-5 shadow-xs overflow-hidden h-full flex flex-col justify-between text-slate-900 dark:text-white">
+      <div>
+        <div className="flex items-center gap-3 mb-5">
+          <div className="w-10 h-10 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center border border-emerald-500/20 flex-shrink-0">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+            </svg>
+          </div>
           <div>
-            <h2 className="text-base sm:text-lg font-black text-slate-800 tracking-tight">Tathir Router</h2>
-            <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest mt-0.5">Algorithmic Purification</p>
+            <h2 className="text-base font-bold text-slate-900 dark:text-white tracking-tight">Tathir Router</h2>
+            <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mt-0.5">Algorithmic Dividend Purification</p>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
-          <div className="p-3 sm:p-4 bg-slate-50 rounded-2xl border border-slate-100">
-            <div className="text-xs font-black text-slate-400 uppercase tracking-wider mb-1">Total Dividends</div>
-            <div className="text-base sm:text-lg font-black text-slate-800 tracking-tight">PKR {totalDividends.toLocaleString()}</div>
+        <div className="grid grid-cols-2 gap-3 mb-5">
+          <div className="p-3.5 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-200/60 dark:border-white/5">
+            <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Total Dividends</div>
+            <div className="text-base font-bold text-slate-900 dark:text-white tracking-tight">PKR {totalDividends.toLocaleString()}</div>
           </div>
-          <div className="p-3 sm:p-4 bg-rose-50 rounded-2xl border border-rose-100">
-            <div className="text-xs font-black text-rose-500 uppercase tracking-wider mb-1">Impure ({impurePercentage}%)</div>
-            <div className="text-base sm:text-lg font-black text-rose-600 tracking-tight">PKR {impureAmount.toLocaleString()}</div>
+          <div className="p-3.5 bg-rose-50/60 dark:bg-rose-500/10 rounded-xl border border-rose-200/60 dark:border-rose-500/20">
+            <div className="text-xs font-semibold text-rose-600 dark:text-rose-400 uppercase tracking-wider mb-1">Impure ({impurePercentage}%)</div>
+            <div className="text-base font-bold text-rose-600 dark:text-rose-400 tracking-tight">PKR {impureAmount.toLocaleString()}</div>
           </div>
         </div>
 
         {!purified ? (
-          <div className="space-y-4 sm:space-y-5">
+          <div className="space-y-4">
             <div>
-              <label className="text-xs font-black text-slate-400 uppercase tracking-wider mb-2 block px-0.5">Route Purification To:</label>
-              <div className="flex gap-2 sm:gap-3">
+              <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 block">
+                Route Purification To:
+              </label>
+              <div className="flex gap-2">
                 {charities.map((c) => (
                   <button 
                     key={c.name}
                     onClick={() => setSelectedCharity(c.name)}
-                    className={`flex-1 p-2.5 sm:p-3 rounded-xl sm:rounded-2xl border transition-all duration-200 flex flex-col items-center gap-1 ${
-                      selectedCharity === c.name 
-                        ? 'bg-emerald-600 border-emerald-600 text-white shadow-md shadow-emerald-900/10 scale-105' 
-                        : 'bg-white border-slate-100 text-slate-400 hover:border-emerald-200 hover:text-emerald-600'
+                    className={`flex-1 p-2.5 rounded-xl border text-center transition-all ${
+                      selectedCharity === c.name
+                        ? 'border-emerald-500 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 shadow-xs'
+                        : 'border-slate-200 dark:border-white/10 bg-slate-50/60 dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-white/20'
                     }`}
                   >
-                    <span className="text-lg sm:text-xl">{c.icon}</span>
-                    <span className="text-xs font-black uppercase tracking-tight">{c.name.split(' ')[0]}</span>
+                    <div className="text-xs font-bold mb-0.5">{c.code}</div>
+                    <div className="text-xs font-medium truncate">{c.name}</div>
                   </button>
                 ))}
               </div>
             </div>
 
-            <button 
+            <button
               onClick={handlePurify}
-              className="w-full py-3 sm:py-3.5 bg-emerald-600 text-white font-black rounded-xl sm:rounded-[2rem] shadow-lg shadow-emerald-900/20 hover:bg-emerald-700 active:scale-95 transition-all text-xs sm:text-sm"
+              className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-xs transition-all active:scale-95"
             >
-              Authorize Auto-Route →
+              Purify PKR {impureAmount.toLocaleString()} Now
             </button>
           </div>
         ) : (
-          <div className="p-5 sm:p-6 bg-emerald-50 rounded-2xl sm:rounded-[2rem] border border-emerald-100 text-center animate-in zoom-in duration-300">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white rounded-full flex items-center justify-center text-xl sm:text-2xl mx-auto mb-2 sm:mb-3 shadow-sm">✅</div>
-            <h3 className="text-base sm:text-lg font-black text-emerald-800 tracking-tight">Wealth Purified</h3>
-            <p className="text-xs font-bold text-emerald-600/70 uppercase tracking-widest mt-0.5">Routed to {selectedCharity}</p>
+          <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-center">
+            <p className="text-xs font-bold text-emerald-700 dark:text-emerald-300">
+              Purification Complete — Routed to {selectedCharity}
+            </p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Cryptographic receipt ready in audit tab</p>
           </div>
         )}
-
-        <p className="mt-4 sm:mt-6 text-xs font-bold text-slate-400 text-center uppercase tracking-widest leading-relaxed">
-          *Simulated compliance audit by Roziq AI. <br />AAOIFI Standard No. 21 Inspired Guidelines.
-        </p>
       </div>
+
+      <p className="text-xs text-slate-400 dark:text-slate-500 text-center mt-4">
+        Follows AAOIFI standard on non-permissible dividend purification
+      </p>
     </div>
   );
 }

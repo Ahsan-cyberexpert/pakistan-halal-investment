@@ -21,16 +21,16 @@
 }
 
 html.dark {
-  --bg-primary: #080e1a;
-  --bg-secondary: #0f172a;
-  --bg-card: #111827;
-  --bg-muted: #1e293b;
-  --text-primary: #f1f5f9;
+  --bg-primary: #0a0a0c;
+  --bg-secondary: #121316;
+  --bg-card: #16171b;
+  --bg-muted: #1e2025;
+  --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
-  --text-muted: #475569;
-  --border-color: rgba(255, 255, 255, 0.07);
-  --shadow-color: rgba(0, 0, 0, 0.4);
-  --glass-bg: rgba(15, 23, 42, 0.85);
+  --text-muted: #64748b;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --shadow-color: rgba(0, 0, 0, 0.5);
+  --glass-bg: rgba(18, 19, 22, 0.85);
   --glass-border: rgba(255, 255, 255, 0.08);
 }
 

@@ -21,7 +21,7 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
   });
   
   const [debt, setDebt] = useState(0);
-  const [wasiyyat, setWasiyyat] = useState(0); // Max 1/3
+  const [wasiyyat, setWasiyyat] = useState(0);
   const [calculated, setCalculated] = useState(false);
 
   const calculateShares = () => {
@@ -32,11 +32,11 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
 
     // 1. Wife/Husband Shares
     if (heirs.husband) {
-      const share = netWealth * (1/4); // 1/4 if children exist
+      const share = netWealth * (1/4);
       shares.push({ name: 'Husband', ratio: '1/4', amount: share });
       remaining -= share;
     } else if (heirs.wife > 0) {
-      const share = netWealth * (1/8); // 1/8 if children exist
+      const share = netWealth * (1/8);
       shares.push({ name: `Wife (${heirs.wife})`, ratio: '1/8', amount: share });
       remaining -= share;
     }
@@ -53,15 +53,15 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
       remaining -= share;
     }
 
-    // 3. Children (Residue)
-    const totalParts = (heirs.sons * 2) + heirs.daughters;
-    if (totalParts > 0) {
-      const perPart = remaining / totalParts;
+    // 3. Children (Residuary)
+    const totalChildUnits = (heirs.sons * 2) + heirs.daughters;
+    if (totalChildUnits > 0 && remaining > 0) {
+      const unitValue = remaining / totalChildUnits;
       if (heirs.sons > 0) {
-        shares.push({ name: `Sons (${heirs.sons})`, ratio: 'Residue (2x)', amount: perPart * 2 * heirs.sons });
+        shares.push({ name: `Sons (${heirs.sons})`, ratio: `${heirs.sons * 2}/${totalChildUnits} Res.`, amount: unitValue * 2 * heirs.sons });
       }
       if (heirs.daughters > 0) {
-        shares.push({ name: `Daughters (${heirs.daughters})`, ratio: 'Residue (1x)', amount: perPart * heirs.daughters });
+        shares.push({ name: `Daughters (${heirs.daughters})`, ratio: `${heirs.daughters}/${totalChildUnits} Res.`, amount: unitValue * heirs.daughters });
       }
     }
 
@@ -71,17 +71,17 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
   const results = calculated ? calculateShares() : [];
 
   return (
-    <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-sm border border-slate-200/80 animate-in fade-in duration-300">
+    <div className="bg-white dark:bg-[#16171b] text-slate-900 dark:text-white rounded-2xl sm:rounded-3xl p-5 shadow-xs border border-slate-200 dark:border-white/10 animate-in fade-in duration-300">
       <div className="flex justify-between items-start mb-4">
         <div>
           <div className="flex items-center gap-1.5 mb-1">
             <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Islamic Inheritance</span>
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Islamic Inheritance</span>
           </div>
-          <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">Wirasat Estate Calculator</h2>
-          <p className="text-xs text-slate-500">Algorithmic Quranic estate division & heir share verification</p>
+          <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight">Wirasat Estate Calculator</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400">Algorithmic Quranic estate division & heir share verification</p>
         </div>
-        <span className="px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-100 text-xs font-semibold rounded-full flex-shrink-0">
+        <span className="px-2.5 py-1 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 text-xs font-semibold rounded-full flex-shrink-0">
           Quranic Ratios
         </span>
       </div>
@@ -90,20 +90,20 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
         <div className="space-y-3">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <div>
-              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Outstanding Debts (PKR)</label>
+              <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">Outstanding Debts (PKR)</label>
               <input 
                 type="number" 
                 placeholder="0"
-                className="w-full p-2.5 sm:p-2 bg-slate-50 border border-slate-200 rounded-xl text-sm sm:text-xs font-semibold text-slate-900 outline-none focus:border-emerald-500"
+                className="w-full p-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-xs font-semibold text-slate-900 dark:text-white outline-none focus:border-emerald-500"
                 onChange={(e) => setDebt(Number(e.target.value))}
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Wasiyyat / Bequest (Max 1/3)</label>
+              <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">Wasiyyat / Bequest (Max 1/3)</label>
               <input 
                 type="number" 
                 placeholder="0"
-                className="w-full p-2.5 sm:p-2 bg-slate-50 border border-slate-200 rounded-xl text-sm sm:text-xs font-semibold text-slate-900 outline-none focus:border-emerald-500"
+                className="w-full p-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-xs font-semibold text-slate-900 dark:text-white outline-none focus:border-emerald-500"
                 onChange={(e) => setWasiyyat(Number(e.target.value))}
               />
             </div>
@@ -111,9 +111,9 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
             <div>
-              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Spouse</label>
+              <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">Spouse</label>
               <select 
-                className="w-full p-2.5 sm:p-2 bg-slate-50 border border-slate-200 rounded-xl text-sm sm:text-xs font-semibold text-slate-900 outline-none focus:border-emerald-500"
+                className="w-full p-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-xs font-semibold text-slate-900 dark:text-white outline-none focus:border-emerald-500"
                 onChange={(e) => setHeirs({ ...heirs, wife: e.target.value === 'wife' ? 1 : 0, husband: e.target.value === 'husband' })}
               >
                 <option value="wife">Wife Alive</option>
@@ -123,9 +123,9 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Parents</label>
+              <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">Parents</label>
               <select 
-                className="w-full p-2.5 sm:p-2 bg-slate-50 border border-slate-200 rounded-xl text-sm sm:text-xs font-semibold text-slate-900 outline-none focus:border-emerald-500"
+                className="w-full p-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-xs font-semibold text-slate-900 dark:text-white outline-none focus:border-emerald-500"
                 onChange={(e) => setHeirs({ ...heirs, father: e.target.value !== 'mother', mother: e.target.value !== 'father' })}
               >
                 <option value="both">Both Alive</option>
@@ -136,21 +136,21 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">No. of Sons</label>
+              <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">No. of Sons</label>
               <input 
                 type="number" 
                 value={heirs.sons}
-                className="w-full p-2.5 sm:p-2 bg-slate-50 border border-slate-200 rounded-xl text-sm sm:text-xs font-semibold text-slate-900 outline-none focus:border-emerald-500"
+                className="w-full p-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-xs font-semibold text-slate-900 dark:text-white outline-none focus:border-emerald-500"
                 onChange={(e) => setHeirs({ ...heirs, sons: Number(e.target.value) })}
               />
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">No. of Daughters</label>
+              <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">No. of Daughters</label>
               <input 
                 type="number" 
                 value={heirs.daughters}
-                className="w-full p-2.5 sm:p-2 bg-slate-50 border border-slate-200 rounded-xl text-sm sm:text-xs font-semibold text-slate-900 outline-none focus:border-emerald-500"
+                className="w-full p-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-xs font-semibold text-slate-900 dark:text-white outline-none focus:border-emerald-500"
                 onChange={(e) => setHeirs({ ...heirs, daughters: Number(e.target.value) })}
               />
             </div>
@@ -158,27 +158,27 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
 
           <button 
             onClick={() => setCalculated(true)}
-            className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-semibold rounded-xl transition-all text-xs active:scale-95 shadow-sm mt-1"
+            className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition-all text-xs active:scale-95 shadow-xs mt-1"
           >
             Calculate Shariah Inheritance
           </button>
         </div>
       ) : (
         <div className="space-y-3 animate-in fade-in duration-200">
-          <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 flex justify-between items-center">
-            <span className="text-xs text-slate-500 font-medium">Net Distributable Estate</span>
-            <span className="text-base font-bold text-slate-900">PKR {(portfolioValue - debt - wasiyyat).toLocaleString()}</span>
+          <div className="p-3.5 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-200/60 dark:border-white/5 flex justify-between items-center">
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Net Distributable Estate</span>
+            <span className="text-base font-bold text-slate-900 dark:text-white">PKR {(portfolioValue - debt - wasiyyat).toLocaleString()}</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {results.map((res, i) => (
-              <div key={i} className="flex justify-between items-center p-3 bg-slate-50/70 rounded-xl border border-slate-200/70">
+              <div key={i} className="flex justify-between items-center p-3 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-200/60 dark:border-white/5">
                 <div>
-                  <p className="font-bold text-slate-800 text-xs">{res.name}</p>
-                  <p className="text-xs font-semibold text-emerald-700 uppercase tracking-wider">{res.ratio} Share</p>
+                  <p className="font-bold text-slate-900 dark:text-white text-xs">{res.name}</p>
+                  <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">{res.ratio} Share</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-bold text-slate-900 text-xs">PKR {res.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+                  <p className="font-bold text-slate-900 dark:text-white text-xs">PKR {res.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
                 </div>
               </div>
             ))}
@@ -187,7 +187,7 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
           <div className="flex gap-2 pt-1">
             <button 
               onClick={() => setCalculated(false)}
-              className="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition-all"
+              className="w-full py-2.5 bg-slate-100 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/15 text-slate-700 dark:text-slate-300 font-semibold text-xs rounded-xl transition-all"
             >
               Re-Calculate
             </button>

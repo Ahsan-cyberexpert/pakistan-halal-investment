@@ -36,7 +36,7 @@ export default function PortfolioDashboard({ holdings, totalValue, dailyPnl, onS
         <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/40 to-transparent pointer-events-none rounded-[2rem]" />
         <div className="relative z-10">
           <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-[1.5rem] flex items-center justify-center text-3xl mx-auto mb-4 shadow-inner border border-emerald-100">
-            📈
+            
           </div>
           <h3 className="text-base sm:text-lg font-black mb-2" style={{ color: "var(--text-primary)" }}>
             Grow Your Halal Wealth
