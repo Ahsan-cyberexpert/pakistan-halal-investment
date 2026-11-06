@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 interface Holding {
   symbol: string;
@@ -171,7 +171,7 @@ export default function PortfolioDashboard({ holdings, totalValue, dailyPnl, onS
                 >
                   {h.pnl >= 0 ? "+" : ""}{pnlPct}%
                 </div>
-                {onSell && <button onClick={() => onSell(h)} className="touch-target mt-1 min-h-0 h-7 rounded-lg px-2 text-xs font-black text-amber-700 hover:bg-amber-50">Sell demo</button>}
+                {onSell && <button onClick={() => onSell(h)} className="touch-target mt-1 min-h-0 h-7 rounded-lg px-2 text-xs font-bold text-red-600 dark:text-red-400 hover:bg-red-500/10">Sell</button>}
               </div>
             </div>
           );

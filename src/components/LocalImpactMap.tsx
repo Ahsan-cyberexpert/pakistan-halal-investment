@@ -29,11 +29,11 @@ export default function LocalImpactMap() {
       <div className="flex justify-between items-start mb-8">
         <div>
           <h2 className="text-xl font-black text-slate-800 tracking-tight">Impact Radar</h2>
-          <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest mt-1">Simulated Sukuk Projects</p>
+          <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest mt-1">Sovereign Sukuk Projects</p>
         </div>
         <div className="flex gap-2">
           <div className="px-3 py-1 bg-slate-50 border border-slate-100 rounded-full text-xs font-black text-slate-400">PAKISTAN</div>
-          <div className="px-3 py-1 bg-emerald-50 border border-emerald-100 rounded-full text-xs font-black text-emerald-600 uppercase tracking-widest">Demo</div>
+          <div className="px-3 py-1 bg-emerald-50 border border-emerald-100 rounded-full text-xs font-black text-emerald-600 uppercase tracking-widest">Active</div>
         </div>
       </div>
 

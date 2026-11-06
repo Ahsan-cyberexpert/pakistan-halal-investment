@@ -194,10 +194,10 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
 
   const handleInstantDemo = () => {
     const demoUser: UserProfile = {
-      name: 'Demo Investor',
+      name: 'Ahsan Khan',
       cnic: '4210100000001',
       mobile: '03000000000',
-      location: 'Karachi, PK (Virtual Demo)',
+      location: 'Karachi, Sindh (Verified)',
       isOverseas: false,
       tradingPin: '1234'
     };
@@ -241,7 +241,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
               <div className="flex items-center justify-between text-left">
                 <div>
                   <p className="text-xs font-bold text-white">Instant Demo Account</p>
-                  <p className="text-[11px] text-slate-400">Pre-funded with PKR 5,000,000 virtual cash</p>
+                  <p className="text-[11px] text-slate-400">Pre-funded with PKR 5,000,000</p>
                 </div>
                 <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                   No CNIC

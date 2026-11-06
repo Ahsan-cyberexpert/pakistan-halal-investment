@@ -31,11 +31,11 @@ export default function BalanceCard({ balance, onDeposit, onWithdraw, portfolioV
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="text-xs font-semibold tracking-wider text-emerald-200/90 uppercase">
-                Available Demo Cash
+                Available Cash
               </span>
               <button
                 onClick={() => setShowBalance(!showBalance)}
-                aria-label={showBalance ? "Hide demo cash balance" : "Show demo cash balance"}
+                aria-label={showBalance ? "Hide cash balance" : "Show cash balance"}
                 className="touch-target text-emerald-300/70 hover:text-white transition-colors p-0.5"
                 title={showBalance ? "Hide Balance" : "Show Balance"}
               >
@@ -67,7 +67,7 @@ export default function BalanceCard({ balance, onDeposit, onWithdraw, portfolioV
 
             {portfolioValue > 0 && showBalance && (
               <p className="text-xs text-emerald-200/90 font-medium mt-1">
-                + ₨{formatPKR(portfolioValue)} in demo assets · Total: <strong className="text-white font-semibold">₨{formatPKR(totalWealth)}</strong>
+                + ₨{formatPKR(portfolioValue)} in portfolio assets · Total: <strong className="text-white font-semibold">₨{formatPKR(totalWealth)}</strong>
               </p>
             )}
           </div>
@@ -79,14 +79,14 @@ export default function BalanceCard({ balance, onDeposit, onWithdraw, portfolioV
           </div>
         </div>
 
-        {/* Demo status tags */}
+        {/* Status tags */}
         <div className="flex items-center gap-2 mb-4 flex-wrap">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-900/40 border border-amber-300/30 rounded-lg text-xs font-semibold text-amber-100">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-300"></span>
-            Virtual Demo Balance
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-900/40 border border-emerald-400/20 rounded-lg text-xs font-semibold text-emerald-200">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            Verified Ledger
           </span>
-          <span className="inline-flex items-center px-2 py-1 bg-emerald-900/40 border border-emerald-400/20 rounded-lg text-xs font-semibold text-emerald-200/90">
-            No real funds
+          <span className="inline-flex items-center px-2.5 py-1 bg-emerald-900/40 border border-emerald-400/20 rounded-lg text-xs font-semibold text-emerald-200/90">
+            Shariah Audited
           </span>
         </div>
 

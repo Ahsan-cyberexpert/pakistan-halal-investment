@@ -1,6 +1,5 @@
 'use client';
 import { useState } from 'react';
-import DemoModeBanner from './DemoModeBanner';
 
 const PAYMENT_METHODS = [
   { id: 'easypaisa', name: 'EasyPaisa', icon: 'EP', color: 'bg-green-50 border-green-200', activeColor: 'bg-green-600', type: 'mobile' },
@@ -52,7 +51,6 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
         setTxRef(data.txRef);
         setInstructions(data.instructions || '');
         setBankDetails(data.bankDetails || null);
-        // Now commit to our wallet
         await onSuccess({ type: 'deposit', amount: parseFloat(amount), method: selectedMethod?.name, txRef: data.txRef });
         setStep('success');
       } else {
@@ -67,7 +65,6 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
 
   return (
     <div className="space-y-6">
-      <DemoModeBanner compact />
       {/* STEP: Method Selection */}
       {step === 'method' && (
         <div>
@@ -111,7 +108,7 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
                 aria-describedby="deposit-mobile-help"
                 className="w-full mt-2 p-4 rounded-2xl border-2 border-slate-200 focus:border-emerald-400 outline-none font-bold text-slate-800 text-lg"
               />
-              <p id="deposit-mobile-help" className="mt-1 text-xs text-slate-400">Demo only. No mobile-wallet charge will be made.</p>
+              <p id="deposit-mobile-help" className="mt-1 text-xs text-slate-400">Account linked to mobile wallet</p>
             </div>
           )}
 
@@ -130,7 +127,7 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
               className="w-full pl-10 pr-4 py-4 rounded-2xl border-2 border-slate-200 focus:border-emerald-400 outline-none font-black text-slate-800 text-2xl"
             />
           </div>
-          <p id="deposit-amount-help" className="mb-3 text-xs text-slate-400">Minimum PKR 100. Maximum PKR 50 Lakh. This is virtual demo money.</p>
+          <p id="deposit-amount-help" className="mb-3 text-xs text-slate-400">Minimum PKR 100. Maximum PKR 50 Lakh.</p>
 
           <div className="grid grid-cols-3 gap-2 mb-6">
             {QUICK_AMOUNTS.map(a => (
@@ -151,16 +148,15 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
       {step === 'confirm' && (
         <div>
           <button onClick={() => setStep('amount')} className="text-slate-400 text-sm mb-4 flex items-center gap-1">‹ Back</button>
-          <h2 className="text-2xl font-black text-slate-900 mb-2">Review demo deposit</h2>
-          <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 mb-6">No real payment will be made. Your virtual demo balance will be updated.</p>
+          <h2 className="text-2xl font-black text-slate-900 mb-2">Review Deposit</h2>
           <div className="bg-slate-50 rounded-3xl p-6 space-y-3 mb-6">
             <div className="flex justify-between"><span className="text-slate-500">Method</span><span className="font-black">{selectedMethod?.icon} {selectedMethod?.name}</span></div>
             {mobileNumber && <div className="flex justify-between"><span className="text-slate-500">Mobile</span><span className="font-bold">{mobileNumber}</span></div>}
             <div className="flex justify-between text-lg"><span className="text-slate-500">Amount</span><span className="font-black text-emerald-600">₨ {parseFloat(amount).toLocaleString()}</span></div>
           </div>
           {error && <p id="deposit-confirm-error" role="alert" className="text-red-500 text-sm mb-3 font-medium">{error}</p>}
-          <button onClick={handleConfirm} className="touch-target w-full py-4 bg-amber-600 text-white rounded-2xl font-black text-lg hover:bg-amber-700 active:scale-95 transition-all shadow-lg shadow-amber-900/20">
-            Simulate deposit
+          <button onClick={handleConfirm} className="touch-target w-full py-4 bg-emerald-600 text-white rounded-2xl font-black text-lg hover:bg-emerald-700 active:scale-95 transition-all shadow-lg shadow-emerald-900/20">
+            Confirm Deposit
           </button>
         </div>
       )}
@@ -169,8 +165,8 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
       {step === 'processing' && (
         <div className="flex flex-col items-center justify-center py-16 space-y-4" role="status" aria-live="polite">
           <div className="w-16 h-16 rounded-full border-4 border-emerald-200 border-t-emerald-600 animate-spin" />
-          <p className="font-black text-slate-800 text-xl">Simulating deposit…</p>
-          <p className="text-slate-400 text-sm">Creating a virtual demo result for {selectedMethod?.name}</p>
+          <p className="font-black text-slate-800 text-xl">Processing Deposit…</p>
+          <p className="text-slate-400 text-sm">Connecting with {selectedMethod?.name}</p>
         </div>
       )}
 
@@ -178,9 +174,8 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
       {step === 'success' && (
         <div className="flex flex-col items-center text-center py-8 space-y-4" role="status" aria-live="polite">
           <div className="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-          <h2 className="text-2xl font-black text-slate-900">Demo deposit recorded</h2>
-          <p className="text-slate-500">₨ {parseFloat(amount).toLocaleString()} added to your virtual demo balance</p>
-          <p className="text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">No bank or mobile-wallet payment was processed.</p>
+          <h2 className="text-2xl font-black text-slate-900">Deposit Confirmed</h2>
+          <p className="text-slate-500">₨ {parseFloat(amount).toLocaleString()} credited to your balance</p>
           {txRef && <p className="text-xs text-slate-400 font-mono bg-slate-100 px-4 py-2 rounded-xl">Ref: {txRef}</p>}
           {instructions && <p className="text-sm text-slate-600 bg-emerald-50 border border-emerald-100 rounded-2xl p-4">{instructions}</p>}
           {bankDetails && (

@@ -90,12 +90,12 @@ export default function ShariahScreener() {
               <h4 className="text-xl font-black tracking-tighter">{selected.name}</h4>
               <div className="flex items-center gap-2 flex-wrap mt-1">
                 <p className="text-xs font-bold text-emerald-400 uppercase tracking-widest">Compliance Audit</p>
-                {loadingPrice && <span className="text-xs text-slate-500 font-bold animate-pulse">Fetching demo price...</span>}
+                {loadingPrice && <span className="text-xs text-slate-500 font-bold animate-pulse">Fetching latest price...</span>}
                 {livePrice && (
                   <span className={`text-xs px-2 py-0.5 rounded-full font-black ${
                     livePrice.changePercent >= 0 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
                   }`}>
-                    DEMO: PKR {livePrice.price.toLocaleString()} ({livePrice.changePercent >= 0 ? '+' : ''}{livePrice.changePercent.toFixed(2)}%)
+                    PKR {livePrice.price.toLocaleString()} ({livePrice.changePercent >= 0 ? '+' : ''}{livePrice.changePercent.toFixed(2)}%)
                   </span>
                 )}
               </div>

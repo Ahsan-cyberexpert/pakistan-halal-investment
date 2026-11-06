@@ -14,9 +14,9 @@ export default function DemoWealthSummary({ cash, invested, pending, zakatDue, l
   const urdu = lang === 'ur';
   const total = cash + invested;
   const items = [
-    { label: urdu ? 'دستیاب ڈیمو کیش' : 'Available demo cash', value: cash, tone: 'text-emerald-600 dark:text-emerald-400' },
+    { label: urdu ? 'دستیاب کیش' : 'Available cash', value: cash, tone: 'text-emerald-600 dark:text-emerald-400' },
     { label: urdu ? 'سرمایہ کاری' : 'Invested value', value: invested, tone: 'text-blue-600 dark:text-blue-400' },
-    { label: urdu ? 'زیر التوا ڈیمو' : 'Pending demo', value: pending, tone: 'text-amber-600 dark:text-amber-400' },
+    { label: urdu ? 'زیر التوا' : 'Pending settlement', value: pending, tone: 'text-amber-600 dark:text-amber-400' },
   ];
 
   return (
@@ -27,15 +27,12 @@ export default function DemoWealthSummary({ cash, invested, pending, zakatDue, l
             {urdu ? 'مالی خلاصہ' : 'Financial summary'}
           </p>
           <h2 id="wealth-summary-title" className="mt-1 text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
-            {urdu ? 'کل ڈیمو دولت' : 'Total demo wealth'}
+            {urdu ? 'کل دولت' : 'Total wealth'}
           </h2>
           <p className="mt-0.5 text-xs font-medium text-slate-500 dark:text-slate-400">
-            {urdu ? 'یہ رقم صرف پریزنٹیشن کے لیے فرضی ہے۔' : 'Virtual money for presentation only.'}
+            {urdu ? 'اثاثوں کی تقسیم اور لیکویڈیٹی کا جائزہ' : 'Asset allocation & liquidity overview'}
           </p>
         </div>
-        <span className="rounded-md border border-amber-500/20 bg-amber-500/10 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-400">
-          {urdu ? 'ڈیمو' : 'Demo'}
-        </span>
       </div>
 
       <p className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-4">{formatPKR(total)}</p>
@@ -59,8 +56,8 @@ export default function DemoWealthSummary({ cash, invested, pending, zakatDue, l
         </svg>
         <p className="text-xs font-medium">
           {zakatDue
-            ? (urdu ? 'ڈیمو حساب کے مطابق زکوٰۃ کا جائزہ دستیاب ہے۔' : 'Zakat review is available for this demo balance.')
-            : (urdu ? 'ڈیمو حساب نصاب سے کم ہے۔' : 'Demo calculation is below the Nisab example.')}
+            ? (urdu ? 'نصاب کے مطابق زکوٰۃ کا جائزہ دستیاب ہے۔' : 'Portfolio exceeds Nisab threshold. Zakat is due.')
+            : (urdu ? 'سرمایہ نصاب کی حد سے کم ہے۔' : 'Portfolio is below Nisab threshold.')}
         </p>
       </div>
     </section>

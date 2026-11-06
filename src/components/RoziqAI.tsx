@@ -161,7 +161,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
                       ROZIQ <span className="text-emerald-200">AI</span>
                       <span className="text-xs bg-white/20 px-2 py-0.5 rounded-full border border-white/30 uppercase tracking-wider font-bold">Master Agent</span>
                     </h3>
-                    <p className="text-xs font-bold text-emerald-100/90">{lang === 'ur' ? 'شرعی و مالیاتی مشیر (ڈیمو اکاؤنٹ سے منسلک)' : 'Sovereign Wealth Guardian (Demo Account Context)'}</p>
+                    <p className="text-xs font-bold text-emerald-100/90">{lang === 'ur' ? 'شرعی و مالیاتی مشیر' : 'Sovereign Wealth Guardian'}</p>
                   </div>
                 </div>
                 <button onClick={() => setIsOpen(false)} aria-label={lang === 'ur' ? 'بند کریں' : 'Close AI help'} className="touch-target text-white/80 hover:text-white text-sm bg-white/10 rounded-xl backdrop-blur-sm border border-white/10">✕</button>

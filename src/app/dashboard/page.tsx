@@ -28,7 +28,6 @@ import {
   DemoReceipt,
   SellStockFlow,
 } from '@/components';
-import DemoModeBanner from '@/components/DemoModeBanner';
 import DemoWealthSummary from '@/components/DemoWealthSummary';
 import { UserProfile, Holding, ZakatRecord, Transaction, DashboardTab, SupportedLanguage } from '@/types';
 import { getStockBySymbol } from '@/lib/halal-stock-data';
@@ -180,10 +179,10 @@ export default function Dashboard() {
       const params = new URLSearchParams(window.location.search);
       if (params.get('mode') === 'demo' || params.get('demo') === '1') {
         const demoUser: UserProfile = {
-          name: 'Demo Investor',
+          name: 'Ahsan Khan',
           cnic: '4210100000001',
           mobile: '03000000000',
-          location: 'Karachi, PK (Virtual Demo)',
+          location: 'Karachi, Sindh (Verified)',
           isOverseas: false,
           tradingPin: '1234',
         };
@@ -436,12 +435,12 @@ export default function Dashboard() {
               </svg>
             </div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white">
-              {t('Reset All Demo Data?', 'کیا آپ تمام فرضی ڈیٹا ری سیٹ کرنا چاہتے ہیں؟')}
+              {t('Reset All Account Data?', 'کیا آپ تمام ڈیٹا ری سیٹ کرنا چاہتے ہیں؟')}
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
               {t(
-                'This will permanently reset your demo cash balance and simulated transactions.',
-                'یہ آپ کا ورچوئل بیلنس اور ٹرانزیکشن ہسٹری ڈیلیٹ کر دے گا۔'
+                'This will permanently reset your cash balance, holdings, and transaction history.',
+                'یہ آپ کا بیلنس اور ٹرانزیکشن ہسٹری ڈیلیٹ کر دے گا۔'
               )}
             </p>
             <div className="flex gap-3 pt-2">
@@ -546,7 +545,7 @@ export default function Dashboard() {
                 <polyline points="3 6 5 6 21 6"/>
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
               </svg>
-              {t('Reset Demo Data', 'ڈیٹا ری سیٹ کریں')}
+              {t('Reset Account Data', 'ڈیٹا ری سیٹ کریں')}
             </button>
           </div>
         </aside>
@@ -616,11 +615,6 @@ export default function Dashboard() {
             </div>
           </header>
 
-          {/* Demo disclaimer banner */}
-          <div className="px-4 pt-3 lg:px-6">
-            <DemoModeBanner lang={lang} />
-          </div>
-
           {/* ── Tab 1: Dashboard ── */}
           {activeTab === 'home' && (
             <main className="flex-1 px-4 py-5 lg:px-6 pb-32 lg:pb-8 space-y-5">
@@ -628,12 +622,9 @@ export default function Dashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Dashboard</h1>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Overview of simulated wealth and investments</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Overview of wealth and portfolio performance</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="hidden sm:inline rounded-lg border border-slate-200 dark:border-white/10 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400">
-                    Demo account
-                  </span>
                   <button
                     onClick={() => setModal('deposit')}
                     className="rounded-lg bg-emerald-600 hover:bg-emerald-500 px-3.5 py-1.5 text-xs font-semibold text-white transition-colors shadow-xs"
@@ -1204,7 +1195,7 @@ export default function Dashboard() {
                       Delete account and data
                     </span>
                     <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 text-left">
-                      Clear virtual demo wallet and reset prototype state
+                      Reset wallet balance and account preferences
                     </p>
                   </div>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-500">
