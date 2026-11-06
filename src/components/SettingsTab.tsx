@@ -152,14 +152,14 @@ export default function SettingsTab({ lang, darkMode, onLangChange, onDarkToggle
         <div>
           <p className="font-black text-slate-800 text-base sm:text-lg tracking-tight">{t('Halal Investor', 'حلال سرمایہ کار')}</p>
           <p className="text-xs sm:text-sm text-emerald-600 font-bold">{t('Sovereign Account', 'خودمختار اکاؤنٹ')}</p>
-          <p className="text-[10px] sm:text-xs text-slate-400 mt-0.5">{t('Data saved on this device', 'ڈیٹا اس ڈیوائس پر محفوظ ہے')}</p>
+          <p className="text-xs text-slate-400 mt-0.5">{t('Data saved on this device', 'ڈیٹا اس ڈیوائس پر محفوظ ہے')}</p>
         </div>
       </div>
 
       {/* Sections */}
       {sections.map((section) => (
         <div key={section.titleEn} className="space-y-2 sm:space-y-3">
-          <p className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1 sm:mb-2 px-1">
+          <p className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-1 sm:mb-2 px-1">
             {t(section.titleEn, section.titleUr)}
           </p>
           <div className="space-y-2">
@@ -177,10 +177,10 @@ export default function SettingsTab({ lang, darkMode, onLangChange, onDarkToggle
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-black text-slate-800 text-xs sm:text-sm tracking-tight">{t(item.labelEn, item.labelUr)}</p>
-                    <p className="text-[10px] sm:text-xs text-slate-400 font-medium mt-0.5">{t(item.descEn, item.descUr)}</p>
+                    <p className="text-xs text-slate-400 font-medium mt-0.5">{t(item.descEn, item.descUr)}</p>
                   </div>
                   {item.badge && (
-                    <span className="text-[10px] sm:text-xs font-black bg-emerald-50 text-emerald-700 px-2.5 py-1 sm:px-3 sm:py-1 rounded-xl border border-emerald-100 flex-shrink-0">
+                    <span className="text-xs font-black bg-emerald-50 text-emerald-700 px-2.5 py-1 sm:px-3 sm:py-1 rounded-xl border border-emerald-100 flex-shrink-0">
                       {item.badge}
                     </span>
                   )}
@@ -203,12 +203,12 @@ export default function SettingsTab({ lang, darkMode, onLangChange, onDarkToggle
                   <div className="mt-2 p-4 sm:p-8 bg-slate-900 rounded-2xl sm:rounded-3xl border border-emerald-500/20 space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-top-2 duration-300 shadow-lg">
                     <div className="text-center">
                       <p className="text-lg sm:text-xl font-black text-white italic tracking-tight">UNLOCK <span className="text-emerald-500">WALI AI</span></p>
-                      <p className="text-[8px] sm:text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-0.5 sm:mt-1">{t('Elite Guardian Access', 'ایلیٹ گارڈین تک رسائی')}</p>
+                      <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mt-0.5 sm:mt-1">{t('Elite Guardian Access', 'ایلیٹ گارڈین تک رسائی')}</p>
                     </div>
 
                     <div className="space-y-3 sm:space-y-4">
                       <div className="space-y-1.5 sm:space-y-2">
-                        <div className="flex justify-between text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-slate-400">
+                        <div className="flex justify-between text-xs font-black uppercase tracking-widest text-slate-400">
                           <span>{t('Total Invested', 'کل سرمایہ کاری')}</span>
                           <span className="text-emerald-500">15 Cr / 25 Cr</span>
                         </div>
@@ -217,7 +217,7 @@ export default function SettingsTab({ lang, darkMode, onLangChange, onDarkToggle
                         </div>
                       </div>
                       <div className="space-y-1.5 sm:space-y-2">
-                        <div className="flex justify-between text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-slate-400">
+                        <div className="flex justify-between text-xs font-black uppercase tracking-widest text-slate-400">
                           <span>{t('Realized Profit', 'حاصل شدہ منافع')}</span>
                           <span className="text-emerald-500">20 Cr / 50 Cr</span>
                         </div>
@@ -228,16 +228,16 @@ export default function SettingsTab({ lang, darkMode, onLangChange, onDarkToggle
                     </div>
 
                     <div className="p-3 sm:p-4 bg-emerald-500/5 rounded-xl sm:rounded-2xl border border-emerald-500/10 text-center">
-                      <p className="text-[8px] sm:text-[9px] text-emerald-400/80 font-bold leading-relaxed italic">
+                      <p className="text-xs text-emerald-400/80 font-bold leading-relaxed italic">
                         {t('Reach 25 Crore Invested and 50 Crore Profit to Unlock Elite Subscription.', 'ایلیٹ سبسکرپشن کھولنے کے لیے 25 کروڑ کی سرمایہ کاری اور 50 کروڑ کا منافع حاصل کریں۔')}
                       </p>
                     </div>
 
                     <div className="flex flex-col gap-2 sm:gap-3">
-                      <button disabled className="w-full py-3 sm:py-4 bg-white/5 text-slate-500 font-black text-[9px] sm:text-[10px] uppercase rounded-xl sm:rounded-2xl border border-white/5 cursor-not-allowed tracking-wider">
+                      <button disabled className="w-full py-3 sm:py-4 bg-white/5 text-slate-500 font-black text-xs uppercase rounded-xl sm:rounded-2xl border border-white/5 cursor-not-allowed tracking-wider">
                         {t('Elite Monthly (Locked)', 'ایلیٹ ماہانہ (مقفل)')}
                       </button>
-                      <button disabled className="w-full py-3 sm:py-4 bg-white/5 text-slate-500 font-black text-[9px] sm:text-[10px] uppercase rounded-xl sm:rounded-2xl border border-white/5 cursor-not-allowed tracking-wider">
+                      <button disabled className="w-full py-3 sm:py-4 bg-white/5 text-slate-500 font-black text-xs uppercase rounded-xl sm:rounded-2xl border border-white/5 cursor-not-allowed tracking-wider">
                         {t('Sovereign Yearly (Locked)', 'سالانہ (مقفل)')}
                       </button>
                     </div>
@@ -252,7 +252,7 @@ export default function SettingsTab({ lang, darkMode, onLangChange, onDarkToggle
                       { label: t('Confirm PIN', 'پن کی تصدیق'), val: confirmPin, set: setConfirmPin },
                     ].map(({ label, val, set }) => (
                       <div key={label}>
-                        <label className="text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-wider block mb-1 sm:mb-1.5">{label}</label>
+                        <label className="text-xs font-black text-slate-500 uppercase tracking-wider block mb-1 sm:mb-1.5">{label}</label>
                         <input
                           type="password"
                           inputMode="numeric"
@@ -265,7 +265,7 @@ export default function SettingsTab({ lang, darkMode, onLangChange, onDarkToggle
                       </div>
                     ))}
                     {pinMsg && (
-                      <p className={`text-[11px] sm:text-xs font-bold text-center ${pinMsg.ok ? 'text-emerald-600' : 'text-red-500'}`}>
+                      <p className={`text-xs font-bold text-center ${pinMsg.ok ? 'text-emerald-600' : 'text-red-500'}`}>
                         {pinMsg.text}
                       </p>
                     )}

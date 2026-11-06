@@ -72,9 +72,9 @@ export default function ShariahScreener() {
           >
             <div>
               <div className="font-black text-slate-800">{s.symbol}</div>
-              <div className="text-[10px] font-bold text-slate-400 uppercase">{s.name}</div>
+              <div className="text-xs font-bold text-slate-400 uppercase">{s.name}</div>
             </div>
-            <div className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest ${
+            <div className={`px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest ${
               s.status === 'Halal' ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'
             }`}>
               {s.status}
@@ -89,13 +89,13 @@ export default function ShariahScreener() {
             <div>
               <h4 className="text-xl font-black tracking-tighter">{selected.name}</h4>
               <div className="flex items-center gap-2 flex-wrap mt-1">
-                <p className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Compliance Audit</p>
-                {loadingPrice && <span className="text-[10px] text-slate-500 font-bold animate-pulse">Fetching live price...</span>}
+                <p className="text-xs font-bold text-emerald-400 uppercase tracking-widest">Compliance Audit</p>
+                {loadingPrice && <span className="text-xs text-slate-500 font-bold animate-pulse">Fetching demo price...</span>}
                 {livePrice && (
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-black ${
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-black ${
                     livePrice.changePercent >= 0 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
                   }`}>
-                    LIVE: PKR {livePrice.price.toLocaleString()} ({livePrice.changePercent >= 0 ? '+' : ''}{livePrice.changePercent.toFixed(2)}%)
+                    DEMO: PKR {livePrice.price.toLocaleString()} ({livePrice.changePercent >= 0 ? '+' : ''}{livePrice.changePercent.toFixed(2)}%)
                   </span>
                 )}
               </div>
@@ -105,14 +105,14 @@ export default function ShariahScreener() {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-white/5 p-4 rounded-2xl border border-white/10">
-              <div className="text-[10px] font-bold text-slate-400 uppercase mb-1">Debt Ratio</div>
+              <div className="text-xs font-bold text-slate-400 uppercase mb-1">Debt Ratio</div>
               <div className="text-lg font-black">{selected.debt}</div>
-              <div className="text-[8px] text-emerald-500 font-bold uppercase mt-1">Limit: &lt;33%</div>
+              <div className="text-xs text-emerald-500 font-bold uppercase mt-1">Limit: &lt;33%</div>
             </div>
             <div className="bg-white/5 p-4 rounded-2xl border border-white/10">
-              <div className="text-[10px] font-bold text-slate-400 uppercase mb-1">Impure Income</div>
+              <div className="text-xs font-bold text-slate-400 uppercase mb-1">Impure Income</div>
               <div className="text-lg font-black">{selected.income}</div>
-              <div className="text-[8px] text-emerald-500 font-bold uppercase mt-1">Limit: &lt;5%</div>
+              <div className="text-xs text-emerald-500 font-bold uppercase mt-1">Limit: &lt;5%</div>
             </div>
           </div>
 

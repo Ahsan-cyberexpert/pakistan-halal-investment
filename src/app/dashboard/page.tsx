@@ -75,6 +75,20 @@ export default function Dashboard() {
     if (!savedLang) setShowLangSelect(true);
     else { setLangState(savedLang); if (!hasOnboarded) setShowOnboarding(true); }
     if (savedDark === '1') { setDarkMode(true); document.documentElement.classList.add('dark'); }
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('mode') === 'demo' || params.get('demo') === '1') {
+        const demoUser: UserProfile = {
+          name: 'Demo Investor',
+          cnic: '4210100000001',
+          mobile: '03000000000',
+          location: 'Karachi, PK (Virtual Demo 📍)',
+          isOverseas: false,
+          tradingPin: '1234'
+        };
+        handleAuthSuccess(demoUser);
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -286,10 +300,10 @@ export default function Dashboard() {
                 <h1 className="text-sm sm:text-base font-black tracking-tighter" style={{ color: 'var(--text-primary)' }}>ROZIQ</h1>
                 <div className="flex items-center gap-1 bg-amber-50 border border-amber-200 rounded-lg px-1.5 sm:px-2 py-0.5" role="status">
                   <div className="w-1.5 h-1.5 bg-amber-500 rounded-full" />
-                  <span className="text-[10px] font-black text-amber-700 uppercase tracking-wider">Demo</span>
+                  <span className="text-xs font-black text-amber-700 uppercase tracking-wider">Demo</span>
                 </div>
               </div>
-              <p className="text-[8px] sm:text-[9px] font-black text-emerald-600 uppercase tracking-[0.2em] truncate max-w-[120px] sm:max-w-none">
+              <p className="text-xs font-black text-emerald-600 uppercase tracking-wider truncate max-w-[120px] sm:max-w-none">
                 {currentUser ? currentUser.name : t('Wealth OS', 'ویلتھ او ایس')}
               </p>
             </div>
@@ -304,13 +318,13 @@ export default function Dashboard() {
 
               <div className="flex items-center gap-1.5 sm:gap-2">
             {currentUser?.isOverseas && (
-              <span className="px-2 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-[8.5px] sm:text-[9px] font-black uppercase tracking-wider inline-flex items-center gap-1">
+              <span className="px-2 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-xs font-black uppercase tracking-wider inline-flex items-center gap-1">
                 <span>🌍</span> <span className="hidden sm:inline">{currentUser.country || 'Overseas'}</span>
               </span>
             )}
 
             {isPremium && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-amber-400 to-yellow-500 text-amber-900 rounded-xl text-[8.5px] sm:text-[9px] font-black uppercase tracking-wider shadow-sm">
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-amber-400 to-yellow-500 text-amber-900 rounded-xl text-xs font-black uppercase tracking-wider shadow-sm">
                 <span>⭐</span> <span className="hidden sm:inline">Elite</span>
               </span>
             )}
@@ -320,7 +334,7 @@ export default function Dashboard() {
               onClick={() => setShowResetModal(true)}
               title={t('Delete Account & Reset Demo Data', 'اکاؤنٹ ڈیلیٹ کریں اور ڈیٹا ری سیٹ کریں')}
               aria-label={t('Reset demo account', 'ڈیمو اکاؤنٹ ری سیٹ کریں')}
-              className="touch-target px-2.5 py-1.5 sm:px-3 sm:py-2 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white border border-red-200 hover:border-red-500 rounded-xl text-[10px] sm:text-xs font-black transition-all active:scale-95 flex items-center gap-1 shadow-sm"
+              className="touch-target px-2.5 py-1.5 sm:px-3 sm:py-2 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white border border-red-200 hover:border-red-500 rounded-xl text-xs font-black transition-all active:scale-95 flex items-center gap-1 shadow-sm"
             >
               <span>🗑️</span> <span className="hidden sm:inline">{t('Reset Demo', 'ری سیٹ')}</span>
             </button>
@@ -362,7 +376,7 @@ export default function Dashboard() {
 
               {/* Desktop Sidebar Navigation */}
               <div className="hidden lg:block rounded-3xl p-4 border shadow-sm space-y-1" style={{ background: 'var(--bg-card)', borderColor: 'var(--border-color)' }}>
-                <p className="text-[9px] font-black uppercase tracking-widest px-3 mb-3" style={{ color: 'var(--text-muted)' }}>
+                <p className="text-xs font-black uppercase tracking-widest px-3 mb-3" style={{ color: 'var(--text-muted)' }}>
                   {t('Navigation', 'نیویگیشن')}
                 </p>
                 {[
@@ -390,7 +404,7 @@ export default function Dashboard() {
                       <div className={`text-xs font-black tracking-tight ${activeTab === tab.id ? 'text-white' : ''}`} style={activeTab !== tab.id ? { color: 'var(--text-primary)' } : {}}>
                         {lang === 'ur' ? tab.labelUr : tab.labelEn}
                       </div>
-                      <div className={`text-[9px] font-medium truncate ${activeTab === tab.id ? 'text-emerald-100' : ''}`} style={activeTab !== tab.id ? { color: 'var(--text-muted)' } : {}}>
+                      <div className={`text-xs font-medium truncate ${activeTab === tab.id ? 'text-emerald-100' : ''}`} style={activeTab !== tab.id ? { color: 'var(--text-muted)' } : {}}>
                         {tab.sub}
                       </div>
                     </div>
@@ -404,8 +418,8 @@ export default function Dashboard() {
                     <div className="flex items-center gap-2">
                       <span className="text-base">🕋</span>
                       <div>
-                        <div className="text-[10px] font-black text-amber-800">{t('Zakat Due', 'زکوٰۃ واجب')}</div>
-                        <div className="text-[9px] text-amber-600 font-medium">{t('You are Nisab eligible', 'آپ نصاب کی شرط پوری کرتے ہیں')}</div>
+                        <div className="text-xs font-black text-amber-800">{t('Zakat Due', 'زکوٰۃ واجب')}</div>
+                        <div className="text-xs text-amber-600 font-medium">{t('You are Nisab eligible', 'آپ نصاب کی شرط پوری کرتے ہیں')}</div>
                       </div>
                     </div>
                   </div>
@@ -437,7 +451,7 @@ export default function Dashboard() {
                     <div className="flex items-start gap-3">
                       <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-emerald-600 text-white" aria-hidden="true">→</div>
                       <div className="min-w-0">
-                        <p className="text-[10px] font-black uppercase tracking-widest text-emerald-700">{t('Next demo action', 'اگلا ڈیمو ایکشن')}</p>
+                        <p className="text-xs font-black uppercase tracking-widest text-emerald-700">{t('Next demo action', 'اگلا ڈیمو ایکشن')}</p>
                         <h2 id="next-demo-action-title" className="mt-1 text-base font-black text-emerald-950">
                           {holdings.length === 0 ? t('Explore a halal stock before reviewing your portfolio.', 'پورٹ فولیو دیکھنے سے پہلے حلال اسٹاک دیکھیں۔') : t('Review your simulated portfolio and recent activity.', 'اپنا فرضی پورٹ فولیو اور حالیہ سرگرمی دیکھیں۔')}
                         </h2>
@@ -451,7 +465,7 @@ export default function Dashboard() {
                   <section className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-slate-200 shadow-sm">
                     <div className="flex justify-between items-center mb-3 sm:mb-4">
                       <h2 className="text-sm sm:text-base font-black text-slate-800 tracking-tight">{t('Recent Activity', 'حالیہ سرگرمی')}</h2>
-                      <button className="text-[11px] sm:text-xs font-bold text-emerald-600 hover:underline">{t('View All', 'سب دیکھیں')}</button>
+                      <button className="text-xs font-bold text-emerald-600 hover:underline">{t('View All', 'سب دیکھیں')}</button>
                     </div>
                     <div className="space-y-2">
                       {transactions.length === 0 ? (
@@ -469,10 +483,10 @@ export default function Dashboard() {
                                 <div className="font-black text-slate-800 text-xs tracking-tight">
                                   {tx.type === 'deposit' ? t('Deposit', 'ڈیپازٹ') : tx.type === 'withdraw' ? t('نکالنا', 'نکالنا') : tx.type === 'zakat_vault' ? t('National Vault', 'قومی والٹ') : tx.symbol}
                                 </div>
-                                <div className="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase mt-0.5">
+                                <div className="text-xs font-bold text-slate-400 uppercase mt-0.5">
                                   {new Date(tx.date).toLocaleDateString(lang === 'ur' ? 'ur-PK' : 'en-US', { day: 'numeric', month: 'short' })}
                                 </div>
-                                <div className="text-[8px] font-bold text-amber-600 mt-0.5">
+                                <div className="text-xs font-bold text-amber-600 mt-0.5">
                                   {tx.status === 'PENDING' ? t('Pending demo', 'زیر التوا ڈیمو') : t('Simulated demo', 'فرضی ڈیمو')} {tx.reference ? `· ${tx.reference}` : ''}
                                 </div>
                               </div>
@@ -481,7 +495,7 @@ export default function Dashboard() {
                               <div className={`font-black text-xs ${tx.type === 'deposit' ? 'text-emerald-600' : 'text-slate-800'}`}>
                                 {tx.type === 'deposit' ? '+' : '-'} {tx.amount.toLocaleString()}
                               </div>
-                              <button onClick={() => setSelectedReceipt(tx)} className="touch-target mt-1 min-h-0 h-7 px-2 rounded-lg text-[9px] font-black text-emerald-700 hover:bg-emerald-50" aria-label={t('View demo receipt', 'ڈیمو رسید دیکھیں')}>
+                              <button onClick={() => setSelectedReceipt(tx)} className="touch-target mt-1 min-h-0 h-7 px-2 rounded-lg text-xs font-black text-emerald-700 hover:bg-emerald-50" aria-label={t('View demo receipt', 'ڈیمو رسید دیکھیں')}>
                                 {t('Receipt', 'رسید')} ↗
                               </button>
                             </div>
@@ -519,7 +533,7 @@ export default function Dashboard() {
                 <div className="space-y-4 sm:space-y-6 pb-20 animate-in fade-in duration-300">
                   <div className="mb-1">
                     <h2 className="text-xl sm:text-2xl font-black text-slate-800 tracking-tight">{t('My Portfolio', 'میرا پورٹ فولیو')}</h2>
-                    <p className="text-slate-500 text-xs mt-0.5">{t('Real-time tracking of your Halal wealth.', 'آپ کی حلال دولت کی اصل وقت میں ٹریکنگ۔')}</p>
+                    <p className="text-slate-500 text-xs mt-0.5">{t('Simulated demo tracking of your virtual halal wealth.', 'آپ کی مجازی حلال دولت کی ڈیمو ٹریکنگ۔')}</p>
                   </div>
                   <PortfolioDashboard holdings={holdings} totalValue={totalPortfolioValue} dailyPnl={dailyPnl} onSell={setSelectedSellHolding} />
                   <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 items-start">

@@ -16,7 +16,7 @@ export default function LearnToEarn() {
 
       {!completed ? (
         <div className="bg-blue-50 border border-blue-100 p-4 rounded-2xl">
-          <span className="bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider mb-2 inline-block">Lesson 1</span>
+          <span className="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wider mb-2 inline-block">Lesson 1</span>
           <h3 className="font-bold text-blue-900 mb-1">What is Murabaha?</h3>
           <p className="text-xs text-blue-800 mb-4 leading-relaxed">
             Murabaha is not a loan. It is a sale where the seller discloses their cost and profit markup. 

@@ -49,19 +49,19 @@ export default function FractionalSukuk({ balance, onBuy }: { balance: number; o
         <>
           <div className="mb-4 mt-4 flex items-start justify-between gap-3">
             <div>
-              <div className="mb-1 flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-amber-500" /><span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Demo fixed income</span></div>
+              <div className="mb-1 flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-amber-500" /><span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Demo fixed income</span></div>
               <h2 className="text-base font-bold tracking-tight text-slate-900 sm:text-lg">Sukuk demo vault</h2>
               <p className="text-xs text-slate-500">Explore asset-backed Islamic investment concepts with virtual money.</p>
             </div>
-            <span className="shrink-0 rounded-full border border-amber-100 bg-amber-50 px-2.5 py-1 text-[10px] font-semibold text-amber-700">Simulated terms</span>
+            <span className="shrink-0 rounded-full border border-amber-100 bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700">Simulated terms</span>
           </div>
 
           <div className="mb-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
             {SUKUKS.map((s) => (
               <button key={s.id} onClick={() => { setSelected(s); setError(''); }} aria-pressed={selected.id === s.id} className={`touch-target rounded-xl border p-3.5 text-left transition-all ${selected.id === s.id ? 'border-amber-500 bg-amber-50/60 shadow-sm' : 'border-slate-200 bg-slate-50/50 hover:border-slate-300'}`}>
-                <div className="mb-1 flex items-center justify-between gap-2"><span className="truncate text-xs font-bold text-slate-800">{s.name}</span><span className="rounded border border-slate-200 bg-white px-1.5 py-0.5 text-[9px] font-semibold text-slate-500">{s.maturity}</span></div>
-                <div className="text-lg font-bold text-amber-700">{s.yield} <span className="text-[10px] font-normal text-slate-500">example p.a.</span></div>
-                <div className="mt-0.5 text-[10px] text-slate-500">{s.type} · {s.risk} risk · demo terms</div>
+                <div className="mb-1 flex items-center justify-between gap-2"><span className="truncate text-xs font-bold text-slate-800">{s.name}</span><span className="rounded border border-slate-200 bg-white px-1.5 py-0.5 text-xs font-semibold text-slate-500">{s.maturity}</span></div>
+                <div className="text-lg font-bold text-amber-700">{s.yield} <span className="text-xs font-normal text-slate-500">example p.a.</span></div>
+                <div className="mt-0.5 text-xs text-slate-500">{s.type} · {s.risk} risk · demo terms</div>
               </button>
             ))}
           </div>
@@ -72,7 +72,7 @@ export default function FractionalSukuk({ balance, onBuy }: { balance: number; o
               <div className="relative flex-1"><span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400">PKR</span><input id="sukuk-demo-amount" type="number" inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : '')} placeholder={`Min ${selected.minInvestment}`} aria-describedby="sukuk-demo-help sukuk-demo-error" aria-invalid={Boolean(error)} className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-10 pr-3 text-sm font-semibold text-slate-900 outline-none focus:border-amber-500 sm:text-xs" /></div>
               <button onClick={reviewPurchase} className="touch-target shrink-0 rounded-lg bg-amber-700 px-5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-amber-800">Review</button>
             </div>
-            <p id="sukuk-demo-help" className="mt-2 text-[10px] text-slate-500">Virtual money only. Example yield is not a promise or live rate.</p>
+            <p id="sukuk-demo-help" className="mt-2 text-xs text-slate-500">Virtual money only. Example yield is not a promise or live rate.</p>
             {error && <p id="sukuk-demo-error" role="alert" className="mt-2 text-xs font-bold text-red-600">{error}</p>}
           </div>
         </>
@@ -81,7 +81,7 @@ export default function FractionalSukuk({ balance, onBuy }: { balance: number; o
       {step === 'review' && (
         <div className="mt-4" role="group" aria-labelledby="sukuk-review-title">
           <button onClick={() => setStep('choose')} className="touch-target mb-3 text-sm font-bold text-slate-500">‹ Back</button>
-          <p className="text-[10px] font-black uppercase tracking-widest text-amber-700">Review simulated Sukuk purchase</p>
+          <p className="text-xs font-black uppercase tracking-widest text-amber-700">Review simulated Sukuk purchase</p>
           <h2 id="sukuk-review-title" className="mt-1 text-xl font-black text-slate-900">{selected.name}</h2>
           <div className="mt-4 space-y-3 rounded-2xl bg-slate-50 p-4 text-sm">
             <div className="flex justify-between"><span className="text-slate-500">Virtual amount</span><strong>PKR {numericAmount.toLocaleString()}</strong></div>

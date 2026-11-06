@@ -32,27 +32,27 @@
 
 ### UI-first work order
 
-- [ ] Audit every page and shared component for typography size, line height, spacing, control height, contrast, card hierarchy, and modal width.
-- [ ] Normalize visual tokens and shared classes before changing individual feature flows.
+- [x] Audit every page and shared component for typography size, line height, spacing, control height, contrast, card hierarchy, and modal width.
+- [x] Normalize visual tokens and shared classes before changing individual feature flows.
 - [ ] Verify responsive layouts at 320px, 375px, 768px, 1024px, and desktop widths.
 - [ ] Verify keyboard/focus order, 400% zoom, dark mode, Urdu RTL, reduced motion, and Android safe areas.
 - [ ] Only resume remaining feature-flow work after the UI audit and visual regression pass are complete.
 
 - [x] Add shared typography floors and reusable scale classes: body 14–16px, metadata at least 12px, headings 18–24px, and primary values 28–40px. Individual component migration remains part of the UI audit.
-- [ ] Add shared touch-target utility with 44px preferred target and visible focus ring; use it for important touch controls.
-- [ ] Add consistent status colors and text/icons for Demo, Pending, Processing, Complete, and Failed; never use color alone.
-- [ ] Reduce unnecessary gradients, glass effects, hover lift, and decorative animation so primary financial surfaces have the strongest hierarchy.
+- [x] Add shared touch-target utility with 44px preferred target and visible focus ring; use it for important touch controls.
+- [x] Add consistent status colors and text/icons for Demo, Pending, Processing, Complete, and Failed; never use color alone.
+- [x] Reduce unnecessary gradients, glass effects, hover lift, and decorative animation so primary financial surfaces have the strongest hierarchy.
 - [ ] Add `prefers-reduced-motion` behavior and preserve state through text/borders.
-- [ ] Standardize button hierarchy: primary, secondary, demo simulation, and destructive.
+- [x] Standardize button hierarchy: primary, secondary, demo simulation, and destructive.
 - [ ] Standardize modal layout, close/back/cancel placement, step indicator, and result panel.
 
 ## Public website
 
-- [ ] Rewrite hero around one clear promise and two paths: demo and future real account.
-- [ ] Group features by Invest, Plan, Purify, and Learn instead of showing every feature at equal priority.
-- [ ] Add How It Works, Demo Safety, Shariah Methodology, product previews, FAQ, and an accurate footer.
-- [ ] Replace unsupported security, certification, live-data, and guaranteed-return claims with scoped prototype/demo language.
-- [ ] Add a real mobile menu at small breakpoints and keep the primary Demo CTA visible.
+- [x] Rewrite hero around one clear promise and two paths: demo and future real account.
+- [x] Group features by Invest, Plan, Purify, and Learn instead of showing every feature at equal priority.
+- [x] Add How It Works, Demo Safety, Shariah Methodology, product previews, FAQ, and an accurate footer.
+- [x] Replace unsupported security, certification, live-data, and guaranteed-return claims with scoped prototype/demo language.
+- [x] Add a real mobile menu at small breakpoints and keep the primary Demo CTA visible.
 
 ## Mobile app and Android shell
 
@@ -67,19 +67,19 @@
 
 ## Dashboard UX
 
-- [ ] Make the first summary show Available demo cash, Invested value, Total demo wealth, Pending amount, and Zakat due with definitions and timestamps.
+- [x] Make the first summary show Available demo cash, Invested value, Total demo wealth, Pending amount, and Zakat due with definitions and timestamps.
 - [ ] Add a `Next demo action` card and move advanced modules under `Explore all tools` without deleting them.
-- [ ] Use consistent desktop and mobile navigation order; reduce mobile bottom navigation to five primary destinations.
-- [ ] Move Reset Demo into Demo controls and keep it away from normal account actions.
-- [ ] Prevent AI/voice controls from overlapping navigation, toasts, or primary content.
+- [x] Use consistent desktop and mobile navigation order; reduce mobile bottom navigation to five primary destinations.
+- [x] Move Reset Demo into Demo controls and keep it away from normal account actions.
+- [x] Prevent AI/voice controls from overlapping navigation, toasts, or primary content.
 
 ## Transaction and feature flows
 
-- [ ] Standardize deposit and withdrawal as Amount → Method → Review → Processing → Result.
+- [x] Standardize deposit and withdrawal as Amount → Method → Review → Processing → Result.
 - [ ] Standardize stock buy/sell with quote status, timestamp, units, fees, risk, resulting balance, and explicit `Simulate purchase/sale` wording. Buy and sell wording/results are implemented; quote risk/fees metadata remains.
 - [ ] Add truthful pending/failure/retry states and preserve important results in activity history.
 - [ ] Add starter stock shortlist, risk/time filters, and `Why this is shown?` explanation.
-- [ ] Add chart text summaries and clearly identify simulated data, time range, and update timestamp.
+- [x] Add chart text summaries and clearly identify simulated data, time range, and update timestamp.
 - [ ] Label Wali, Zakat, purification, Hajj, Sukuk, and AI actions according to demo status and add contextual help. Sukuk is now standardized; the remaining feature labels still need review.
 
 ## Accessibility and bilingual UX
@@ -99,7 +99,7 @@
 
 ## Validation
 
-- [ ] Run typecheck and build after each implementation batch.
+- [x] Run typecheck and build after each implementation batch.
 - [ ] Confirm demo login, seeded balance, buy, sell, deposit, withdrawal, Zakat, Wali, AI, and Reset Demo still work.
 - [ ] Verify that every demo transaction visibly says simulated and creates a receipt/history entry.
 - [ ] Complete walkthroughs for a first-time investor, an overseas user, an Urdu user, and a presentation judge.

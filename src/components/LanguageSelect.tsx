@@ -18,7 +18,7 @@ export default function LanguageSelect({ onSelect }: LanguageSelectProps) {
           🕌
         </div>
         <h1 className="text-4xl font-black text-white tracking-tighter mb-1">Roziq</h1>
-        <p className="text-emerald-400 text-[11px] font-black uppercase tracking-[0.3em] mb-16">Halal Wealth OS</p>
+        <p className="text-emerald-400 text-xs font-black uppercase tracking-[0.3em] mb-16">Halal Wealth OS</p>
 
         {/* Language Prompt */}
         <div className="w-full text-center mb-8">
@@ -58,7 +58,7 @@ export default function LanguageSelect({ onSelect }: LanguageSelectProps) {
           </button>
         </div>
 
-        <p className="mt-12 text-white/20 text-[10px] text-center font-medium uppercase tracking-widest">
+        <p className="mt-12 text-white/20 text-xs text-center font-medium uppercase tracking-widest">
           You can change this later in Settings
         </p>
       </div>

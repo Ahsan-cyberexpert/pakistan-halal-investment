@@ -81,13 +81,13 @@ export default function OverseasInvest({ balance, onInvest, lang = 'en', cnic = 
     <div className="space-y-4 sm:space-y-6 animate-in fade-in duration-500" dir={isUrdu ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div>
-        <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-full text-[10px] sm:text-xs font-bold mb-1.5 sm:mb-2">
+        <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-bold mb-1.5 sm:mb-2">
           <span>🌍</span> {t('Roshan Digital Gateway', 'روشن ڈیجیٹل گیٹ وے')}
         </div>
         <h2 className="text-lg sm:text-2xl font-black text-slate-800 tracking-tight">
           {t('Overseas Pakistanis Investment', 'اوورسیز پاکستانیز انویسٹمنٹ')}
         </h2>
-        <p className="text-slate-500 text-[11px] sm:text-xs mt-0.5 sm:mt-1 leading-relaxed">
+        <p className="text-slate-500 text-xs mt-0.5 sm:mt-1 leading-relaxed">
           {t('Specialized Shariah-compliant investment channels for non-resident Pakistanis. Repatriable profits, zero Riba, and sovereign guarantees.', 'غیر مقیم پاکستانیوں کے لیے شریعہ کے مطابق سرمایہ کاری کے خصوصی ذرائع۔ قابل واپسی منافع، زیرو سود، اور حکومتی ضمانتیں۔')}
         </p>
       </div>
@@ -97,17 +97,17 @@ export default function OverseasInvest({ balance, onInvest, lang = 'en', cnic = 
         <div className="absolute top-0 right-0 w-32 h-32 sm:w-48 sm:h-48 bg-emerald-500/10 rounded-full blur-[40px] pointer-events-none" />
         <div className="flex justify-between items-start mb-4 sm:mb-6">
           <div>
-            <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-0.5 sm:mb-1">
+            <p className="text-xs font-bold uppercase tracking-widest text-emerald-400 mb-0.5 sm:mb-1">
               {t('Total Overseas Portfolio', 'کل اوورسیز پورٹ فولیو')}
             </p>
             <h3 className="text-xl sm:text-3xl font-black tracking-tight">Rs {totalOverseas.toLocaleString()}</h3>
           </div>
-          <span className="px-2.5 py-1 bg-white/10 border border-white/10 rounded-xl text-[10px] sm:text-xs font-bold text-emerald-300">
+          <span className="px-2.5 py-1 bg-white/10 border border-white/10 rounded-xl text-xs font-bold text-emerald-300">
             {country}
           </span>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 pt-3 sm:pt-4 border-t border-white/10 text-[11px] sm:text-xs">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 pt-3 sm:pt-4 border-t border-white/10 text-xs">
           <div>
             <p className="text-slate-400 font-medium">{t('Active Investments', 'فعال سرمایہ کاریاں')}</p>
             <p className="font-bold text-sm sm:text-base mt-0.5 text-white">{holdings.length} {t('Assets', 'اثاثے')}</p>
@@ -130,25 +130,25 @@ export default function OverseasInvest({ balance, onInvest, lang = 'en', cnic = 
             <div key={a.id} className="p-4 sm:p-5 bg-white rounded-2xl sm:rounded-3xl border border-slate-100 shadow-sm hover:border-emerald-200 transition-all space-y-2.5 sm:space-y-3">
               <div className="flex justify-between items-start">
                 <div>
-                  <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-widest px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-lg border border-emerald-100">
+                  <span className="text-xs font-black uppercase tracking-widest px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-lg border border-emerald-100">
                     {a.cat}
                   </span>
                   <h4 className="font-bold text-xs sm:text-sm text-slate-800 mt-1 sm:mt-2">{a.name}</h4>
-                  <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">{isUrdu ? a.descUr : a.descEn}</p>
+                  <p className="text-xs text-slate-500 mt-0.5">{isUrdu ? a.descUr : a.descEn}</p>
                 </div>
                 <div className="text-right flex-shrink-0">
                   <p className="text-xs sm:text-sm font-black text-emerald-600">{a.ret}</p>
-                  <p className="text-[8px] sm:text-[9px] text-slate-400 font-bold mt-0.5">{t('Expected', 'متوقع')}</p>
+                  <p className="text-xs text-slate-400 font-bold mt-0.5">{t('Expected', 'متوقع')}</p>
                 </div>
               </div>
 
               <div className="flex justify-between items-center pt-2.5 sm:pt-3 border-t border-slate-50">
                 <div>
-                  <p className="text-[9px] sm:text-[10px] text-slate-400 font-medium">{t('Min Investment', 'کم از کم سرمایہ کاری')}</p>
-                  <p className="text-[11px] sm:text-xs font-bold text-slate-700">Rs {a.min.toLocaleString()}</p>
+                  <p className="text-xs text-slate-400 font-medium">{t('Min Investment', 'کم از کم سرمایہ کاری')}</p>
+                  <p className="text-xs font-bold text-slate-700">Rs {a.min.toLocaleString()}</p>
                 </div>
                 <button onClick={() => setSelectedAsset(a)}
-                  className="px-4 py-2 sm:px-5 sm:py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl sm:rounded-2xl font-bold text-[11px] sm:text-xs shadow-md hover:shadow-slate-900/20 transition-all active:scale-95">
+                  className="px-4 py-2 sm:px-5 sm:py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl sm:rounded-2xl font-bold text-xs shadow-md hover:shadow-slate-900/20 transition-all active:scale-95">
                   {t('Invest Now', 'سرمایہ کاری کریں')}
                 </button>
               </div>
@@ -165,19 +165,19 @@ export default function OverseasInvest({ balance, onInvest, lang = 'en', cnic = 
               <h4 className="font-black text-sm sm:text-base text-slate-800">{selectedAsset.name}</h4>
               <button onClick={() => setSelectedAsset(null)} className="text-slate-400 hover:text-slate-600 text-xs sm:text-sm">✕</button>
             </div>
-            <p className="text-[11px] sm:text-xs text-slate-500">{isUrdu ? selectedAsset.descUr : selectedAsset.descEn}</p>
+            <p className="text-xs text-slate-500">{isUrdu ? selectedAsset.descUr : selectedAsset.descEn}</p>
 
-            {error && <p className="text-[11px] sm:text-xs font-bold text-red-500 bg-red-50 p-2 sm:p-2.5 rounded-xl">{error}</p>}
-            {successMsg && <p className="text-[11px] sm:text-xs font-bold text-emerald-600 bg-emerald-50 p-2 sm:p-2.5 rounded-xl">{successMsg}</p>}
+            {error && <p className="text-xs font-bold text-red-500 bg-red-50 p-2 sm:p-2.5 rounded-xl">{error}</p>}
+            {successMsg && <p className="text-xs font-bold text-emerald-600 bg-emerald-50 p-2 sm:p-2.5 rounded-xl">{successMsg}</p>}
 
             <div>
-              <label className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">
+              <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-1">
                 {t('Investment Amount (PKR)', 'سرمایہ کاری کی رقم (روپے)')}
               </label>
               <input type="number" value={investAmount} onChange={e => setInvestAmount(e.target.value)}
                 placeholder={selectedAsset.min.toString()}
                 className="w-full px-3.5 py-2.5 sm:px-4 sm:py-3 bg-slate-50 border border-slate-200 rounded-xl sm:rounded-2xl text-slate-800 font-bold focus:outline-none focus:border-emerald-500 text-xs sm:text-sm" />
-              <div className="flex justify-between text-[9px] sm:text-[10px] text-slate-400 mt-1">
+              <div className="flex justify-between text-xs text-slate-400 mt-1">
                 <span>{t('Min: Rs', 'کم از کم: روپے')} {selectedAsset.min.toLocaleString()}</span>
                 <span>{t('Wallet: Rs', 'والٹ: روپے')} {balance.toLocaleString()}</span>
               </div>
@@ -200,12 +200,12 @@ export default function OverseasInvest({ balance, onInvest, lang = 'en', cnic = 
           {holdings.map(h => (
             <div key={h.id} className="p-3 sm:p-4 bg-white rounded-2xl sm:rounded-3xl border border-slate-100 flex justify-between items-center shadow-sm">
               <div>
-                <h4 className="font-bold text-[11px] sm:text-xs text-slate-800">{h.assetName}</h4>
-                <p className="text-[9px] sm:text-[10px] text-slate-400 font-medium">{h.category} · {h.expectedReturn}</p>
+                <h4 className="font-bold text-xs text-slate-800">{h.assetName}</h4>
+                <p className="text-xs text-slate-400 font-medium">{h.category} · {h.expectedReturn}</p>
               </div>
               <div className="text-right">
-                <p className="font-black text-[11px] sm:text-xs text-slate-800">Rs {h.amountInvested.toLocaleString()}</p>
-                <p className="text-[8px] sm:text-[9px] font-bold text-emerald-600 mt-0.5">{t('Active', 'فعال')}</p>
+                <p className="font-black text-xs text-slate-800">Rs {h.amountInvested.toLocaleString()}</p>
+                <p className="text-xs font-bold text-emerald-600 mt-0.5">{t('Active', 'فعال')}</p>
               </div>
             </div>
           ))}

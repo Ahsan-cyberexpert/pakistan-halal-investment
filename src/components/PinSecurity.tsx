@@ -127,7 +127,7 @@ export default function PinSecurity({ onSuccess, mode = 'app', onCancel }: PinSe
         <h1 className="text-sm sm:text-base font-black text-white tracking-tight mb-0.5">
           {mode === 'trading' ? 'Trading Security Gate' : 'Roziq Security'}
         </h1>
-        <p className="text-emerald-400 font-bold uppercase tracking-widest text-[8px] sm:text-[9px] mb-3">
+        <p className="text-emerald-400 font-bold uppercase tracking-widest text-xs mb-3">
           {mode === 'trading' ? 'Confirm Transaction · تصدیق کریں' : 'Security Gate · سیکیورٹی گیٹ'}
         </p>
 
@@ -142,7 +142,7 @@ export default function PinSecurity({ onSuccess, mode = 'app', onCancel }: PinSe
               'border-white/10 bg-white/5 group-hover:border-emerald-500/50'}`}>
               {biometricStatus === 'success' ? '✅' : biometricStatus === 'error' ? '❌' : '🫱'}
             </div>
-            <span className="text-[7px] font-black text-white/40 uppercase tracking-widest group-hover:text-emerald-400 transition-colors">
+            <span className="text-xs font-black text-white/40 uppercase tracking-widest group-hover:text-emerald-400 transition-colors">
               {biometricStatus === 'scanning' ? 'Scanning...' : biometricStatus === 'success' ? 'Verified!' : biometricStatus === 'error' ? 'Try Again' : 'Fingerprint / Face ID'}
             </span>
           </button>
@@ -150,7 +150,7 @@ export default function PinSecurity({ onSuccess, mode = 'app', onCancel }: PinSe
 
         {/* Title */}
         <h2 className="text-xs sm:text-sm font-bold text-slate-200 mb-0.5 text-center">{titles[step].en}</h2>
-        <p className="text-[10px] text-slate-400 mb-3 text-center font-medium">{titles[step].ar}</p>
+        <p className="text-xs text-slate-400 mb-3 text-center font-medium">{titles[step].ar}</p>
 
         {/* PIN Dots */}
         <div className={`flex gap-2.5 sm:gap-3 mb-4 sm:mb-5 transition-all ${shake ? 'animate-bounce' : ''}`}>
@@ -187,18 +187,18 @@ export default function PinSecurity({ onSuccess, mode = 'app', onCancel }: PinSe
         <div className="mt-4 flex flex-col items-center gap-1.5 w-full pt-2.5 border-t border-slate-800">
           {step === 'enter' && (
             <button onClick={() => { setStep('set-new'); setPin(''); setError(false); }}
-              className="text-slate-400 hover:text-emerald-400 text-[9px] sm:text-[10px] font-bold transition-colors uppercase tracking-widest">
+              className="text-slate-400 hover:text-emerald-400 text-xs font-bold transition-colors uppercase tracking-widest">
               {mode === 'trading' ? 'Change Trading PIN' : 'Change PIN / پن تبدیل کریں'}
             </button>
           )}
           {step !== 'enter' && (
             <button onClick={() => { setStep('enter'); setNewPin(''); setConfirmPin(''); setError(false); }}
-              className="text-slate-400 hover:text-red-400 text-[9px] sm:text-[10px] font-bold transition-colors uppercase tracking-widest">
+              className="text-slate-400 hover:text-red-400 text-xs font-bold transition-colors uppercase tracking-widest">
               Cancel / واپس جائیں
             </button>
           )}
           {mode === 'trading' && onCancel && (
-            <button onClick={onCancel} className="text-slate-500 hover:text-slate-300 text-[9px] sm:text-[10px] font-medium transition-colors mt-0.5">
+            <button onClick={onCancel} className="text-slate-500 hover:text-slate-300 text-xs font-medium transition-colors mt-0.5">
               Cancel Transaction
             </button>
           )}

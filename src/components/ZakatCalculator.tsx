@@ -73,13 +73,13 @@ export default function ZakatCalculator({ balance, portfolioValue, onDonate }: Z
               <div className="w-14 h-14 bg-slate-50 text-slate-400 rounded-2xl flex items-center justify-center text-3xl shadow-inner border border-slate-100">🤲</div>
               <div>
                 <h2 className="text-xl font-black text-slate-800 tracking-tight">Zakat OS</h2>
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Nisab Tracker & Distribution</p>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Nisab Tracker & Distribution</p>
               </div>
             </div>
             {isEligible ? (
-              <span className="text-[10px] font-black text-amber-600 bg-amber-50 px-3 py-1.5 rounded-full border border-amber-200 uppercase tracking-widest animate-pulse">Liability Due</span>
+              <span className="text-xs font-black text-amber-600 bg-amber-50 px-3 py-1.5 rounded-full border border-amber-200 uppercase tracking-widest animate-pulse">Liability Due</span>
             ) : (
-              <span className="text-[10px] font-black text-slate-400 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200 uppercase tracking-widest">Below Nisab</span>
+              <span className="text-xs font-black text-slate-400 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200 uppercase tracking-widest">Below Nisab</span>
             )}
           </div>
 
@@ -98,7 +98,7 @@ export default function ZakatCalculator({ balance, portfolioValue, onDonate }: Z
           {isEligible ? (
             <div className="p-6 bg-amber-50 rounded-[2.5rem] border border-amber-100 relative overflow-hidden">
               <div className="relative z-10">
-                <div className="text-[10px] font-black text-amber-700 uppercase tracking-widest mb-1">Total Zakat Payable</div>
+                <div className="text-xs font-black text-amber-700 uppercase tracking-widest mb-1">Total Zakat Payable</div>
                 <div className="text-3xl font-black text-amber-800 tracking-tighter">PKR {zakatAmount.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
                 <button 
                   onClick={() => setModalOpen(true)}
@@ -110,7 +110,7 @@ export default function ZakatCalculator({ balance, portfolioValue, onDonate }: Z
             </div>
           ) : (
             <div className="p-6 bg-slate-50 rounded-[2.5rem] border border-slate-100 text-center">
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-relaxed">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest leading-relaxed">
                 Nisab threshold: PKR {NISAB_THRESHOLD.toLocaleString()}<br />
                 Your wealth is currently safe from liability.
               </p>
@@ -143,18 +143,18 @@ export default function ZakatCalculator({ balance, portfolioValue, onDonate }: Z
                 >
                   <div className="text-2xl mb-2">{r.icon}</div>
                   <div className="font-black text-slate-800 text-xs tracking-tight">{r.name}</div>
-                  <div className="text-[9px] font-black text-slate-400 uppercase mt-0.5">{r.focus}</div>
+                  <div className="text-xs font-black text-slate-400 uppercase mt-0.5">{r.focus}</div>
                 </button>
               ))}
             </div>
 
             {selectedRecipient && (
               <form onSubmit={handleDonate} className="space-y-6 animate-in slide-in-from-top-4">
-                <div className="p-4 bg-emerald-50 rounded-2xl text-emerald-800 text-[10px] font-bold text-center uppercase tracking-widest leading-relaxed">
+                <div className="p-4 bg-emerald-50 rounded-2xl text-emerald-800 text-xs font-bold text-center uppercase tracking-widest leading-relaxed">
                   Impact: Your PKR {zakatAmount.toLocaleString()} will provide meals, clean water, and education to those in need.
                 </div>
                 <div>
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2 block px-1">Security PIN</label>
+                  <label className="text-xs font-black text-slate-400 uppercase tracking-wider mb-2 block px-1">Security PIN</label>
                   <input
                     type="password"
                     inputMode="numeric"

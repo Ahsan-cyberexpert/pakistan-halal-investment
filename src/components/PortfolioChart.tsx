@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useState, useMemo } from "react";
 
 interface Holding {
@@ -54,7 +54,7 @@ export default function PortfolioChart({ balance, holdings, totalValue }: Portfo
       {/* Header Row */}
       <div className="flex justify-between items-start mb-5 sm:mb-6">
         <div>
-          <p className="text-[9px] sm:text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-1">
+          <p className="text-xs font-black text-emerald-600 uppercase tracking-widest mb-1">
             Total Wealth
           </p>
           <p className="text-2xl sm:text-4xl font-black tracking-tight" style={{ color: "var(--text-primary)" }}>
@@ -62,7 +62,7 @@ export default function PortfolioChart({ balance, holdings, totalValue }: Portfo
           </p>
           <div className="flex items-center gap-2 mt-1.5 flex-wrap">
             <span
-              className={`text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-xl ${
+              className={`text-xs font-black px-2.5 py-1 rounded-xl ${
                 isPnlPositive
                   ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
                   : "bg-red-50 text-red-600 border border-red-100"
@@ -70,7 +70,7 @@ export default function PortfolioChart({ balance, holdings, totalValue }: Portfo
             >
               {isPnlPositive ? "▲" : "▼"} ₨{formatPKR(Math.abs(totalPnL))} ({isPnlPositive ? "+" : ""}{pnlPercent}%)
             </span>
-            <span className="text-[9px] sm:text-[10px] font-medium" style={{ color: "var(--text-muted)" }}>
+            <span className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>
               Portfolio P&L
             </span>
           </div>
@@ -82,7 +82,7 @@ export default function PortfolioChart({ balance, holdings, totalValue }: Portfo
             <button
               key={t}
               onClick={() => setActiveRange(t)}
-              className={`text-[9px] sm:text-[10px] font-black px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl transition-all duration-200 ${
+              className={`text-xs font-black px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl transition-all duration-200 ${
                 activeRange === t
                   ? "bg-emerald-600 text-white shadow-md shadow-emerald-900/20"
                   : "text-slate-400 hover:text-slate-600"
@@ -145,7 +145,7 @@ export default function PortfolioChart({ balance, holdings, totalValue }: Portfo
 
         {/* Current value tooltip */}
         <div className="absolute top-1 right-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div className="bg-slate-900 text-white text-[9px] sm:text-[10px] font-bold px-2.5 py-1.5 rounded-xl shadow-xl whitespace-nowrap">
+          <div className="bg-slate-900 text-white text-xs font-bold px-2.5 py-1.5 rounded-xl shadow-xl whitespace-nowrap">
             ₨{formatPKR(totalWealth)}
           </div>
         </div>
@@ -154,7 +154,7 @@ export default function PortfolioChart({ balance, holdings, totalValue }: Portfo
       {/* Allocation Bar */}
       {(balance > 0 || totalValue > 0) && (
         <div className="mb-5">
-          <div className="flex justify-between text-[9px] sm:text-[10px] font-black uppercase tracking-wider mb-2" style={{ color: "var(--text-muted)" }}>
+          <div className="flex justify-between text-xs font-black uppercase tracking-wider mb-2" style={{ color: "var(--text-muted)" }}>
             <span>Cash: {100 - allocationPct}%</span>
             <span>Invested: {allocationPct}%</span>
           </div>
@@ -179,13 +179,18 @@ export default function PortfolioChart({ balance, holdings, totalValue }: Portfo
           },
         ].map((item, i) => (
           <div key={i} className={`text-center ${i === 1 ? "border-x" : ""}`} style={{ borderColor: "var(--border-color)" }}>
-            <p className="text-[8px] sm:text-[9px] font-black uppercase tracking-wider mb-1" style={{ color: "var(--text-muted)" }}>
+            <p className="text-xs font-black uppercase tracking-wider mb-1" style={{ color: "var(--text-muted)" }}>
               {item.label}
             </p>
-            <p className={`text-[11px] sm:text-sm font-black ${item.color}`}>{item.value}</p>
+            <p className={`text-xs sm:text-sm font-black ${item.color}`}>{item.value}</p>
           </div>
         ))}
       </div>
+
+      {/* Chart Disclaimer */}
+      <p className="text-xs text-slate-400 text-center mt-3 pt-2 border-t border-slate-100/60 dark:border-slate-800/60 font-medium">
+        Simulated data. Time range: Demo. Last update: not applicable.
+      </p>
 
       <style>{`
         @keyframes drawPortfolioLine {

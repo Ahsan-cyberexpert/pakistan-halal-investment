@@ -23,7 +23,7 @@ export default function MicroTakaful() {
             </div>
             <div className="text-right">
               <div className="font-black text-sky-600 text-lg">PKR 200</div>
-              <div className="text-[10px] text-gray-400">/ month</div>
+              <div className="text-xs text-gray-400">/ month</div>
             </div>
           </div>
           <p className="text-xs text-gray-600 mb-4 leading-relaxed">

@@ -92,7 +92,7 @@ export default function MarketAlerts() {
       {showAdd && (
         <div className="bg-slate-50 rounded-3xl p-5 mb-6 space-y-4 animate-in slide-in-from-top-2 duration-300">
           <div>
-            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-2">Stock</label>
+            <label className="text-xs font-black text-slate-500 uppercase tracking-widest block mb-2">Stock</label>
             <select
               value={selectedSymbol}
               onChange={e => setSelectedSymbol(e.target.value)}
@@ -106,7 +106,7 @@ export default function MarketAlerts() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-2">Direction</label>
+              <label className="text-xs font-black text-slate-500 uppercase tracking-widest block mb-2">Direction</label>
               <div className="flex gap-2">
                 {(['above', 'below'] as const).map(d => (
                   <button
@@ -122,7 +122,7 @@ export default function MarketAlerts() {
               </div>
             </div>
             <div>
-              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-2">Target (₨)</label>
+              <label className="text-xs font-black text-slate-500 uppercase tracking-widest block mb-2">Target (₨)</label>
               <input
                 type="number"
                 value={targetPrice}
@@ -145,7 +145,7 @@ export default function MarketAlerts() {
 
       {saved && (
         <div className="mb-4 p-3 bg-emerald-50 border border-emerald-100 rounded-2xl text-emerald-700 text-xs font-black text-center animate-in fade-in">
-          ✅ Alert set! You'll be notified when the price is reached.
+          ✅ Alert set! You&apos;ll be notified when the price is reached.
         </div>
       )}
 
@@ -176,12 +176,12 @@ export default function MarketAlerts() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <span className="font-black text-slate-800 text-sm">{alert.symbol}</span>
-                    <span className={`text-[9px] font-black px-2 py-0.5 rounded-lg ${
+                    <span className={`text-xs font-black px-2 py-0.5 rounded-lg ${
                       alert.direction === 'above' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'
                     }`}>
                       {alert.direction === 'above' ? '▲' : '▼'} ₨{alert.targetPrice.toLocaleString()}
                     </span>
-                    {isTriggered && <span className="text-[9px] font-black px-2 py-0.5 bg-emerald-600 text-white rounded-lg">TRIGGERED</span>}
+                    {isTriggered && <span className="text-xs font-black px-2 py-0.5 bg-emerald-600 text-white rounded-lg">TRIGGERED</span>}
                   </div>
                   <p className="text-xs text-slate-400 mt-0.5">
                     Current: ₨{current.toLocaleString()} &nbsp;·&nbsp;

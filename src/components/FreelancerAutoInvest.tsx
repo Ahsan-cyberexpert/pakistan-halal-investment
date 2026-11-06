@@ -35,7 +35,7 @@ export default function FreelancerAutoInvest() {
         <div className="bg-emerald-50 border border-emerald-100 p-4 rounded-2xl">
           <div className="flex justify-between items-center mb-3">
             <span className="text-sm font-bold text-emerald-900">Payoneer Connected ✅</span>
-            <span className="bg-emerald-200 text-emerald-800 text-[10px] font-bold px-2 py-1 rounded-md">ACTIVE</span>
+            <span className="bg-emerald-200 text-emerald-800 text-xs font-bold px-2 py-1 rounded-md">ACTIVE</span>
           </div>
           <div className="bg-white p-3 rounded-xl border border-emerald-100 flex justify-between items-center text-sm">
             <span className="text-gray-600">Auto-Invest Rule</span>

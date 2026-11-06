@@ -11,12 +11,12 @@ export default function GlobalHalalETFs({ onInvest }: GlobalHalalETFsProps) {
         <div>
           <div className="flex items-center gap-1.5 mb-1">
             <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Global Assets</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Global Assets</span>
           </div>
           <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">Global Halal ETFs (USD)</h2>
           <p className="text-xs text-slate-500">Hedge against PKR inflation with Shariah-compliant US Equities</p>
         </div>
-        <span className="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-100 text-[10px] font-semibold rounded-full flex-shrink-0">
+        <span className="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-100 text-xs font-semibold rounded-full flex-shrink-0">
           Forex Hedged
         </span>
       </div>
@@ -30,12 +30,12 @@ export default function GlobalHalalETFs({ onInvest }: GlobalHalalETFsProps) {
             <div className="w-9 h-9 bg-blue-100 text-blue-800 rounded-lg flex items-center justify-center font-bold text-xs flex-shrink-0">HLAL</div>
             <div>
               <div className="font-bold text-xs text-slate-900">Wahed FTSE USA Shariah</div>
-              <div className="text-[10px] text-slate-500">Apple, Microsoft, Alphabet (Halal Filtered)</div>
+              <div className="text-xs text-slate-500">Apple, Microsoft, Alphabet (Halal Filtered)</div>
             </div>
           </div>
           <div className="text-right flex-shrink-0">
             <div className="font-bold text-xs text-emerald-600">+14.2%</div>
-            <div className="text-[9px] text-slate-400 font-medium">YTD Return</div>
+            <div className="text-xs text-slate-400 font-medium">YTD Return</div>
           </div>
         </div>
 
@@ -47,12 +47,12 @@ export default function GlobalHalalETFs({ onInvest }: GlobalHalalETFsProps) {
             <div className="w-9 h-9 bg-indigo-100 text-indigo-800 rounded-lg flex items-center justify-center font-bold text-xs flex-shrink-0">SPUS</div>
             <div>
               <div className="font-bold text-xs text-slate-900">SP Funds S&P 500 Sharia</div>
-              <div className="text-[10px] text-slate-500">Standard & Poor's Top Shariah 500</div>
+              <div className="text-xs text-slate-500">Standard &amp; Poor&apos;s Top Shariah 500</div>
             </div>
           </div>
           <div className="text-right flex-shrink-0">
             <div className="font-bold text-xs text-emerald-600">+16.8%</div>
-            <div className="text-[9px] text-slate-400 font-medium">YTD Return</div>
+            <div className="text-xs text-slate-400 font-medium">YTD Return</div>
           </div>
         </div>
       </div>

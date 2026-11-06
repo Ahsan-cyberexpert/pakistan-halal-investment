@@ -23,7 +23,7 @@ export default function DemoWealthSummary({ cash, invested, pending, zakatDue, l
     <section className="card p-4 sm:p-5" aria-labelledby="wealth-summary-title" dir={urdu ? 'rtl' : 'ltr'}>
       <div className="flex items-start justify-between gap-3 mb-4">
         <div>
-          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+          <p className="text-xs font-black uppercase tracking-widest text-slate-400">
             {urdu ? 'مالی خلاصہ' : 'Financial summary'}
           </p>
           <h2 id="wealth-summary-title" className="mt-1 text-xl sm:text-2xl font-black text-slate-900">
@@ -33,7 +33,7 @@ export default function DemoWealthSummary({ cash, invested, pending, zakatDue, l
             {urdu ? 'یہ رقم صرف پریزنٹیشن کے لیے فرضی ہے۔' : 'Virtual money for presentation only.'}
           </p>
         </div>
-        <span className="rounded-xl border border-amber-200 bg-amber-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-amber-700">
+        <span className="rounded-xl border border-amber-200 bg-amber-50 px-2.5 py-1 text-xs font-black uppercase tracking-wider text-amber-700">
           {urdu ? 'ڈیمو' : 'Demo'}
         </span>
       </div>
@@ -43,7 +43,7 @@ export default function DemoWealthSummary({ cash, invested, pending, zakatDue, l
       <div className="grid grid-cols-3 gap-2 sm:gap-3">
         {items.map((item) => (
           <div key={item.label} className="min-w-0 rounded-xl bg-slate-50 border border-slate-100 p-2.5 sm:p-3">
-            <p className="text-[10px] leading-tight font-bold text-slate-500">{item.label}</p>
+            <p className="text-xs leading-tight font-bold text-slate-500">{item.label}</p>
             <p className={`mt-1 truncate text-xs sm:text-sm font-black ${item.tone}`}>{formatPKR(item.value)}</p>
           </div>
         ))}

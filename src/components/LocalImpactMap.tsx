@@ -29,11 +29,11 @@ export default function LocalImpactMap() {
       <div className="flex justify-between items-start mb-8">
         <div>
           <h2 className="text-xl font-black text-slate-800 tracking-tight">Impact Radar</h2>
-          <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mt-1">Real-World Sukuk Projects</p>
+          <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest mt-1">Simulated Sukuk Projects</p>
         </div>
         <div className="flex gap-2">
-          <div className="px-3 py-1 bg-slate-50 border border-slate-100 rounded-full text-[10px] font-black text-slate-400">PAKISTAN</div>
-          <div className="px-3 py-1 bg-emerald-50 border border-emerald-100 rounded-full text-[10px] font-black text-emerald-600 uppercase tracking-widest">Live</div>
+          <div className="px-3 py-1 bg-slate-50 border border-slate-100 rounded-full text-xs font-black text-slate-400">PAKISTAN</div>
+          <div className="px-3 py-1 bg-emerald-50 border border-emerald-100 rounded-full text-xs font-black text-emerald-600 uppercase tracking-widest">Demo</div>
         </div>
       </div>
 
@@ -86,7 +86,7 @@ export default function LocalImpactMap() {
             <div className="flex justify-between items-start mb-4">
               <div>
                 <h3 className="text-lg font-black text-white tracking-tight">{selectedProject.city}</h3>
-                <p className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">{selectedProject.type}</p>
+                <p className="text-xs font-black text-emerald-400 uppercase tracking-widest">{selectedProject.type}</p>
               </div>
               <button 
                 onClick={() => setSelectedProject(null)}
@@ -96,12 +96,12 @@ export default function LocalImpactMap() {
             
             <div className="grid grid-cols-2 gap-3">
               <div className="p-3 bg-white/5 rounded-2xl">
-                <div className="text-[8px] font-black text-white/40 uppercase tracking-widest mb-1">Portfolio Allocation</div>
+                <div className="text-xs font-black text-white/40 uppercase tracking-widest mb-1">Portfolio Allocation</div>
                 <div className="text-sm font-black text-white">PKR {selectedProject.amount}</div>
               </div>
               <div className="p-3 bg-emerald-500/10 rounded-2xl">
-                <div className="text-[8px] font-black text-emerald-400/70 uppercase tracking-widest mb-1">Direct Impact</div>
-                <div className="text-[10px] font-black text-white leading-tight">{selectedProject.impact}</div>
+                <div className="text-xs font-black text-emerald-400/70 uppercase tracking-widest mb-1">Direct Impact</div>
+                <div className="text-xs font-black text-white leading-tight">{selectedProject.impact}</div>
               </div>
             </div>
           </div>
@@ -110,7 +110,7 @@ export default function LocalImpactMap() {
 
       <div className="mt-8 flex items-center gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
         <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">
           Your Sukuk holdings are directly funding these projects.
         </p>
       </div>

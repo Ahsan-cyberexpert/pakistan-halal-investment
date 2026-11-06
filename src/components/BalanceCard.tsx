@@ -30,7 +30,7 @@ export default function BalanceCard({ balance, onDeposit, onWithdraw, portfolioV
         <div className="flex justify-between items-start mb-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-[10px] sm:text-[11px] font-semibold tracking-wider text-emerald-200/90 uppercase">
+              <span className="text-xs font-semibold tracking-wider text-emerald-200/90 uppercase">
                 Available Demo Cash
               </span>
               <button
@@ -66,7 +66,7 @@ export default function BalanceCard({ balance, onDeposit, onWithdraw, portfolioV
             </div>
 
             {portfolioValue > 0 && showBalance && (
-              <p className="text-[11px] text-emerald-200/90 font-medium mt-1">
+              <p className="text-xs text-emerald-200/90 font-medium mt-1">
                 + ₨{formatPKR(portfolioValue)} in demo assets · Total: <strong className="text-white font-semibold">₨{formatPKR(totalWealth)}</strong>
               </p>
             )}
@@ -81,11 +81,11 @@ export default function BalanceCard({ balance, onDeposit, onWithdraw, portfolioV
 
         {/* Demo status tags */}
         <div className="flex items-center gap-2 mb-4 flex-wrap">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-900/40 border border-amber-300/30 rounded-lg text-[10px] font-semibold text-amber-100">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-900/40 border border-amber-300/30 rounded-lg text-xs font-semibold text-amber-100">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-300"></span>
             Virtual Demo Balance
           </span>
-          <span className="inline-flex items-center px-2 py-1 bg-emerald-900/40 border border-emerald-400/20 rounded-lg text-[10px] font-semibold text-emerald-200/90">
+          <span className="inline-flex items-center px-2 py-1 bg-emerald-900/40 border border-emerald-400/20 rounded-lg text-xs font-semibold text-emerald-200/90">
             No real funds
           </span>
         </div>

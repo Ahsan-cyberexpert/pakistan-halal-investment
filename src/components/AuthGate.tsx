@@ -196,6 +196,21 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
     onSuccess(googleUser);
   };
 
+  const handleInstantDemo = () => {
+    const demoUser: UserProfile = {
+      name: 'Demo Investor',
+      cnic: '4210100000001',
+      mobile: '03000000000',
+      location: 'Karachi, PK (Virtual Demo 📍)',
+      isOverseas: false,
+      tradingPin: '1234'
+    };
+    localStorage.setItem('roziq_user', JSON.stringify(demoUser));
+    localStorage.setItem('roziq_pin', '1234');
+    localStorage.setItem('roziq_trading_pin', '1234');
+    onSuccess(demoUser);
+  };
+
   return (
     <div className="fixed inset-0 z-[2000] bg-slate-950 flex flex-col items-center justify-center p-4 overflow-y-auto">
       {/* Background glow */}
@@ -207,7 +222,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
         <div className="flex flex-col items-center mb-6">
           <div className="w-14 h-14 bg-emerald-600 rounded-3xl flex items-center justify-center text-3xl shadow-2xl shadow-emerald-900/50 mb-3">🇵🇰</div>
           <h1 className="text-2xl font-black text-white tracking-tighter">Roziq</h1>
-          <p className="text-emerald-400 text-[10px] font-black uppercase tracking-[0.25em] mt-1">Pakistan's Halal Wealth OS</p>
+          <p className="text-emerald-400 text-xs font-black uppercase tracking-[0.25em] mt-1">Pakistan&apos;s Halal Wealth OS</p>
         </div>
 
         {/* ── LOGIN SCREEN ── */}
@@ -216,10 +231,31 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
             <h2 className="text-lg font-black text-white text-center">Welcome Back</h2>
             <p className="text-slate-400 text-xs text-center font-medium">Login with your CNIC &amp; Password</p>
 
+            {/* Instant Demo Option (No CNIC or GPS required) */}
+            <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3 text-center">
+              <p className="text-xs font-bold text-amber-300 mb-2">
+                ⚡ Exploring for review or presentation?
+              </p>
+              <button
+                type="button"
+                onClick={handleInstantDemo}
+                className="touch-target w-full py-2.5 px-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black rounded-xl text-xs sm:text-sm shadow-md transition-all active:scale-95 flex items-center justify-center gap-2"
+              >
+                <span>🚀</span>
+                <span>Enter Instant Demo Mode (No CNIC / GPS)</span>
+              </button>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="flex-1 h-px bg-white/10" />
+              <span className="text-xs text-slate-500 font-bold uppercase tracking-wider">or sign in with CNIC</span>
+              <div className="flex-1 h-px bg-white/10" />
+            </div>
+
             {error && <p className="text-red-400 text-xs font-bold text-center bg-red-900/20 py-2 px-3 rounded-xl">{error}</p>}
 
             <div>
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1.5">CNIC</label>
+              <label className="text-xs font-black text-slate-400 uppercase tracking-widest block mb-1.5">CNIC</label>
               <input
                 type="text" inputMode="numeric" value={cnic}
                 onChange={e => setCnic(formatCnic(e.target.value))}
@@ -228,7 +264,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
               />
             </div>
             <div>
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1.5">Password</label>
+              <label className="text-xs font-black text-slate-400 uppercase tracking-widest block mb-1.5">Password</label>
               <input
                 type="password" value={password} onChange={e => setPassword(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleLogin()}
@@ -252,7 +288,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
             </button>
 
             <p className="text-center text-xs text-slate-500 font-medium pt-1">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <button onClick={() => { setScreen('register'); setError(''); }}
                 className="text-emerald-400 font-black hover:text-emerald-300 transition-colors">Register</button>
             </p>
@@ -266,20 +302,20 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
             {error && <p className="text-red-400 text-xs font-bold text-center bg-red-900/20 py-2 px-3 rounded-xl">{error}</p>}
 
             <div>
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Full Name</label>
+              <label className="text-xs font-black text-slate-400 uppercase tracking-widest block mb-1">Full Name</label>
               <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Muhammad Ali"
                 className="w-full px-3.5 py-2.5 bg-slate-800 border border-white/10 rounded-xl text-white text-xs focus:outline-none focus:border-emerald-500 transition-colors" />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">CNIC Number</label>
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest block mb-1">CNIC Number</label>
                 <input type="text" inputMode="numeric" value={cnic} onChange={e => setCnic(formatCnic(e.target.value))} placeholder="42101-1234567-1"
                   className="w-full px-3.5 py-2.5 bg-slate-800 border border-white/10 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-emerald-500 transition-colors" />
               </div>
 
               <div>
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Mobile Number</label>
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest block mb-1">Mobile Number</label>
                 <input type="text" inputMode="numeric" value={mobile} onChange={e => setMobile(formatMobile(e.target.value))} placeholder="0300-1234567"
                   className="w-full px-3.5 py-2.5 bg-slate-800 border border-white/10 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-emerald-500 transition-colors" />
               </div>
@@ -287,7 +323,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
 
             {/* Live Location Picker */}
             <div>
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Live GPS Location</label>
+              <label className="text-xs font-black text-slate-400 uppercase tracking-widest block mb-1">Live GPS Location</label>
               <div className="flex gap-2 items-center">
                 <input type="text" readOnly value={location} placeholder="Click button to fetch location..."
                   className="flex-1 px-3.5 py-2.5 bg-slate-800/60 border border-white/10 rounded-xl text-emerald-300 font-bold text-xs outline-none" />
@@ -303,13 +339,13 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Password</label>
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest block mb-1">Password</label>
                 <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••"
                   className="w-full px-3.5 py-2.5 bg-slate-800 border border-white/10 rounded-xl text-white text-xs focus:outline-none focus:border-emerald-500 transition-colors" />
               </div>
 
               <div>
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Confirm Password</label>
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest block mb-1">Confirm Password</label>
                 <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="••••••••"
                   className="w-full px-3.5 py-2.5 bg-slate-800 border border-white/10 rounded-xl text-white text-xs focus:outline-none focus:border-emerald-500 transition-colors" />
               </div>
@@ -319,7 +355,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
             <div className="flex items-center justify-between p-3 bg-slate-800 rounded-xl border border-white/10">
               <div>
                 <p className="text-white font-bold text-xs">🌍 Overseas Pakistani?</p>
-                <p className="text-slate-400 text-[10px] mt-0.5">Living or working abroad</p>
+                <p className="text-slate-400 text-xs mt-0.5">Living or working abroad</p>
               </div>
               <button onClick={() => setIsOverseas(v => !v)}
                 className={`w-10 h-5 rounded-full transition-colors flex items-center px-1 ${isOverseas ? 'bg-emerald-500' : 'bg-slate-600'}`}>
@@ -329,7 +365,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
 
             {isOverseas && (
               <div>
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Country of Residence</label>
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest block mb-1">Country of Residence</label>
                 <select value={country} onChange={e => setCountry(e.target.value)}
                   className="w-full px-3.5 py-2.5 bg-slate-800 border border-white/10 rounded-xl text-white text-xs focus:outline-none focus:border-emerald-500">
                   <option value="">Select Country</option>
@@ -358,7 +394,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
             </p>
             {error && <p className="text-red-400 text-xs font-bold bg-red-900/20 py-2 px-3 rounded-xl">{error}</p>}
             <div>
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1.5">Enter 4-Digit PIN</label>
+              <label className="text-xs font-black text-slate-400 uppercase tracking-widest block mb-1.5">Enter 4-Digit PIN</label>
               <input type="password" inputMode="numeric" maxLength={4} value={tradingPin}
                 onChange={e => setTradingPin(e.target.value.replace(/\D/g,'').slice(0,4))}
                 placeholder="••••"
@@ -366,7 +402,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
               />
             </div>
             <div>
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1.5">Confirm 4-Digit PIN</label>
+              <label className="text-xs font-black text-slate-400 uppercase tracking-widest block mb-1.5">Confirm 4-Digit PIN</label>
               <input type="password" inputMode="numeric" maxLength={4} value={confirmTradingPin}
                 onChange={e => setConfirmTradingPin(e.target.value.replace(/\D/g,'').slice(0,4))}
                 placeholder="••••"
@@ -396,7 +432,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
           </div>
         )}
 
-        <p className="text-center text-slate-600 text-[10px] font-bold mt-6 uppercase tracking-widest">
+        <p className="text-center text-slate-600 text-xs font-bold mt-6 uppercase tracking-widest">
           🔒 End-to-end encrypted · CNIC &amp; GPS verified · AAOIFI Halal Certified
         </p>
       </div>

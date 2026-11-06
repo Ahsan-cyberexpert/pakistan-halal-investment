@@ -72,7 +72,7 @@ export default function SovereignScan({ onComplete, isOpen }: SovereignScanProps
           ></div>
         </div>
         
-        <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">
+        <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">
           Sovereign ID Protection Active
         </p>
       </div>

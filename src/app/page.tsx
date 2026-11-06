@@ -8,97 +8,134 @@ const stats = [
   { value: "2.5M+", label: "Example Nisab", sub: "Demo calculation only" },
 ];
 
-const features = [
+const featureCategories = [
   {
-    emoji: "⚖️",
-    title: "Shariah Screener",
-    desc: "Real-time PSX filtering using AAOIFI standards. Every stock is verified for Riba, Gharar, and Haram sectors before you invest.",
-    badge: "AI-Powered",
-    color: "from-emerald-500 to-teal-600",
-    bg: "bg-emerald-50",
+    category: "Invest",
+    tagline: "Shariah-screened equities, asset-backed Sukuks, and real-sector financing",
+    items: [
+      {
+        emoji: "⚖️",
+        title: "Shariah PSX Screener",
+        desc: "Automated PSX filtering adhering to AAOIFI Standard No. 35. Verifies debt-to-market-cap, non-compliant income, and liquidity ratios.",
+        badge: "Screening",
+        bg: "bg-emerald-50",
+      },
+      {
+        emoji: "🏛️",
+        title: "Fractional Sukuks",
+        desc: "Simulated asset-backed Islamic sovereign and corporate bonds. Fixed income models without riba or speculative derivatives.",
+        badge: "Asset-Backed",
+        bg: "bg-blue-50",
+      },
+      {
+        emoji: "🌍",
+        title: "Global Halal ETFs",
+        desc: "Exposure to international Shariah-compliant funds (e.g. SPUS, HLAL) with simulated forex conversion calculations.",
+        badge: "Global",
+        bg: "bg-indigo-50",
+      },
+      {
+        emoji: "🌾",
+        title: "Agri-Financing (Salam)",
+        desc: "Direct forward financing models (Bay' Al-Salam) connecting capital with real-sector Pakistani agriculture.",
+        badge: "Real Sector",
+        bg: "bg-amber-50",
+      },
+    ],
   },
   {
-    emoji: "🤖",
-    title: "Wali AI Autopilot",
-    desc: "An elite wealth guardian that automates halal trades on your behalf. Smart rebalancing, market alerts, and portfolio protection.",
-    badge: "Premium Elite",
-    color: "from-amber-400 to-yellow-500",
-    bg: "bg-amber-50",
+    category: "Plan",
+    tagline: "Sovereign financial roadmap, community mutuals, and family protection",
+    items: [
+      {
+        emoji: "🤖",
+        title: "Wali AI Autopilot",
+        desc: "Strategic wealth guardian that simulates halal rebalancing, market alerts, and disciplined entry barriers.",
+        badge: "Autopilot",
+        bg: "bg-amber-50",
+      },
+      {
+        emoji: "🤝",
+        title: "Digital Kameti (ROSCA)",
+        desc: "Rotating savings and credit mutuals formalized with digital ledgers, transparent contracts, and zero interest.",
+        badge: "Community",
+        bg: "bg-orange-50",
+      },
+      {
+        emoji: "🏥",
+        title: "Family Health Takaful",
+        desc: "Mutual cooperative emergency pool (Tabarru) designed to shield families against medical emergencies without conventional insurance.",
+        badge: "Takaful",
+        bg: "bg-rose-50",
+      },
+    ],
   },
   {
-    emoji: "🕋",
-    title: "Zakat & Hajj Vault",
-    desc: "Automate your spiritual obligations. National Zakat Vault integration with live audit tracking and transparent distribution.",
-    badge: "Shariah Compliant",
-    color: "from-teal-500 to-cyan-600",
-    bg: "bg-teal-50",
+    category: "Purify",
+    tagline: "Spiritual financial obligations, Nisab automation, and charity tracking",
+    items: [
+      {
+        emoji: "🕋",
+        title: "Zakat & Hajj Vault",
+        desc: "Live Nisab monitoring (Gold/Silver) with automated calculation on eligible holdings and transparent simulated distribution.",
+        badge: "Wajib",
+        bg: "bg-teal-50",
+      },
+      {
+        emoji: "💧",
+        title: "Dividend Purification (Tathir)",
+        desc: "Calculates impermissible non-operating revenue percentages from stocks and routes purification charity with full receipt trails.",
+        badge: "Tathir",
+        bg: "bg-cyan-50",
+      },
+    ],
   },
   {
-    emoji: "📜",
-    title: "Wirasat Calculator",
-    desc: "Calculate your estate according to Islamic inheritance laws. Protect your family's future with CNIC-secured heir verification.",
-    badge: "Legal & Spiritual",
-    color: "from-purple-500 to-violet-600",
-    bg: "bg-purple-50",
-  },
-  {
-    emoji: "🏥",
-    title: "Family Health Takaful",
-    desc: "Riba-free family health savings through Islamic mutual assistance. Save monthly, protect your loved ones from medical emergencies.",
-    badge: "Riba-Free",
-    color: "from-rose-500 to-pink-600",
-    bg: "bg-rose-50",
-  },
-  {
-    emoji: "📈",
-    title: "Fractional Sukuks",
-    desc: "Invest in government-backed Islamic bonds starting from PKR 1,000. Earn halal returns with sovereign-grade security.",
-    badge: "Gov. Backed",
-    color: "from-blue-500 to-indigo-600",
-    bg: "bg-blue-50",
-  },
-  {
-    emoji: "🌍",
-    title: "Overseas Remittance",
-    desc: "Pakistani diaspora can invest directly from abroad. Multi-currency support with halal global ETFs and real-time forex.",
-    badge: "Global",
-    color: "from-cyan-500 to-sky-600",
-    bg: "bg-cyan-50",
-  },
-  {
-    emoji: "🤝",
-    title: "Digital Kameti",
-    desc: "Modernized Islamic rotating savings (Kameti) with CNIC verification, legal contracts, and transparent fund management.",
-    badge: "Community",
-    color: "from-orange-500 to-amber-600",
-    bg: "bg-orange-50",
+    category: "Learn",
+    tagline: "Verified Shariah guidance, estate planning, and financial education",
+    items: [
+      {
+        emoji: "📜",
+        title: "Wirasat Calculator",
+        desc: "Rigorous Islamic estate distribution engine implementing Quranic inheritance fractions for spouses, children, and parents.",
+        badge: "Fiqh & Law",
+        bg: "bg-purple-50",
+      },
+      {
+        emoji: "🎙️",
+        title: "Roziq AI Financial Mufti",
+        desc: "Context-aware bilingual AI advisor trained on AAOIFI Shariah standards, offering voice and text guidance on Pakistani finance.",
+        badge: "Bilingual AI",
+        bg: "bg-emerald-50",
+      },
+    ],
   },
 ];
 
 const howItWorks = [
   {
     step: "01",
-    title: "Create Your Account",
-    desc: "Register with your CNIC for a secure, verified Islamic wealth account. Biometric authentication keeps your funds safe.",
-    icon: "🔐",
+    title: "Launch Instant Demo",
+    desc: "Explore immediately with pre-seeded virtual funds. No CNIC or GPS required to experience the platform.",
+    icon: "🚀",
   },
   {
     step: "02",
-    title: "Get Shariah Screened",
-    desc: "Our AI scans your portfolio and watchlist against AAOIFI standards in real time — only halal assets pass through.",
+    title: "Explore Shariah Tools",
+    desc: "Scan PSX stocks against AAOIFI criteria, simulate Sukuk purchases, and test automated dividend purification.",
     icon: "⚖️",
   },
   {
     step: "03",
-    title: "Build Your Wealth",
-    desc: "Invest in PSX Halal stocks, Sukuks, Hajj savings, and Global Halal ETFs — all with zero commission.",
-    icon: "📈",
+    title: "Plan and Purify",
+    desc: "Calculate Zakat on your simulated holdings, model family inheritance via Wirasat, and explore community Kametis.",
+    icon: "🕋",
   },
   {
     step: "04",
-    title: "Fulfill Your Duties",
-    desc: "Automated Zakat calculation and one-tap distribution to verified NGOs. Purify your wealth with confidence.",
-    icon: "🕋",
+    title: "Consult the AI Mufti",
+    desc: "Ask financial and fiqh questions in Urdu or English with an AI guardian aware of your portfolio context.",
+    icon: "🤖",
   },
 ];
 
@@ -142,16 +179,18 @@ export default function Home() {
           <div className="hidden md:flex items-center space-x-8 text-sm font-bold text-slate-500">
             <a href="#features" className="hover:text-emerald-600 transition-colors">Features</a>
             <a href="#how-it-works" className="hover:text-emerald-600 transition-colors">How It Works</a>
-            <a href="#security" className="hover:text-emerald-600 transition-colors">Security</a>
-            <a href="#mission" className="hover:text-emerald-600 transition-colors">Mission</a>
+            <a href="#security" className="hover:text-emerald-600 transition-colors">Demo Safety</a>
+            <a href="#real-account-info" className="hover:text-emerald-600 transition-colors">Real Account</a>
           </div>
 
-          <Link
-            href="/dashboard"
-            className="touch-target px-4 sm:px-8 py-2 sm:py-3 bg-slate-900 text-white rounded-xl sm:rounded-2xl font-bold text-sm hover:bg-emerald-700 hover:shadow-xl hover:shadow-emerald-900/20 hover:-translate-y-0.5 transition-all flex-shrink-0"
-          >
-            Try demo →
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/dashboard?mode=demo"
+              className="touch-target px-4 sm:px-6 py-2.5 bg-emerald-600 text-white rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm hover:bg-emerald-700 hover:shadow-xl hover:shadow-emerald-900/20 hover:-translate-y-0.5 transition-all flex-shrink-0"
+            >
+              Try Demo →
+            </Link>
+          </div>
 
           <details className="relative md:hidden">
             <summary aria-label="Open navigation menu" className="touch-target list-none [&::-webkit-details-marker]:hidden cursor-pointer gap-2 rounded-xl border border-slate-200 bg-white/80 px-3 text-sm font-bold text-slate-700 shadow-sm">
@@ -162,7 +201,7 @@ export default function Home() {
               <a href="#features" className="touch-target w-full justify-start rounded-xl px-3 text-sm font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-800">Features</a>
               <a href="#how-it-works" className="touch-target w-full justify-start rounded-xl px-3 text-sm font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-800">How It Works</a>
               <a href="#security" className="touch-target w-full justify-start rounded-xl px-3 text-sm font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-800">Demo Safety</a>
-              <a href="#mission" className="touch-target w-full justify-start rounded-xl px-3 text-sm font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-800">Mission</a>
+              <a href="#real-account-info" className="touch-target w-full justify-start rounded-xl px-3 text-sm font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-800">Real Account Roadmap</a>
             </div>
           </details>
         </div>
@@ -182,7 +221,7 @@ export default function Home() {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
             <span className="text-xs font-black text-emerald-700 uppercase tracking-wide sm:tracking-widest">
-              Interactive demo · Roziq Halal Wealth OS
+              Interactive Prototype · Roziq Halal Wealth OS
             </span>
           </div>
 
@@ -192,22 +231,25 @@ export default function Home() {
           </h1>
 
           <p className="max-w-xl text-sm sm:text-base text-slate-600 mx-auto mb-6 sm:mb-8 leading-relaxed font-medium">
-            Explore investing, savings, Zakat, and financial goals in one guided experience.
-            This presentation demo uses virtual money and simulated activity.
+            Experience Islamic investing, savings, Zakat, and financial planning in one calm, guided OS.
+            This presentation prototype uses simulated activity and virtual funds.
           </p>
 
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-2.5 sm:gap-3 animate-in fade-in duration-700 mb-10 sm:mb-16">
+          {/* Dual Path Choice: Demo vs Real Account Roadmap */}
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-3 animate-in fade-in duration-700 mb-10 sm:mb-16">
             <Link
-              href="/dashboard"
-              className="touch-target w-full sm:w-auto px-7 py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-emerald-700 shadow-lg shadow-slate-900/20 hover:-translate-y-0.5 transition-all text-center"
+              href="/dashboard?mode=demo"
+              className="touch-target w-full sm:w-auto px-7 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-sm sm:text-base shadow-lg shadow-emerald-900/20 hover:-translate-y-0.5 transition-all text-center flex items-center justify-center gap-2"
             >
-              Try the interactive demo →
+              <span>🚀</span>
+              <span>Try Interactive Demo (No CNIC Required)</span>
             </Link>
             <a
-              href="#features"
-              className="touch-target w-full sm:w-auto px-7 py-3 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold text-sm hover:border-emerald-300 hover:text-emerald-700 hover:-translate-y-0.5 transition-all shadow-sm text-center"
+              href="#real-account-info"
+              className="touch-target w-full sm:w-auto px-7 py-3.5 bg-white border border-slate-200 text-slate-700 hover:text-emerald-700 hover:border-emerald-300 rounded-xl font-bold text-sm sm:text-base hover:-translate-y-0.5 transition-all shadow-sm text-center flex items-center justify-center gap-2"
             >
-              See how it works →
+              <span>🔒</span>
+              <span>Create Real Account (Phase 4 Roadmap)</span>
             </a>
           </div>
 
@@ -228,40 +270,52 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FEATURES */}
+      {/* GROUPED FEATURES BY GOAL: Invest, Plan, Purify, Learn */}
       <section id="features" className="scroll-mt-28 py-14 sm:py-24 lg:py-32" style={{ background: "var(--bg-secondary)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-16 sm:mb-24">
+          <div className="text-center mb-16 sm:mb-20">
             <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-100 px-4 py-2 rounded-2xl mb-6">
               <span className="text-emerald-600 text-xs">⚡</span>
-                <span className="text-xs font-black text-emerald-700 uppercase tracking-widest">Explore the demo features</span>
+              <span className="text-xs font-black text-emerald-700 uppercase tracking-widest">Four Core Pillars</span>
             </div>
-            <h2 className="text-4xl sm:text-6xl font-black text-slate-900 tracking-tight mb-4">
-              Built on Faith.{" "}
-              <span className="text-gradient">Powered by AI.</span>
+            <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-4">
+              Invest. Plan. <span className="text-gradient">Purify. Learn.</span>
             </h2>
-            <p className="text-slate-500 text-lg max-w-2xl mx-auto font-medium">
-              Explore the product vision through four simple goals: invest, plan, purify, and learn.
+            <p className="text-slate-500 text-base sm:text-lg max-w-2xl mx-auto font-medium">
+              Every tool in Roziq is organized around what you want to achieve with your wealth.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
-            {features.map((f, i) => (
-              <div
-                key={i}
-                className="group relative p-6 sm:p-7 rounded-[2rem] border border-slate-100 hover:border-emerald-200 hover:shadow-2xl hover:shadow-emerald-900/5 transition-all duration-500 cursor-default overflow-hidden"
-                style={{ background: "var(--bg-primary)" }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/0 to-emerald-50/0 group-hover:from-emerald-50/80 group-hover:to-teal-50/40 transition-all duration-500 rounded-[2rem]" />
-                <div className="relative z-10">
-                  <div className={`w-14 h-14 ${f.bg} rounded-2xl flex items-center justify-center text-2xl mb-5 shadow-sm transition-transform duration-300 group-hover:scale-110`}>
-                    {f.emoji}
+          <div className="space-y-12 sm:space-y-16">
+            {featureCategories.map((group) => (
+              <div key={group.category} className="space-y-5">
+                <div className="flex flex-col sm:flex-row sm:items-baseline justify-between border-b border-slate-100 pb-3 gap-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl sm:text-2xl">{group.category === 'Invest' ? '📈' : group.category === 'Plan' ? '🧭' : group.category === 'Purify' ? '🕋' : '📚'}</span>
+                    <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">{group.category}</h3>
                   </div>
-                  <div className="inline-flex items-center gap-1 bg-slate-100 px-2.5 py-1 rounded-lg mb-3">
-                    <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{f.badge}</span>
-                  </div>
-                  <h4 className="text-base sm:text-lg font-black text-slate-900 mb-2 tracking-tight">{f.title}</h4>
-                  <p className="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">{f.desc}</p>
+                  <p className="text-xs sm:text-sm font-medium text-slate-500">{group.tagline}</p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+                  {group.items.map((item, i) => (
+                    <div
+                      key={i}
+                      className="group relative p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-100 hover:border-emerald-200 hover:shadow-xl transition-all duration-300 overflow-hidden"
+                      style={{ background: "var(--bg-primary)" }}
+                    >
+                      <div className="relative z-10">
+                        <div className={`w-12 h-12 ${item.bg} rounded-xl flex items-center justify-center text-xl mb-4 shadow-xs group-hover:scale-105 transition-transform duration-200`}>
+                          {item.emoji}
+                        </div>
+                        <div className="inline-flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded-lg mb-2">
+                          <span className="text-xs font-black text-slate-600 uppercase tracking-wider">{item.badge}</span>
+                        </div>
+                        <h4 className="text-sm sm:text-base font-black text-slate-900 mb-1.5 tracking-tight">{item.title}</h4>
+                        <p className="text-xs text-slate-500 font-medium leading-relaxed">{item.desc}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}
@@ -275,14 +329,13 @@ export default function Home() {
           <div className="text-center mb-16 sm:mb-20">
             <div className="inline-flex items-center gap-2 bg-teal-50 border border-teal-100 px-4 py-2 rounded-2xl mb-6">
               <span className="text-teal-600 text-xs">🛤️</span>
-              <span className="text-xs font-black text-teal-700 uppercase tracking-widest">Your Journey</span>
+              <span className="text-xs font-black text-teal-700 uppercase tracking-widest">Guided Flow</span>
             </div>
-            <h2 className="text-4xl sm:text-6xl font-black text-slate-900 tracking-tight mb-4">
-              Simple.{" "}
-              <span className="text-gradient">Sovereign.</span>
+            <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-4">
+              Simple. Transparent. <span className="text-gradient">Sovereign.</span>
             </h2>
-            <p className="text-slate-500 text-lg max-w-xl mx-auto font-medium">
-              Get started in minutes. No complex forms, no hidden charges.
+            <p className="text-slate-500 text-base sm:text-lg max-w-xl mx-auto font-medium">
+              Designed for first-time Muslim investors and seasoned halal savers alike.
             </p>
           </div>
 
@@ -290,72 +343,70 @@ export default function Home() {
             <div className="hidden lg:block absolute top-16 left-[14%] right-[14%] h-0.5 bg-gradient-to-r from-transparent via-emerald-200 to-transparent" />
             {howItWorks.map((step, i) => (
               <div key={i} className="relative text-center group">
-                <div className="relative w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-3xl flex items-center justify-center text-3xl mx-auto mb-6 shadow-xl shadow-emerald-900/20 group-hover:scale-105 transition-transform duration-300">
+                <div className="relative w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-3xl flex items-center justify-center text-2xl sm:text-3xl mx-auto mb-5 shadow-xl shadow-emerald-900/20 group-hover:scale-105 transition-transform duration-300">
                   {step.icon}
-                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-slate-900 rounded-2xl flex items-center justify-center text-xs font-black text-white border-2 border-white shadow-md">
+                  <div className="absolute -top-2 -right-2 w-7 h-7 sm:w-8 sm:h-8 bg-slate-900 rounded-xl sm:rounded-2xl flex items-center justify-center text-xs font-black text-white border-2 border-white shadow-md">
                     {step.step}
                   </div>
                 </div>
-                <h3 className="text-lg font-black text-slate-900 mb-3">{step.title}</h3>
-                <p className="text-sm text-slate-500 font-medium leading-relaxed">{step.desc}</p>
+                <h3 className="text-base sm:text-lg font-black text-slate-900 mb-2">{step.title}</h3>
+                <p className="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">{step.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* SECURITY */}
+      {/* DEMO SAFETY & TRANSPARENCY */}
       <section id="security" className="scroll-mt-28 py-14 sm:py-24 lg:py-32 bg-slate-950 text-white overflow-hidden relative">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-600/10 rounded-full blur-[120px] translate-x-1/3 -translate-y-1/4" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-teal-600/10 rounded-full blur-[100px] -translate-x-1/4 translate-y-1/4" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 sm:gap-20 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-20 items-center">
             <div>
-              <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-2xl mb-8">
+              <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-2xl mb-6">
                 <span className="text-emerald-400 text-xs">🛡️</span>
-                <span className="text-xs font-black text-emerald-400 uppercase tracking-widest">Demo safety and transparency</span>
+                <span className="text-xs font-black text-emerald-400 uppercase tracking-widest">Demo Safety &amp; Governance</span>
               </div>
-              <h2 className="text-4xl sm:text-6xl font-black tracking-tight mb-8 leading-tight">
-                Your wealth,<br />
-                <span className="text-gradient">protected by code</span><br />
-                and faith.
+              <h2 className="text-3xl sm:text-5xl font-black tracking-tight mb-6 leading-tight">
+                Transparent code.<br />
+                <span className="text-gradient">Zero real funds at risk.</span>
               </h2>
-              <div className="space-y-6">
+              <div className="space-y-5">
                 {[
-                  { icon: "🧪", title: "Interactive simulation", desc: "Try deposits, withdrawals, stock actions, Zakat, and portfolio updates without moving real money." },
-                  { icon: "🔁", title: "Repeatable demo", desc: "Reset the demo account and replay the same journey for presentations and feedback." },
-                  { icon: "📊", title: "Transparent states", desc: "Demo balances, simulated prices, and example calculations are designed to be clearly labeled." },
-                  { icon: "⚖️", title: "Shariah-focused vision", desc: "Production screening and scholar review will be documented separately before any real service launches." },
+                  { icon: "🧪", title: "100% Simulated Sandbox", desc: "Try deposits, withdrawals, stock buys/sells, and Zakat without linking bank accounts or transferring real money." },
+                  { icon: "🧾", title: "Standardized Demo Receipts", desc: "Every mock transaction outputs a verifiable receipt with timestamps, unique reference codes, and explicit simulated notes." },
+                  { icon: "🔁", title: "Scoped Demo Reset", desc: "Resetting your demo account only clears roziq-prefixed browser data, ensuring non-destructive presentation runs." },
+                  { icon: "⚖️", title: "AAOIFI Standard No. 35", desc: "Financial ratios and screening rules reflect authoritative global Shariah standards for academic and evaluation fidelity." },
                 ].map((item) => (
-                  <div key={item.title} className="flex gap-5 group">
-                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-xl flex-shrink-0 group-hover:bg-emerald-600/20 group-hover:border-emerald-500/30 transition-all duration-300">
+                  <div key={item.title} className="flex gap-4 group">
+                    <div className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-lg flex-shrink-0 group-hover:bg-emerald-600/20 group-hover:border-emerald-500/30 transition-all duration-300">
                       {item.icon}
                     </div>
                     <div>
-                      <h4 className="font-bold text-base sm:text-lg mb-1 text-white">{item.title}</h4>
-                      <p className="text-slate-400 text-sm font-medium leading-relaxed">{item.desc}</p>
+                      <h4 className="font-bold text-sm sm:text-base mb-0.5 text-white">{item.title}</h4>
+                      <p className="text-slate-400 text-xs sm:text-sm font-medium leading-relaxed">{item.desc}</p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="bg-white/5 border border-white/10 rounded-2xl sm:rounded-[3rem] p-5 sm:p-12 backdrop-blur-3xl overflow-x-auto">
-              <div className="flex items-center gap-3 mb-6 sm:mb-8">
-                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-500 shadow-lg shadow-red-500/50" />
-                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-amber-500 shadow-lg shadow-amber-500/50" />
-                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50" />
-                <span className="ml-2 text-slate-500 text-[11px] sm:text-xs font-mono">roziq_security.log</span>
+            <div className="bg-white/5 border border-white/10 rounded-2xl sm:rounded-3xl p-5 sm:p-8 backdrop-blur-3xl overflow-x-auto">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-2.5 h-2.5 rounded-full bg-red-500 shadow-md shadow-red-500/50" />
+                <div className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-md shadow-amber-500/50" />
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-md shadow-emerald-500/50" />
+                <span className="ml-2 text-slate-400 text-xs font-mono">roziq_demo_audit.log</span>
               </div>
-              <div className="space-y-3 sm:space-y-4 font-mono text-[11px] sm:text-sm">
-                <p className="text-slate-400"><span className="text-emerald-400">[INFO]</span> Initializing Shariah Screener v2.0...</p>
-                <p className="text-slate-400"><span className="text-blue-400">[DEMO]</span> Loading example PSX screening data...</p>
-                <p className="text-emerald-400"><span className="text-emerald-500">[INFO]</span> Example screened stocks available for exploration</p>
-                <p className="text-slate-400"><span className="text-amber-400">[DATA]</span> Prices may be simulated or delayed</p>
-                <p className="text-slate-400"><span className="text-amber-400">[SAFE]</span> No bank, broker, or payment call is made</p>
-                <p className="text-slate-400"><span className="text-blue-400">[RESET]</span> Demo state can be replayed anytime</p>
-                <p className="text-emerald-400"><span className="text-emerald-500">[READY]</span> Safe interactive walkthrough available</p>
+              <div className="space-y-3 font-mono text-xs sm:text-sm">
+                <p className="text-slate-400"><span className="text-emerald-400">[INFO]</span> Roziq Halal Wealth OS — Presentation Build</p>
+                <p className="text-slate-400"><span className="text-blue-400">[DEMO]</span> Mode: Simulated Sandbox (No Real Payment Gateways)</p>
+                <p className="text-emerald-400"><span className="text-emerald-500">[STATUS]</span> Virtual Ledger initialized (PKR 5,000,000 mock cash)</p>
+                <p className="text-slate-400"><span className="text-amber-400">[DATA]</span> PSX tickers sourced for demonstration and educational flow</p>
+                <p className="text-slate-400"><span className="text-emerald-400">[AUDIT]</span> Demo receipts stored locally with cryptographic IDs</p>
+                <p className="text-emerald-400"><span className="text-emerald-500">[READY]</span> Safe interactive exploration enabled</p>
                 <p className="animate-pulse text-emerald-400">_</p>
               </div>
             </div>
@@ -363,105 +414,127 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
-      <section className="py-24 sm:py-32" style={{ background: "var(--bg-secondary)" }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight mb-4">
-              Trusted by <span className="text-gradient">Pakistani Muslims</span>
-            </h2>
-            <p className="text-slate-500 text-lg font-medium">Real stories from our community</p>
+      {/* REAL ACCOUNT ROADMAP SECTION (STRUCTURAL SEPARATION) */}
+      <section id="real-account-info" className="scroll-mt-28 py-14 sm:py-24" style={{ background: "var(--bg-secondary)" }}>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+          <div className="inline-flex items-center gap-2 bg-amber-50 border border-amber-200 px-4 py-2 rounded-2xl mb-6">
+            <span className="text-amber-600 text-xs">🔒</span>
+            <span className="text-xs font-black text-amber-800 uppercase tracking-widest">Future Real Account Foundation (Phase 4)</span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mb-4">
+            Looking for Real Brokerage &amp; Banking?
+          </h2>
+          <p className="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed mb-8">
+            Roziq maintains a strict structural boundary between the interactive presentation demo and future production infrastructure. Real accounts will not reuse demo credentials, local storage state, or simulated payment callbacks.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left mb-8">
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+              <span className="text-lg mb-2 block">🏦</span>
+              <h4 className="text-sm font-bold text-slate-900 mb-1">SECP-Regulated Broker FIX</h4>
+              <p className="text-xs text-slate-500">Live order routing to accredited PSX brokers via formal broker FIX/REST API protocols.</p>
+            </div>
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+              <span className="text-lg mb-2 block">⚡</span>
+              <h4 className="text-sm font-bold text-slate-900 mb-1">State Bank Raast Gateway</h4>
+              <p className="text-xs text-slate-500">Instant Pakistani fiat on-ramps and off-ramps through Raast, 1Link, and partner banks.</p>
+            </div>
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+              <span className="text-lg mb-2 block">📜</span>
+              <h4 className="text-sm font-bold text-slate-900 mb-1">Formal Shariah Board</h4>
+              <p className="text-xs text-slate-500">Documented religious governance and independent scholar audits before any live fund handling.</p>
+            </div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-xs font-semibold text-amber-800 mb-6">
+            ℹ️ Production registration will open post-hackathon during Phase 4. For now, experience all capabilities using the interactive simulated demo.
+          </div>
+
+          <Link
+            href="/dashboard?mode=demo"
+            className="touch-target inline-flex items-center gap-2 px-8 py-3.5 bg-slate-900 hover:bg-emerald-700 text-white rounded-xl font-bold text-sm shadow-md transition-all active:scale-95"
+          >
+            <span>Launch Interactive Demo Now →</span>
+          </Link>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section className="py-20 sm:py-28" style={{ background: "var(--bg-primary)" }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mb-2">
+              Community <span className="text-gradient">Feedback</span>
+            </h2>
+            <p className="text-slate-500 text-sm sm:text-base font-medium">Reflecting the needs of ethical Pakistani investors</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
             {testimonials.map((t, i) => (
-              <div key={i} className="p-7 rounded-[2rem] border border-slate-100 hover:border-emerald-200 hover:shadow-xl transition-all duration-300" style={{ background: "var(--bg-primary)" }}>
-                <div className="flex items-center gap-4 mb-5">
-                  <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-2xl">
+              <div key={i} className="p-6 rounded-2xl sm:rounded-3xl border border-slate-100 hover:border-emerald-200 hover:shadow-xl transition-all duration-300" style={{ background: "var(--bg-secondary)" }}>
+                <div className="flex items-center gap-3.5 mb-4">
+                  <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-xl flex-shrink-0">
                     {t.avatar}
                   </div>
                   <div>
-                    <div className="font-black text-slate-900 text-sm">{t.name}</div>
+                    <div className="font-black text-slate-900 text-xs sm:text-sm">{t.name}</div>
                     <div className="text-xs text-slate-500 font-medium">{t.role}</div>
                   </div>
                 </div>
-                <div className="flex gap-0.5 mb-4">
-                  {[1,2,3,4,5].map(s => <span key={s} className="text-amber-400 text-sm">★</span>)}
+                <div className="flex gap-0.5 mb-3">
+                  {[1,2,3,4,5].map(s => <span key={s} className="text-amber-400 text-xs">★</span>)}
                 </div>
-                <p className="text-slate-600 text-sm font-medium leading-relaxed italic">&quot;{t.quote}&quot;</p>
+                <p className="text-slate-600 text-xs sm:text-sm font-medium leading-relaxed italic">&quot;{t.quote}&quot;</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* MISSION */}
-      <section id="mission" className="scroll-mt-28 py-14 sm:py-24 lg:py-32" style={{ background: "var(--bg-primary)" }}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-100 px-4 py-2 rounded-2xl mb-8">
-            <span className="text-emerald-600">🕌</span>
-            <span className="text-xs font-black text-emerald-700 uppercase tracking-widest">The Sovereign Mission</span>
-          </div>
-          <blockquote className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight mb-10">
-            &quot;To build a financial future where technology respects the soul, and every Pakistani can grow their wealth without fear of interest.&quot;
-          </blockquote>
-          <div className="w-20 h-1.5 bg-gradient-to-r from-emerald-500 to-teal-400 mx-auto rounded-full mb-12" />
-
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-            <Link
-              href="/dashboard"
-              className="w-full sm:w-auto px-12 py-5 bg-slate-900 text-white rounded-[2rem] font-black text-xl hover:bg-emerald-700 shadow-2xl shadow-slate-900/20 hover:shadow-emerald-900/30 hover:-translate-y-1 transition-all"
-            >
-              Start Your Halal Wealth Journey 🇵🇰
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* FOOTER */}
-      <footer className="py-16 border-t" style={{ borderColor: "var(--border-color)", background: "var(--bg-secondary)" }}>
+      <footer className="py-12 border-t" style={{ borderColor: "var(--border-color)", background: "var(--bg-secondary)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
             <div className="md:col-span-2">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center text-xl shadow-lg shadow-emerald-200">
+              <div className="flex items-center space-x-3 mb-3">
+                <div className="w-9 h-9 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center text-lg shadow-md shadow-emerald-200">
                   🇵🇰
                 </div>
                 <div>
-                  <span className="text-xl font-black text-slate-800 tracking-tighter">Roziq</span>
-                  <div className="text-[8px] font-black text-emerald-600 uppercase tracking-[0.2em]">Halal Wealth OS</div>
+                  <span className="text-lg font-black text-slate-800 tracking-tighter">Roziq</span>
+                  <div className="text-xs font-black text-emerald-600 uppercase tracking-wider">Halal Wealth OS</div>
                 </div>
               </div>
-            <p className="text-slate-500 text-sm font-medium leading-relaxed max-w-xs">
-                An interactive prototype for exploring halal wealth tools, savings goals, Zakat, and investing concepts. 🕌
+              <p className="text-slate-500 text-xs sm:text-sm font-medium leading-relaxed max-w-sm">
+                An interactive prototype for exploring halal wealth tools, savings goals, Zakat, and investing concepts with virtual money. 🕌
               </p>
             </div>
             <div>
-              <h5 className="font-black text-slate-800 text-sm mb-4 uppercase tracking-widest">Platform</h5>
-              <ul className="space-y-2.5">
+              <h5 className="font-black text-slate-800 text-xs mb-3 uppercase tracking-wider">Platform Demo</h5>
+              <ul className="space-y-2">
                 {["Dashboard", "Halal Stocks", "Zakat Hub", "Hajj Vault", "Sukuks"].map(l => (
-                  <li key={l}><Link href="/dashboard" className="text-slate-500 text-sm font-medium hover:text-emerald-600 transition-colors">{l}</Link></li>
+                  <li key={l}><Link href="/dashboard?mode=demo" className="text-slate-500 text-xs font-medium hover:text-emerald-600 transition-colors">{l}</Link></li>
                 ))}
               </ul>
             </div>
             <div>
-              <h5 className="font-black text-slate-800 text-sm mb-4 uppercase tracking-widest">Company</h5>
-              <ul className="space-y-2.5">
-                {["Mission", "Security", "Privacy Policy", "Terms of Service", "Contact"].map(l => (
-                  <li key={l}><a href="#" className="text-slate-500 text-sm font-medium hover:text-emerald-600 transition-colors">{l}</a></li>
+              <h5 className="font-black text-slate-800 text-xs mb-3 uppercase tracking-wider">Governance</h5>
+              <ul className="space-y-2">
+                {["Demo Safety", "AAOIFI Standards", "Phase 4 Roadmap", "Terms of Service"].map(l => (
+                  <li key={l}><a href="#security" className="text-slate-500 text-xs font-medium hover:text-emerald-600 transition-colors">{l}</a></li>
                 ))}
               </ul>
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-8 border-t" style={{ borderColor: "var(--border-color)" }}>
-            <p className="text-slate-400 text-sm font-medium">
-              © 2026 Roziq. Interactive prototype — demo balances, prices, transactions, and recommendations are simulated and not financial advice.
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-6 border-t" style={{ borderColor: "var(--border-color)" }}>
+            <p className="text-slate-400 text-xs font-medium text-center sm:text-left">
+              © 2026 Roziq Halal Wealth OS. Interactive presentation prototype — balances, prices, trades, and returns are simulated.
             </p>
-            <div className="flex space-x-6 text-slate-400">
-              <a href="#" className="hover:text-emerald-600 font-bold text-sm transition-colors">Twitter</a>
-              <a href="#" className="hover:text-emerald-600 font-bold text-sm transition-colors">LinkedIn</a>
-              <a href="#" className="hover:text-emerald-600 font-bold text-sm transition-colors">GitHub</a>
+            <div className="flex space-x-5 text-slate-400 text-xs font-bold">
+              <Link href="/dashboard?mode=demo" className="text-emerald-600 hover:text-emerald-700">Open Demo</Link>
+              <a href="#security" className="hover:text-emerald-600">Safety &amp; Auditing</a>
             </div>
           </div>
         </div>

@@ -107,9 +107,9 @@ export default function MuftiAI({ lang }: MuftiAIProps) {
           <div>
             <h2 className="text-lg font-black text-amber-500 tracking-tight uppercase flex items-center gap-1.5">
               MUFTI <span className="text-white">AI</span>
-              <span className="text-[9px] px-2 py-0.5 bg-amber-500/20 text-amber-300 rounded-full border border-amber-500/30">AAOIFI</span>
+              <span className="text-xs px-2 py-0.5 bg-amber-500/20 text-amber-300 rounded-full border border-amber-500/30">AAOIFI</span>
             </h2>
-            <p className="text-[10px] font-bold text-slate-400">{t('Certified Shariah Advisor', 'تصدیق شدہ شرعی مشیر')}</p>
+            <p className="text-xs font-bold text-slate-400">{t('Certified Shariah Advisor', 'تصدیق شدہ شرعی مشیر')}</p>
           </div>
         </div>
 
@@ -174,7 +174,7 @@ export default function MuftiAI({ lang }: MuftiAIProps) {
             <button 
               key={q} 
               onClick={() => { setInputText(q); }}
-              className="px-2.5 py-1 bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-slate-400 rounded-xl text-[10px] font-bold border border-white/5 transition-all"
+              className="px-2.5 py-1 bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-slate-400 rounded-xl text-xs font-bold border border-white/5 transition-all"
             >
               {q}
             </button>

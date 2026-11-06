@@ -93,7 +93,7 @@ export default function VoiceAgent({ onCommand, lang = 'en' }: VoiceAgentProps) 
       {/* Status / Command Feedback */}
       {statusText && (
         <div className="bg-slate-900/90 backdrop-blur-md text-white border border-emerald-500/30 px-4 py-2.5 rounded-2xl shadow-xl text-xs font-bold animate-in fade-in slide-in-from-bottom-2 duration-300 max-w-xs text-right">
-          <p className="text-[8px] text-emerald-400 uppercase tracking-widest mb-0.5">Voice AI Status</p>
+          <p className="text-xs text-emerald-400 uppercase tracking-widest mb-0.5">Voice AI Status</p>
           {statusText}
         </div>
       )}
@@ -109,7 +109,7 @@ export default function VoiceAgent({ onCommand, lang = 'en' }: VoiceAgentProps) 
           </div>
           
           {!hasSupport && (
-            <p className="text-amber-700 text-[10px] font-bold mb-3 bg-amber-50 p-2.5 rounded-xl border border-amber-200/60 leading-relaxed">
+            <p className="text-amber-700 text-xs font-bold mb-3 bg-amber-50 p-2.5 rounded-xl border border-amber-200/60 leading-relaxed">
               ⚠️ {lang === 'ur' ? 'آپ کا براؤزر وائس فیچر کو سپورٹ نہیں کرتا۔ نیچے دیے گئے بٹن استعمال کریں:' : 'Your browser does not support speech recognition. Use quick commands below:'}
             </p>
           )}
@@ -122,7 +122,7 @@ export default function VoiceAgent({ onCommand, lang = 'en' }: VoiceAgentProps) 
               </button>
             ))}
           </div>
-          <p className="text-[9px] text-slate-400 text-center mt-3 font-bold">✓ Shariah Voice Navigation</p>
+          <p className="text-xs text-slate-400 text-center mt-3 font-bold">✓ Shariah Voice Navigation</p>
         </div>
       )}
 

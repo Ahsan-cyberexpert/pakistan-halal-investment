@@ -35,7 +35,7 @@ export default function SellStockFlow({ holding, onSuccess, onCancel }: SellStoc
       {step === 'units' && (
         <div>
           <button onClick={onCancel} className="touch-target mb-3 text-sm font-bold text-slate-500">‹ Back</button>
-          <p className="text-[10px] font-black uppercase tracking-widest text-emerald-700">Sell demo holding</p>
+          <p className="text-xs font-black uppercase tracking-widest text-emerald-700">Sell demo holding</p>
           <h2 className="mt-1 text-2xl font-black text-slate-900">Sell {holding.symbol}</h2>
           <p className="mt-1 text-sm text-slate-500">Choose how many virtual units to sell. No broker order will be placed.</p>
 
@@ -58,7 +58,7 @@ export default function SellStockFlow({ holding, onSuccess, onCancel }: SellStoc
       {step === 'review' && (
         <div>
           <button onClick={() => setStep('units')} className="touch-target mb-3 text-sm font-bold text-slate-500">‹ Back</button>
-          <p className="text-[10px] font-black uppercase tracking-widest text-amber-700">Review simulated sale</p>
+          <p className="text-xs font-black uppercase tracking-widest text-amber-700">Review simulated sale</p>
           <h2 className="mt-1 text-2xl font-black text-slate-900">Sell {requestedUnits.toFixed(4)} {holding.symbol} units?</h2>
           <div className="mt-5 space-y-3 rounded-2xl bg-slate-50 p-4 text-sm">
             <div className="flex justify-between"><span className="text-slate-500">Virtual units</span><strong>{requestedUnits.toFixed(4)}</strong></div>

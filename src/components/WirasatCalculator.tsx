@@ -76,12 +76,12 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
         <div>
           <div className="flex items-center gap-1.5 mb-1">
             <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Islamic Inheritance</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Islamic Inheritance</span>
           </div>
           <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">Wirasat Estate Calculator</h2>
           <p className="text-xs text-slate-500">Algorithmic Quranic estate division & heir share verification</p>
         </div>
-        <span className="px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-100 text-[10px] font-semibold rounded-full flex-shrink-0">
+        <span className="px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-100 text-xs font-semibold rounded-full flex-shrink-0">
           Quranic Ratios
         </span>
       </div>
@@ -90,7 +90,7 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
         <div className="space-y-3">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <div>
-              <label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block mb-1">Outstanding Debts (PKR)</label>
+              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Outstanding Debts (PKR)</label>
               <input 
                 type="number" 
                 placeholder="0"
@@ -99,7 +99,7 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
               />
             </div>
             <div>
-              <label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block mb-1">Wasiyyat / Bequest (Max 1/3)</label>
+              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Wasiyyat / Bequest (Max 1/3)</label>
               <input 
                 type="number" 
                 placeholder="0"
@@ -111,7 +111,7 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
             <div>
-              <label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block mb-1">Spouse</label>
+              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Spouse</label>
               <select 
                 className="w-full p-2.5 sm:p-2 bg-slate-50 border border-slate-200 rounded-xl text-sm sm:text-xs font-semibold text-slate-900 outline-none focus:border-emerald-500"
                 onChange={(e) => setHeirs({ ...heirs, wife: e.target.value === 'wife' ? 1 : 0, husband: e.target.value === 'husband' })}
@@ -123,7 +123,7 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
             </div>
 
             <div>
-              <label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block mb-1">Parents</label>
+              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Parents</label>
               <select 
                 className="w-full p-2.5 sm:p-2 bg-slate-50 border border-slate-200 rounded-xl text-sm sm:text-xs font-semibold text-slate-900 outline-none focus:border-emerald-500"
                 onChange={(e) => setHeirs({ ...heirs, father: e.target.value !== 'mother', mother: e.target.value !== 'father' })}
@@ -136,7 +136,7 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
             </div>
 
             <div>
-              <label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block mb-1">No. of Sons</label>
+              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">No. of Sons</label>
               <input 
                 type="number" 
                 value={heirs.sons}
@@ -146,7 +146,7 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
             </div>
 
             <div>
-              <label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block mb-1">No. of Daughters</label>
+              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">No. of Daughters</label>
               <input 
                 type="number" 
                 value={heirs.daughters}
@@ -175,7 +175,7 @@ export default function WirasatCalculator({ portfolioValue = 2500000 }: { portfo
               <div key={i} className="flex justify-between items-center p-3 bg-slate-50/70 rounded-xl border border-slate-200/70">
                 <div>
                   <p className="font-bold text-slate-800 text-xs">{res.name}</p>
-                  <p className="text-[9px] font-semibold text-emerald-700 uppercase tracking-wider">{res.ratio} Share</p>
+                  <p className="text-xs font-semibold text-emerald-700 uppercase tracking-wider">{res.ratio} Share</p>
                 </div>
                 <div className="text-right">
                   <p className="font-bold text-slate-900 text-xs">PKR {res.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>

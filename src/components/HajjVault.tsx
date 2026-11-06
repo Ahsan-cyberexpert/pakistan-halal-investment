@@ -20,16 +20,16 @@ export default function HajjVault({ onDeposit }: HajjVaultProps) {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 mb-3 sm:mb-4">
             <div>
               <div className="flex flex-wrap gap-1.5 mb-1.5">
-                <div className="inline-flex items-center gap-1 bg-emerald-500/20 text-emerald-300 text-[8px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border border-emerald-500/30">
+                <div className="inline-flex items-center gap-1 bg-emerald-500/20 text-emerald-300 text-xs font-black uppercase tracking-widest px-2.5 py-1 rounded-full border border-emerald-500/30">
                   <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
                   Yield Bearing Savings
                 </div>
-                <div className="inline-flex items-center gap-1 bg-white/10 text-white text-[8px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border border-white/10">
+                <div className="inline-flex items-center gap-1 bg-white/10 text-white text-xs font-black uppercase tracking-widest px-2.5 py-1 rounded-full border border-white/10">
                   0% Fee
                 </div>
               </div>
               <h2 className="text-lg sm:text-xl font-black tracking-tight italic">HAJJ <span className="text-emerald-500">VAULT</span></h2>
-              <p className="text-slate-400 text-[8px] sm:text-[9px] font-bold uppercase tracking-widest mt-0.5">Sovereign Sukuk Backed</p>
+              <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mt-0.5">Sovereign Sukuk Backed</p>
             </div>
             <div className="w-9 h-9 sm:w-10 sm:h-10 bg-white/5 rounded-xl flex items-center justify-center text-lg border border-white/10 shadow-md flex-shrink-0">🌙</div>
           </div>
@@ -37,11 +37,11 @@ export default function HajjVault({ onDeposit }: HajjVaultProps) {
           <div className="bg-black/40 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-white/5 backdrop-blur-xl mb-3 sm:mb-4 shadow-sm">
             <div className="flex justify-between items-end mb-2.5">
               <div>
-                <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Current Saved</p>
+                <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-0.5">Current Saved</p>
                 <p className="text-base sm:text-lg font-black text-white italic tracking-tight">PKR {current.toLocaleString()}</p>
               </div>
               <div className="text-right flex-shrink-0">
-                <p className="text-[8px] font-black text-emerald-500 uppercase tracking-widest mb-0.5">Annual Yield</p>
+                <p className="text-xs font-black text-emerald-500 uppercase tracking-widest mb-0.5">Annual Yield</p>
                 <p className="text-xs sm:text-sm font-black text-emerald-400 tracking-tight">+{yearlyProfit}%</p>
               </div>
             </div>
@@ -53,7 +53,7 @@ export default function HajjVault({ onDeposit }: HajjVaultProps) {
                   style={{ width: `${percentage}%` }}
                 ></div>
               </div>
-              <div className="flex justify-between text-[8px] font-black uppercase tracking-widest text-slate-400">
+              <div className="flex justify-between text-xs font-black uppercase tracking-widest text-slate-400">
                 <span>{percentage.toFixed(1)}% Completed</span>
                 <span>Goal: PKR {goal.toLocaleString()}</span>
               </div>
@@ -67,8 +67,8 @@ export default function HajjVault({ onDeposit }: HajjVaultProps) {
               { label: 'VIP', price: '25L', active: current >= 250000 },
             ].map((p, i) => (
               <div key={i} className={`p-2 rounded-xl border text-center transition-all ${p.active ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300' : 'bg-white/5 border-white/5 text-slate-500'}`}>
-                <p className="text-[7px] font-black uppercase mb-0.5">{p.label}</p>
-                <p className="text-[11px] font-black">{p.price}</p>
+                <p className="text-xs font-black uppercase mb-0.5">{p.label}</p>
+                <p className="text-xs font-black">{p.price}</p>
               </div>
             ))}
           </div>
@@ -78,11 +78,11 @@ export default function HajjVault({ onDeposit }: HajjVaultProps) {
       <div className="p-3 sm:p-4 flex flex-col sm:flex-row gap-2 bg-slate-900/50">
         <button 
           onClick={() => onDeposit?.(50000)}
-          className="w-full sm:flex-[2] py-2.5 bg-white text-slate-900 font-black text-[11px] uppercase tracking-wider rounded-xl hover:bg-emerald-50 transition-all shadow-md active:scale-95 text-center"
+          className="w-full sm:flex-[2] py-2.5 bg-white text-slate-900 font-black text-xs uppercase tracking-wider rounded-xl hover:bg-emerald-50 transition-all shadow-md active:scale-95 text-center"
         >
           Auto-Deposit PKR 50,000 (PIN Locked)
         </button>
-        <button className="w-full sm:flex-1 py-2.5 bg-white/5 text-slate-300 font-black text-[11px] uppercase rounded-xl border border-white/5 hover:bg-white/10 transition-all active:scale-95 text-center">
+        <button className="w-full sm:flex-1 py-2.5 bg-white/5 text-slate-300 font-black text-xs uppercase rounded-xl border border-white/5 hover:bg-white/10 transition-all active:scale-95 text-center">
           Manage
         </button>
       </div>

@@ -33,7 +33,7 @@ export default function DemoReceipt({ transaction, onClose, lang = 'en' }: DemoR
       <section className="mobile-modal-safe w-full max-w-md rounded-t-3xl bg-white p-5 shadow-2xl sm:rounded-3xl" role="dialog" aria-modal="true" aria-labelledby="demo-receipt-title" dir={urdu ? 'rtl' : 'ltr'}>
         <div className="mb-5 flex items-start justify-between gap-3">
           <div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-amber-700">{urdu ? 'ڈیمو رسید' : 'Demo receipt'}</p>
+            <p className="text-xs font-black uppercase tracking-widest text-amber-700">{urdu ? 'ڈیمو رسید' : 'Demo receipt'}</p>
             <h2 id="demo-receipt-title" className="mt-1 text-xl font-black text-slate-900">{actionLabel(transaction, urdu)}</h2>
           </div>
           <button onClick={onClose} aria-label={urdu ? 'رسید بند کریں' : 'Close receipt'} className="touch-target rounded-xl border border-slate-200 text-slate-500">✕</button>

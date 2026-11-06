@@ -159,9 +159,9 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
                   <div>
                     <h3 className="font-black text-sm sm:text-base tracking-tight flex items-center gap-1.5">
                       ROZIQ <span className="text-emerald-200">AI</span>
-                      <span className="text-[7px] sm:text-[8px] bg-white/20 px-1.5 py-0.5 rounded-full border border-white/30 uppercase tracking-widest">Master Agent</span>
+                      <span className="text-xs bg-white/20 px-2 py-0.5 rounded-full border border-white/30 uppercase tracking-wider font-bold">Master Agent</span>
                     </h3>
-                    <p className="text-[9px] sm:text-[10px] font-bold text-emerald-100/80">{lang === 'ur' ? 'شرعی و مالیاتی مشیر (اکاؤنٹ سے منسلک)' : 'Sovereign Wealth Guardian (Account Linked)'}</p>
+                    <p className="text-xs font-bold text-emerald-100/90">{lang === 'ur' ? 'شرعی و مالیاتی مشیر (ڈیمو اکاؤنٹ سے منسلک)' : 'Sovereign Wealth Guardian (Demo Account Context)'}</p>
                   </div>
                 </div>
                 <button onClick={() => setIsOpen(false)} aria-label={lang === 'ur' ? 'بند کریں' : 'Close AI help'} className="touch-target text-white/80 hover:text-white text-sm bg-white/10 rounded-xl backdrop-blur-sm border border-white/10">✕</button>
@@ -169,15 +169,15 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
               
               {/* AI Response Display Area */}
               <div className="min-h-[80px] max-h-[150px] overflow-y-auto flex flex-col justify-center pr-1 relative z-10 mb-2">
-                <p className="text-xs sm:text-sm font-black leading-relaxed mb-1 text-white shadow-sm">"{response}"</p>
-                {transcript && <p className="text-emerald-200 text-[11px] font-bold opacity-80 italic">"{transcript}"</p>}
+                <p className="text-xs sm:text-sm font-black leading-relaxed mb-1 text-white shadow-sm">&quot;{response}&quot;</p>
+                {transcript && <p className="text-emerald-200 text-xs font-bold opacity-90 italic">&quot;{transcript}&quot;</p>}
               </div>
 
               {/* Prominent Manual Play Voice Button */}
               <div className="relative z-10 flex justify-end mb-1">
                 <button 
                   onClick={handleManualPlayVoice}
-                  className="px-3 py-1.5 bg-white text-emerald-700 hover:bg-emerald-50 rounded-xl text-[10px] sm:text-xs font-black flex items-center gap-1.5 shadow-md transition-all active:scale-95 border border-emerald-100 flex-shrink-0"
+                  className="px-3 py-1.5 bg-white text-emerald-700 hover:bg-emerald-50 rounded-xl text-xs font-black flex items-center gap-1.5 shadow-md transition-all active:scale-95 border border-emerald-100 flex-shrink-0"
                 >
                   <span className={`${isSpeaking ? 'animate-spin' : ''}`}>🔊</span> 
                   <span>{lang === 'ur' ? 'آواز سنیں (Play Voice)' : 'Play Voice'}</span>
@@ -185,8 +185,8 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
               </div>
 
               {/* Live Context Badge */}
-              <div className="mt-2 pt-2 border-t border-white/10 flex justify-between items-center text-[10px] font-bold text-emerald-100/90 relative z-10">
-                <span>🏦 {lang === 'ur' ? 'موجودہ کیش بیلنس:' : 'Live Cash Balance:'} PKR {balance.toLocaleString()}</span>
+              <div className="mt-2 pt-2 border-t border-white/10 flex justify-between items-center text-xs font-bold text-emerald-100/90 relative z-10">
+                <span>🏦 {lang === 'ur' ? 'ورچوئل کیش بیلنس:' : 'Demo Cash Balance:'} PKR {balance.toLocaleString()}</span>
                 <span>💼 {holdings.length} {lang === 'ur' ? 'اسٹاکس' : 'Stocks'}</span>
               </div>
             </div>
@@ -238,7 +238,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
               
               {/* Quick Prompt Chips */}
               <div>
-                <p className="text-[11px] font-bold text-slate-400 text-center mb-2">
+                <p className="text-xs font-bold text-slate-400 text-center mb-2">
                   {lang === 'ur' ? 'یا ذیل میں سے فوری احکامات منتخب کریں:' : 'Or choose quick commands below:'}
                 </p>
                 <div className="w-full flex flex-wrap gap-1.5 justify-center">
@@ -249,7 +249,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
                     <button 
                       key={t} 
                       onClick={() => sendPrompt(t, lang === 'ur' ? 'ur' : 'en')}
-                      className="px-3 py-1.5 bg-white border border-slate-200/80 rounded-xl text-[10px] font-black text-slate-600 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 transition-all active:scale-95 shadow-sm"
+                      className="px-3 py-1.5 bg-white border border-slate-200/80 rounded-xl text-xs font-black text-slate-600 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 transition-all active:scale-95 shadow-sm"
                     >
                       {t}
                     </button>
@@ -258,7 +258,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
               </div>
 
               <div className="text-center pt-2 border-t border-slate-200/60">
-                <p className="text-[10px] font-bold text-slate-400">✓ Hackathon Master Agent (Voice + Write + Account Linked)</p>
+                <p className="text-xs font-bold text-slate-400">✓ Hackathon Master Agent (Voice + Write + Demo Simulation)</p>
               </div>
             </div>
           </div>

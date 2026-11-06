@@ -57,7 +57,7 @@ export default function PortfolioDashboard({ holdings, totalValue, dailyPnl, onS
       {/* Header */}
       <div className="flex justify-between items-start mb-5">
         <div>
-          <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-1">
+          <p className="text-xs font-black uppercase tracking-widest text-emerald-600 mb-1">
             Portfolio Value
           </p>
           <p className="text-2xl sm:text-3xl font-black tracking-tight" style={{ color: "var(--text-primary)" }}>
@@ -65,7 +65,7 @@ export default function PortfolioDashboard({ holdings, totalValue, dailyPnl, onS
           </p>
         </div>
         <div
-          className={`flex flex-col items-end gap-0.5 px-3 sm:px-4 py-2 rounded-2xl font-bold text-[10px] sm:text-xs border ${
+          className={`flex flex-col items-end gap-0.5 px-3 sm:px-4 py-2 rounded-2xl font-bold text-xs border ${
             isDailyPositive
               ? "bg-emerald-50 text-emerald-700 border-emerald-100"
               : "bg-red-50 text-red-600 border-red-100"
@@ -74,7 +74,7 @@ export default function PortfolioDashboard({ holdings, totalValue, dailyPnl, onS
           <div className="flex items-center gap-1 font-black">
             {isDailyPositive ? "▲" : "▼"} {dailyPnlPct}%
           </div>
-          <div className="text-[7px] sm:text-[8px] font-black uppercase tracking-tight opacity-60 text-right">
+          <div className="text-xs font-black uppercase tracking-tight opacity-60 text-right">
             Portfolio P&L
           </div>
         </div>
@@ -83,7 +83,7 @@ export default function PortfolioDashboard({ holdings, totalValue, dailyPnl, onS
       {/* Allocation Bar */}
       <div className="mb-5">
         <div
-          className="flex justify-between text-[9px] sm:text-[10px] font-black uppercase tracking-widest mb-2"
+          className="flex justify-between text-xs font-black uppercase tracking-widest mb-2"
           style={{ color: "var(--text-muted)" }}
         >
           <span>Asset Allocation</span>
@@ -110,7 +110,7 @@ export default function PortfolioDashboard({ holdings, totalValue, dailyPnl, onS
           {holdings.slice(0, 5).map((h, i) => (
             <div key={h.symbol} className="flex items-center gap-1">
               <div className={`w-2 h-2 rounded-full ${COLORS[i % COLORS.length]}`} />
-              <span className="text-[9px] font-bold" style={{ color: "var(--text-muted)" }}>{h.symbol}</span>
+              <span className="text-xs font-bold" style={{ color: "var(--text-muted)" }}>{h.symbol}</span>
             </div>
           ))}
         </div>
@@ -119,7 +119,7 @@ export default function PortfolioDashboard({ holdings, totalValue, dailyPnl, onS
       {/* Holdings List */}
       <div className="space-y-2">
         <h3
-          className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest mb-3"
+          className="text-xs font-black uppercase tracking-widest mb-3"
           style={{ color: "var(--text-muted)" }}
         >
           Holdings
@@ -149,13 +149,13 @@ export default function PortfolioDashboard({ holdings, totalValue, dailyPnl, onS
                       {h.symbol}
                     </span>
                     {h.isWali && (
-                      <span className="bg-emerald-500 text-white text-[7px] font-black uppercase px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
+                      <span className="bg-emerald-500 text-white text-xs font-black uppercase px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
                         <span className="w-1 h-1 bg-white rounded-full animate-pulse" />
                         Wali
                       </span>
                     )}
                   </div>
-                  <div className="text-[9px] sm:text-[10px] font-bold uppercase mt-0.5" style={{ color: "var(--text-muted)" }}>
+                  <div className="text-xs font-bold uppercase mt-0.5" style={{ color: "var(--text-muted)" }}>
                     {h.units.toFixed(2)} units
                   </div>
                 </div>
@@ -165,13 +165,13 @@ export default function PortfolioDashboard({ holdings, totalValue, dailyPnl, onS
                   ₨{formatPKR(currentVal)}
                 </div>
                 <div
-                  className={`text-[9px] sm:text-[10px] font-black uppercase tracking-wide ${
+                  className={`text-xs font-black uppercase tracking-wide ${
                     h.pnl >= 0 ? "text-emerald-500" : "text-red-500"
                   }`}
                 >
                   {h.pnl >= 0 ? "+" : ""}{pnlPct}%
                 </div>
-                {onSell && <button onClick={() => onSell(h)} className="touch-target mt-1 min-h-0 h-7 rounded-lg px-2 text-[9px] font-black text-amber-700 hover:bg-amber-50">Sell demo</button>}
+                {onSell && <button onClick={() => onSell(h)} className="touch-target mt-1 min-h-0 h-7 rounded-lg px-2 text-xs font-black text-amber-700 hover:bg-amber-50">Sell demo</button>}
               </div>
             </div>
           );

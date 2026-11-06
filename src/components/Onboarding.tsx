@@ -87,7 +87,7 @@ export default function Onboarding({ onComplete, lang }: OnboardingProps) {
 
         {/* Badge */}
         <div className="mb-6 px-4 py-1.5 bg-white/5 border border-white/10 rounded-full">
-          <span className="text-white/50 text-[10px] font-black uppercase tracking-[0.25em]">{current.badge}</span>
+          <span className="text-white/50 text-xs font-black uppercase tracking-[0.25em]">{current.badge}</span>
         </div>
 
         {/* Title */}

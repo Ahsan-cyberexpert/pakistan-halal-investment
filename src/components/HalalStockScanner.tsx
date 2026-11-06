@@ -86,9 +86,9 @@ export default function HalalStockScanner({ balance, onBuy }: { balance: number;
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5 sm:gap-2">
           <div className={`w-2 h-2 rounded-full ${isLive ? 'bg-emerald-500 animate-pulse' : 'bg-amber-400'}`} />
-          <span className="text-[10px] sm:text-xs font-bold text-slate-400">{isLive ? `Market feed · ${lastUpdated}` : `Simulated demo prices · ${lastUpdated}`}</span>
+          <span className="text-xs font-bold text-slate-400">{isLive ? `Market feed · ${lastUpdated}` : `Simulated demo prices · ${lastUpdated}`}</span>
         </div>
-        <button onClick={fetchStocks} className="text-[10px] sm:text-xs text-emerald-600 font-bold hover:underline">↻ Refresh</button>
+        <button onClick={fetchStocks} className="text-xs text-emerald-600 font-bold hover:underline">↻ Refresh</button>
       </div>
 
       {/* Search */}
@@ -104,7 +104,7 @@ export default function HalalStockScanner({ balance, onBuy }: { balance: number;
         />
       </div>
 
-      {error && <p className="text-amber-600 text-[10px] sm:text-[11px] font-medium bg-amber-50 px-3 py-1.5 rounded-xl">{error}</p>}
+      {error && <p className="text-amber-600 text-xs font-medium bg-amber-50 px-3 py-1.5 rounded-xl">{error}</p>}
 
       {/* Stock List — Contained in a streamlined scrollable box */}
       <div className="space-y-1.5 max-h-[300px] sm:max-h-[360px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-slate-200">
@@ -119,17 +119,17 @@ export default function HalalStockScanner({ balance, onBuy }: { balance: number;
               }`}
             >
               <div className="flex items-center gap-2 sm:gap-2.5 text-left">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-100 flex items-center justify-center font-black text-[11px] text-slate-700 flex-shrink-0">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-100 flex items-center justify-center font-black text-xs text-slate-700 flex-shrink-0">
                   {stock.symbol.slice(0,3)}
                 </div>
                 <div>
                   <div className="font-black text-slate-800 text-xs tracking-tight">{stock.symbol}</div>
-                  <div className="text-[9px] sm:text-[10px] text-slate-400 truncate max-w-[130px] sm:max-w-none">{stock.name} · {stock.sector}</div>
+                  <div className="text-xs text-slate-400 truncate max-w-[130px] sm:max-w-none">{stock.name} · {stock.sector}</div>
                 </div>
               </div>
               <div className="text-right flex-shrink-0">
                 <div className="font-black text-slate-800 text-xs">₨{stock.price.toLocaleString()}</div>
-                <div className={`text-[9px] sm:text-[10px] font-bold ${stock.changePercent >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+                <div className={`text-xs font-bold ${stock.changePercent >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
                   {stock.changePercent >= 0 ? '▲' : '▼'} {Math.abs(stock.changePercent).toFixed(2)}%
                 </div>
               </div>
@@ -159,7 +159,7 @@ export default function HalalStockScanner({ balance, onBuy }: { balance: number;
                     />
                   </div>
                   {buyAmount && parseFloat(buyAmount) > 0 && (
-                    <p className="text-[9px] sm:text-[10px] text-slate-400 mt-1 pl-1 font-medium">
+                    <p className="text-xs text-slate-400 mt-1 pl-1 font-medium">
                       ≈ {(parseFloat(buyAmount) / stock.price).toFixed(2)} shares
                     </p>
                   )}
@@ -174,7 +174,7 @@ export default function HalalStockScanner({ balance, onBuy }: { balance: number;
                     {buying ? 'Simulating...' : 'Simulate purchase'}
                   </button>
                 </div>
-                <p className="text-center text-[9px] sm:text-[10px] text-amber-700 font-bold tracking-widest uppercase">Demo action · virtual holdings only</p>
+                <p className="text-center text-xs text-amber-700 font-bold tracking-widest uppercase">Demo action · virtual holdings only</p>
               </div>
             )}
           </div>
