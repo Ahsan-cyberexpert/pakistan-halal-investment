@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import {
   DepositFlow,
   WithdrawFlow,
-  BalanceCard,
   HalalStockScanner,
   PortfolioDashboard,
   FinancialHealthScore,
@@ -37,7 +36,94 @@ import { getStockBySymbol } from '@/lib/halal-stock-data';
 import { ZAKAT_NISAB_PKR, WALI_INVESTED_THRESHOLD, WALI_PROFIT_THRESHOLD } from '@/lib/constants';
 import { createDemoReference, demoStorage } from '@/lib/demo-storage';
 
+// ─── Nav items ────────────────────────────────────────────────────────────────
+const NAV_ITEMS = [
+  {
+    id: 'home',
+    labelEn: 'Dashboard',
+    labelUr: 'ڈیش بورڈ',
+    sub: 'Overview & Activity',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
+        <rect x="11" y="1" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
+        <rect x="1" y="11" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
+        <rect x="11" y="11" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
+      </svg>
+    ),
+  },
+  {
+    id: 'portfolio',
+    labelEn: 'Stocks',
+    labelUr: 'اسٹاکس',
+    sub: 'PSX Screened',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <polyline points="1,13 5,8 8,11 12,5 17,8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    ),
+  },
+  {
+    id: 'assets',
+    labelEn: 'Sukuk',
+    labelUr: 'سکوک',
+    sub: 'Sukuk, Hajj, Agri',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <rect x="1" y="8" width="16" height="9" rx="1" stroke="currentColor" strokeWidth="1.5"/>
+        <path d="M1 8l8-6 8 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M6 8v9M9 8v9M12 8v9" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+      </svg>
+    ),
+  },
+  {
+    id: 'kameti',
+    labelEn: 'Family',
+    labelUr: 'خاندان',
+    sub: 'Health & Kameti',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <circle cx="6" cy="6" r="3" stroke="currentColor" strokeWidth="1.5"/>
+        <circle cx="12" cy="6" r="3" stroke="currentColor" strokeWidth="1.5"/>
+        <path d="M1 17c0-3.314 2.239-6 5-6M12 11c2.761 0 5 2.686 5 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+      </svg>
+    ),
+  },
+  {
+    id: 'zakat',
+    labelEn: 'Zakat',
+    labelUr: 'زکوٰۃ',
+    sub: 'Social Finance',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M9 1l2.09 5.26L17 7.27l-4 3.9.94 5.5L9 14l-4.94 2.67L5 11.17 1 7.27l5.91-1.01L9 1z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    ),
+  },
+  {
+    id: 'settings',
+    labelEn: 'Settings',
+    labelUr: 'سیٹنگز',
+    sub: 'Preferences & PIN',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <circle cx="9" cy="9" r="2.5" stroke="currentColor" strokeWidth="1.5"/>
+        <path d="M9 1v2M9 15v2M1 9h2M15 9h2M3.22 3.22l1.42 1.42M13.36 13.36l1.42 1.42M3.22 14.78l1.42-1.42M13.36 4.64l1.42-1.42" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+      </svg>
+    ),
+  },
+];
 
+// ─── Stocks data ───────────────────────────────────────────────────────────────
+const DEMO_STOCKS = [
+  { name: 'Meezan Bank', price: 145.0, change: '+1.47%', debt: '0.0%', impure: '0.0%', compliant: true },
+  { name: 'Systems Limited', price: 415.0, change: '+1.10%', debt: '4.5%', impure: '0.8%', compliant: true },
+  { name: 'Lucky Cement', price: 411.5, change: '-1.50%', debt: '18.5%', impure: '2.1%', compliant: true },
+  { name: 'Habib Bank', price: 92.1, change: '-1.60%', debt: '45.0%', impure: '28.5%', compliant: false },
+  { name: 'Engro Corp', price: 312.8, change: '+1.00%', debt: '22.4%', impure: '4.2%', compliant: true },
+];
+
+// ─── Main Dashboard ────────────────────────────────────────────────────────────
 export default function Dashboard() {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -50,8 +136,7 @@ export default function Dashboard() {
   const [lang, setLangState] = useState<SupportedLanguage>('en');
   const [showLangSelect, setShowLangSelect] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
-
+  const [darkMode, setDarkMode] = useState(true); // default dark
   const [showTradingPin, setShowTradingPin] = useState(false);
   const [pendingTrade, setPendingTrade] = useState<any>(null);
   const [isScanning, setIsScanning] = useState(false);
@@ -59,22 +144,26 @@ export default function Dashboard() {
   const [showResetModal, setShowResetModal] = useState(false);
   const [selectedReceipt, setSelectedReceipt] = useState<Transaction | null>(null);
   const [selectedSellHolding, setSelectedSellHolding] = useState<Holding | null>(null);
+  const [stockFilter, setStockFilter] = useState<'all' | 'halal' | 'excluded'>('all');
+  const [stockSearch, setStockSearch] = useState('');
 
   const t = (en: string, ur: string) => lang === 'ur' ? ur : en;
 
   const toggleDark = (val: boolean) => {
-    setDarkMode(val); localStorage.setItem('roziq_dark', val ? '1' : '0');
+    setDarkMode(val);
+    localStorage.setItem('roziq_dark', val ? '1' : '0');
     if (val) document.documentElement.classList.add('dark');
     else document.documentElement.classList.remove('dark');
   };
 
   useEffect(() => {
+    document.documentElement.classList.add('dark');
     const savedLang = localStorage.getItem('roziq_lang') as 'en' | 'ur';
     const hasOnboarded = localStorage.getItem('roziq_onboarded');
     const savedDark = localStorage.getItem('roziq_dark');
     if (!savedLang) setShowLangSelect(true);
     else { setLangState(savedLang); if (!hasOnboarded) setShowOnboarding(true); }
-    if (savedDark === '1') { setDarkMode(true); document.documentElement.classList.add('dark'); }
+    if (savedDark === '0') { setDarkMode(false); document.documentElement.classList.remove('dark'); }
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       if (params.get('mode') === 'demo' || params.get('demo') === '1') {
@@ -89,16 +178,15 @@ export default function Dashboard() {
         handleAuthSuccess(demoUser);
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (!modal && !showResetModal && !selectedReceipt && !selectedSellHolding) return;
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        setModal(null);
-        setShowResetModal(false);
-        setSelectedReceipt(null);
-        setSelectedSellHolding(null);
+        setModal(null); setShowResetModal(false);
+        setSelectedReceipt(null); setSelectedSellHolding(null);
       }
     };
     window.addEventListener('keydown', handleEscape);
@@ -112,7 +200,6 @@ export default function Dashboard() {
     const h = localStorage.getItem(`roziq_holdings_${cnicKey}`);
     const txs = localStorage.getItem(`roziq_tx_${cnicKey}`);
     const zk = localStorage.getItem(`roziq_zakat_${cnicKey}`);
-
     if (b) setBalance(parseFloat(b));
     else { setBalance(5000000); localStorage.setItem(`roziq_balance_${cnicKey}`, '5000000'); }
     if (h) setHoldings(JSON.parse(h));
@@ -139,11 +226,12 @@ export default function Dashboard() {
   const totalPortfolioValue = holdings.reduce((sum, h) => sum + h.invested + h.pnl, 0);
   const dailyPnl = holdings.reduce((sum, h) => sum + h.pnl, 0);
   const isZakatEligible = (balance + totalPortfolioValue) >= ZAKAT_NISAB_PKR;
-
+  const totalWealth = balance + totalPortfolioValue;
+  const zakatDue = isZakatEligible ? Math.round(totalWealth * 0.025) : 0;
   const totalInvestedHistory = holdings.reduce((sum, h) => sum + h.invested, 0);
-  const totalRealizedProfit = transactions.reduce((sum, t) => sum + (t.profit || 0), 0);
+  const totalRealizedProfit = transactions.reduce((sum, tx) => sum + (tx.profit || 0), 0);
   const isPremium = totalInvestedHistory >= WALI_INVESTED_THRESHOLD && totalRealizedProfit >= WALI_PROFIT_THRESHOLD;
-  const pendingDemoAmount = transactions.filter((tx) => tx.status === 'PENDING').reduce((sum, tx) => sum + (tx.amount || 0), 0);
+  const pendingDemoAmount = transactions.filter(tx => tx.status === 'PENDING').reduce((sum, tx) => sum + (tx.amount || 0), 0);
 
   const handleTransactionSuccess = async (data: any) => {
     if (['buy_stock', 'sell_stock', 'buy_sukuk', 'zakat', 'withdraw', 'health_save', 'overseas_invest'].includes(data.type)) {
@@ -155,23 +243,14 @@ export default function Dashboard() {
   const processTransaction = async (data: any) => {
     let newBal = balance; let newHoldings = [...holdings]; let newTxs = [...transactions]; let newZk = [...zakatHistory];
     const txRecord: Transaction = {
-      id: Date.now(),
-      type: data.type,
-      amount: data.amount,
-      symbol: data.symbol || data.name || data.type,
-      name: data.name,
-      status: 'SUCCESS',
-      date: new Date().toISOString(),
+      id: Date.now(), type: data.type, amount: data.amount,
+      symbol: data.symbol || data.name || data.type, name: data.name,
+      status: 'SUCCESS', date: new Date().toISOString(),
       reference: data.txRef || createDemoReference(data.type),
       note: data.note || 'Simulated demo transaction. No real funds moved.',
-      method: data.method,
-      units: data.units,
-      recipient: data.recipient,
-      isDemo: true,
-      receiptVersion: 1,
-      balanceBefore: balance,
+      method: data.method, units: data.units, recipient: data.recipient,
+      isDemo: true, receiptVersion: 1, balanceBefore: balance,
     };
-
     if (data.type === 'deposit') { newBal += data.amount; newTxs.unshift(txRecord); }
     else if (data.type === 'withdraw') { newBal -= data.amount; newTxs.unshift(txRecord); }
     else if (data.type === 'buy_stock') {
@@ -190,44 +269,28 @@ export default function Dashboard() {
         existing.units = remainingUnits;
         if (remainingUnits === 0) newHoldings = newHoldings.filter(h => h.symbol !== data.symbol);
       }
-      newBal += data.amount;
-      txRecord.profit = data.realizedPnl;
-      newTxs.unshift(txRecord);
+      newBal += data.amount; txRecord.profit = data.realizedPnl; newTxs.unshift(txRecord);
     }
     else if (['buy_sukuk', 'health_save', 'overseas_invest'].includes(data.type)) { newBal -= data.amount; newTxs.unshift(txRecord); }
     else if (data.type === 'zakat') { newBal -= data.amount; newZk.unshift({ date: new Date().toISOString(), amount: data.amount, recipient: data.recipient }); newTxs.unshift(txRecord); }
-
     txRecord.balanceAfter = newBal;
-
     setBalance(newBal); setHoldings(newHoldings); setTransactions(newTxs); setZakatHistory(newZk);
     persistUserData(newBal, newHoldings, newTxs, newZk);
     setModal(null); setIsScanning(false); setPendingTx(null);
   };
 
   const onScanComplete = () => { if (pendingTx) processTransaction(pendingTx); };
-
-  const handleSellRequest = (data: any) => {
-    setSelectedSellHolding(null);
-    setPendingTrade(data);
-    setShowTradingPin(true);
-  };
-
+  const handleSellRequest = (data: any) => { setSelectedSellHolding(null); setPendingTrade(data); setShowTradingPin(true); };
   const initiateBuyStock = (symbol: string, amount: number) => {
     const stock = getStockBySymbol(symbol); if (!stock) return;
     setPendingTrade({ type: 'buy_stock', amount, symbol: stock.symbol, name: stock.name, units: amount / stock.price });
     setShowTradingPin(true);
   };
-
-  const initiateSecureTransaction = (data: any) => {
-    setPendingTrade(data);
-    setShowTradingPin(true);
-  };
-
+  const initiateSecureTransaction = (data: any) => { setPendingTrade(data); setShowTradingPin(true); };
   const handleTradingPinSuccess = () => {
     setShowTradingPin(false);
     if (pendingTrade) { handleTransactionSuccess(pendingTrade); setPendingTrade(null); }
   };
-
   const handleBuySukuk = (purchase: any) => initiateSecureTransaction(purchase);
   const handleZakatDonation = (amount: number, recipient: string) => initiateSecureTransaction({ type: 'zakat', amount, recipient, symbol: 'ZAKAT' });
   const handleHealthSave = (amount: number) => initiateSecureTransaction({ type: 'health_save', amount, symbol: 'HEALTH' });
@@ -235,18 +298,17 @@ export default function Dashboard() {
   const handleHajjDeposit = (amount: number) => initiateSecureTransaction({ type: 'buy_sukuk', amount, symbol: 'HAJJ' });
   const handleETFInvest = (amount: number, etf: string) => initiateSecureTransaction({ type: 'buy_sukuk', amount, symbol: etf });
   const handleKametiContribute = (amount: number) => initiateSecureTransaction({ type: 'buy_sukuk', amount, symbol: 'KAMETI' });
-
   const executeReset = () => {
-    demoStorage.clear();
-    setCurrentUser(null);
-    setIsAuthorized(false);
-    setBalance(5000000);
-    setHoldings([]);
-    setTransactions([]);
-    setZakatHistory([]);
-    setShowResetModal(false);
-    window.location.href = '/dashboard';
+    demoStorage.clear(); setCurrentUser(null); setIsAuthorized(false);
+    setBalance(5000000); setHoldings([]); setTransactions([]); setZakatHistory([]);
+    setShowResetModal(false); window.location.href = '/dashboard';
   };
+
+  const filteredStocks = DEMO_STOCKS.filter(s => {
+    const matchFilter = stockFilter === 'all' ? true : stockFilter === 'halal' ? s.compliant : !s.compliant;
+    const matchSearch = s.name.toLowerCase().includes(stockSearch.toLowerCase());
+    return matchFilter && matchSearch;
+  });
 
   return (
     <>
@@ -255,390 +317,465 @@ export default function Dashboard() {
       {showOnboarding && !showLangSelect && <Onboarding lang={lang} onComplete={() => { setShowOnboarding(false); localStorage.setItem('roziq_onboarded', '1'); }} />}
       {!isAuthorized && !showLangSelect && !showOnboarding && <AuthGate onSuccess={handleAuthSuccess} />}
       {showTradingPin && <PinSecurity mode="trading" onSuccess={handleTradingPinSuccess} onCancel={() => { setShowTradingPin(false); setPendingTrade(null); }} />}
-      
-      {/* Custom Reset Confirmation Modal */}
+
+      {/* Reset Modal */}
       {showResetModal && (
-        <div className="fixed inset-0 z-[5000] bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200" dir={lang === 'ur' ? 'rtl' : 'ltr'}>
-          <div className="bg-white rounded-3xl p-6 max-w-sm w-full text-center shadow-2xl border border-slate-100 space-y-4 animate-in zoom-in-95 duration-200">
-            <div className="w-16 h-16 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center text-3xl mx-auto shadow-inner border border-red-200">🗑️</div>
-            <h3 className="text-lg font-black text-slate-800 tracking-tight">{t('Reset All Demo Data?', 'کیا آپ واقعی تمام فرضی ڈیٹا ری سیٹ کرنا چاہتے ہیں؟')}</h3>
-            <p className="text-xs text-slate-500 leading-relaxed font-medium">
-              {t('This will permanently delete your CNIC account, virtual cash balance, and mock transaction history. You will be redirected to the onboarding screen.', 'اس سے آپ کا CNIC اکاؤنٹ، ورچوئل کیش بیلنس اور فرضی ٹرانزیکشن ہسٹری مکمل طور پر ڈیلیٹ ہو جائے گی۔ آپ کو دوبارہ لاگ ان کرنا ہوگا۔')}
-            </p>
+        <div className="fixed inset-0 z-[5000] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)' }}>
+          <div className="w-full max-w-sm rounded-2xl border border-white/10 p-6 text-center space-y-4" style={{ background: '#1a1a1a' }}>
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-red-500/15 text-2xl">🗑️</div>
+            <h3 className="text-base font-bold text-white">{t('Reset All Demo Data?', 'کیا آپ تمام فرضی ڈیٹا ری سیٹ کرنا چاہتے ہیں؟')}</h3>
+            <p className="text-sm text-slate-400">{t('This will delete your virtual balance and transaction history.', 'یہ آپ کا ورچوئل بیلنس اور ٹرانزیکشن ہسٹری ڈیلیٹ کر دے گا۔')}</p>
             <div className="flex gap-3 pt-2">
-              <button 
-                onClick={() => setShowResetModal(false)} 
-                className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition-all active:scale-95 shadow-sm"
-              >
-                {t('Cancel', 'کینسل')}
-              </button>
-              <button 
-                onClick={executeReset} 
-                className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white font-black rounded-xl text-xs shadow-md transition-all active:scale-95"
-              >
-                {t('Yes, Delete All', 'ہاں، ڈیلیٹ کریں')}
-              </button>
+              <button onClick={() => setShowResetModal(false)} className="flex-1 rounded-xl border border-white/10 py-3 text-sm font-semibold text-white hover:bg-white/5 transition-colors">{t('Cancel', 'کینسل')}</button>
+              <button onClick={executeReset} className="flex-1 rounded-xl bg-red-600 py-3 text-sm font-semibold text-white hover:bg-red-500 transition-colors">{t('Delete All', 'ڈیلیٹ کریں')}</button>
             </div>
           </div>
         </div>
       )}
 
       {selectedReceipt && <DemoReceipt transaction={selectedReceipt} onClose={() => setSelectedReceipt(null)} lang={lang} />}
-
-      {/* Master AI Agent (Voice + Write + Linked Accounts) */}
       <RoziqAI balance={balance} holdings={holdings} transactions={transactions} lang={lang} />
 
-      <div className="min-h-screen mobile-content-safe text-slate-900 selection:bg-emerald-100 selection:text-emerald-900 overflow-x-hidden" style={{ background: 'var(--bg-primary)' }} dir={lang === 'ur' ? 'rtl' : 'ltr'}>
-        {/* Top Header */}
-        <header className="app-header-safe sticky top-0 z-50 backdrop-blur-xl border-b py-2.5 sm:py-3 shadow-sm" style={{ background: 'var(--bg-primary)', borderColor: 'var(--border-color)' }}>
-          <div className="max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl sm:rounded-2xl flex items-center justify-center text-base sm:text-lg shadow-md shadow-emerald-900/20 flex-shrink-0">🇵🇰</div>
-            <div>
-              <div className="flex items-center gap-1.5 sm:gap-2">
-                <h1 className="text-sm sm:text-base font-black tracking-tighter" style={{ color: 'var(--text-primary)' }}>ROZIQ</h1>
-                <div className="flex items-center gap-1 bg-amber-50 border border-amber-200 rounded-lg px-1.5 sm:px-2 py-0.5" role="status">
-                  <div className="w-1.5 h-1.5 bg-amber-500 rounded-full" />
-                  <span className="text-xs font-black text-amber-700 uppercase tracking-wider">Demo</span>
-                </div>
-              </div>
-              <p className="text-xs font-black text-emerald-600 uppercase tracking-wider truncate max-w-[120px] sm:max-w-none">
-                {currentUser ? currentUser.name : t('Wealth OS', 'ویلتھ او ایس')}
-              </p>
+      {/* ── Main Shell ── */}
+      <div
+        className="min-h-screen flex"
+        style={{ background: '#0d0d0d', color: '#fff' }}
+        dir={lang === 'ur' ? 'rtl' : 'ltr'}
+      >
+        {/* ── Sidebar ── */}
+        <aside className="hidden lg:flex flex-col w-56 flex-shrink-0 border-r border-white/8 sticky top-0 h-screen overflow-y-auto" style={{ background: '#111' }}>
+          {/* Logo */}
+          <div className="flex items-center gap-2.5 px-5 py-5 border-b border-white/5">
+            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500">
+              <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                <path d="M7 1.5C4 1.5 1.5 4 1.5 7S4 12.5 7 12.5 12.5 10 12.5 7 10 1.5 7 1.5z" stroke="#000" strokeWidth="1.4"/>
+                <circle cx="7" cy="7" r="2" fill="#000"/>
+              </svg>
             </div>
-            {/* Desktop tab name breadcrumb */}
-            <div className="hidden lg:flex items-center gap-1.5 ml-2" style={{ color: 'var(--text-muted)' }}>
-              <span className="text-xs">/</span>
-              <span className="text-xs font-black uppercase tracking-widest capitalize" style={{ color: 'var(--text-secondary)' }}>
-                {activeTab === 'home' ? 'Dashboard' : activeTab === 'portfolio' ? 'Halal Stocks' : activeTab === 'assets' ? 'Sovereign Assets' : activeTab === 'kameti' ? 'Family & Takaful' : activeTab === 'zakat' ? 'Zakat & Impact' : 'Settings'}
-              </span>
-            </div>
+            <span className="font-bold text-sm text-white">Roziq</span>
           </div>
 
-              <div className="flex items-center gap-1.5 sm:gap-2">
-            {currentUser?.isOverseas && (
-              <span className="px-2 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-xs font-black uppercase tracking-wider inline-flex items-center gap-1">
-                <span>🌍</span> <span className="hidden sm:inline">{currentUser.country || 'Overseas'}</span>
-              </span>
-            )}
-
-            {isPremium && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-amber-400 to-yellow-500 text-amber-900 rounded-xl text-xs font-black uppercase tracking-wider shadow-sm">
-                <span>⭐</span> <span className="hidden sm:inline">Elite</span>
-              </span>
-            )}
-
-            {/* Reset Demo Data */}
-            <button
-              onClick={() => setShowResetModal(true)}
-              title={t('Delete Account & Reset Demo Data', 'اکاؤنٹ ڈیلیٹ کریں اور ڈیٹا ری سیٹ کریں')}
-              aria-label={t('Reset demo account', 'ڈیمو اکاؤنٹ ری سیٹ کریں')}
-              className="touch-target px-2.5 py-1.5 sm:px-3 sm:py-2 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white border border-red-200 hover:border-red-500 rounded-xl text-xs font-black transition-all active:scale-95 flex items-center gap-1 shadow-sm"
-            >
-              <span>🗑️</span> <span className="hidden sm:inline">{t('Reset Demo', 'ری سیٹ')}</span>
-            </button>
-
-            <button aria-label={t('Notifications', 'اطلاعات')} className="touch-target rounded-xl border border-slate-200 hover:bg-slate-50 transition-all active:scale-90 text-xs sm:text-sm shadow-sm" style={{ background: 'var(--bg-card)' }}>
-              🔔
-            </button>
-
-            <button
-              onClick={() => setActiveTab('settings')}
-              title={t('Settings', 'سیٹنگز')}
-              aria-label={t('Open settings', 'سیٹنگز کھولیں')}
-              className={`touch-target rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 border-2 shadow-md transition-all active:scale-90 ${activeTab === 'settings' ? 'border-emerald-400 scale-105 shadow-emerald-500/30' : 'border-white'}`}
-            >
-              <div className="w-full h-full rounded-xl border border-black/10 flex items-center justify-center text-white text-xs font-black">
-                {currentUser ? currentUser.name.charAt(0).toUpperCase() : '⚙'}
-              </div>
-            </button>
-              </div>
-            </div>
-            <div className="pt-2">
-              <DemoModeBanner lang={lang} />
-            </div>
-          </div>
-        </header>
-        {/* Widescreen Responsive Layout Grid (max-w-7xl) */}
-        <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3.5 sm:py-6 animate-in fade-in duration-500">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8 items-start">
-            
-            {/* Left Column: Wallet Overview & Navigation */}
-            <div className="lg:col-span-4 space-y-4 sm:space-y-6 lg:sticky lg:top-36 z-10">
-              <BalanceCard balance={balance} portfolioValue={totalPortfolioValue} onDeposit={() => setModal('deposit')} onWithdraw={() => setModal('withdraw')} />
-              
-              {isPremium && (
-                <div className="hidden lg:block">
-                  <WaliAutopilot lang={lang} />
-                </div>
-              )}
-
-              {/* Desktop Sidebar Navigation */}
-              <div className="hidden lg:block rounded-3xl p-4 border shadow-sm space-y-1" style={{ background: 'var(--bg-card)', borderColor: 'var(--border-color)' }}>
-                <p className="text-xs font-black uppercase tracking-widest px-3 mb-3" style={{ color: 'var(--text-muted)' }}>
-                  {t('Navigation', 'نیویگیشن')}
-                </p>
-                {[
-                  { id: 'home', icon: '🏠', labelEn: 'Dashboard', labelUr: 'ڈیش بورڈ', sub: t('Overview & Activity', 'جائزہ') },
-                  { id: 'portfolio', icon: '📈', labelEn: 'Halal Stocks', labelUr: 'حلال اسٹاکس', sub: t('PSX Screened', 'PSX اسکریند') },
-                  { id: 'assets', icon: '🏛️', labelEn: 'Sovereign Assets', labelUr: 'خود مختار اثاثے', sub: t('Sukuk, Hajj, Agri', 'سکوک، حج') },
-                  { id: 'kameti', icon: '🤝', labelEn: 'Family & Takaful', labelUr: 'فیملی ہیلتھ تکافل', sub: t('Health & Kameti', 'صحت') },
-                  { id: 'zakat', icon: '🕋', labelEn: 'Zakat & Impact', labelUr: 'زکوٰۃ اور اثر', sub: t('Social Finance', 'سماجی مالیات') },
-                  { id: 'settings', icon: '⚙️', labelEn: 'Settings & Security', labelUr: 'سیٹنگز اور سیکیورٹی', sub: t('Preferences & PIN', 'ترجیحات اور پن') },
-                ].map((tab) => (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id as any)}
-                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-2xl text-left transition-all duration-200 group/nav ${
-                      activeTab === tab.id
-                        ? 'bg-emerald-600 text-white shadow-md shadow-emerald-900/20'
-                        : 'hover:bg-emerald-50'
-                    }`}
-                  >
-                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-base flex-shrink-0 transition-all ${
-                      activeTab === tab.id ? 'bg-white/20' : 'bg-slate-100 group-hover/nav:bg-emerald-100'
-                    }`}>
-                      {tab.icon}
-                    </div>
-                    <div className="min-w-0">
-                      <div className={`text-xs font-black tracking-tight ${activeTab === tab.id ? 'text-white' : ''}`} style={activeTab !== tab.id ? { color: 'var(--text-primary)' } : {}}>
-                        {lang === 'ur' ? tab.labelUr : tab.labelEn}
-                      </div>
-                      <div className={`text-xs font-medium truncate ${activeTab === tab.id ? 'text-emerald-100' : ''}`} style={activeTab !== tab.id ? { color: 'var(--text-muted)' } : {}}>
-                        {tab.sub}
-                      </div>
-                    </div>
-                    {activeTab === tab.id && <span className="ml-auto text-white/60 text-xs">→</span>}
-                  </button>
-                ))}
-
-                {/* Zakat Eligibility Indicator */}
-                {isZakatEligible && (
-                  <div className="mx-1 mt-2 p-3 bg-amber-50 border border-amber-200 rounded-2xl">
-                    <div className="flex items-center gap-2">
-                      <span className="text-base">🕋</span>
-                      <div>
-                        <div className="text-xs font-black text-amber-800">{t('Zakat Due', 'زکوٰۃ واجب')}</div>
-                        <div className="text-xs text-amber-600 font-medium">{t('You are Nisab eligible', 'آپ نصاب کی شرط پوری کرتے ہیں')}</div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                <div className="pt-3 mt-2 border-t px-1" style={{ borderColor: 'var(--border-color)' }}>
-                  <button 
-                    onClick={() => setShowResetModal(true)}
-                    className="w-full py-2.5 px-3 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white border border-red-200 hover:border-red-500 rounded-xl text-xs font-black transition-all active:scale-95 flex items-center justify-center gap-1.5 shadow-sm"
-                  >
-                    <span>🗑️</span> {t('Delete Account & Demo Data', 'اکاؤنٹ اور فرضی ڈیٹا ڈیلیٹ کریں')}
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: Dynamic Tab Panels */}
-            <div className="lg:col-span-8 space-y-4 sm:space-y-6">
-              {/* HOME TAB */}
-              {activeTab === 'home' && (
-                <div className="space-y-4 sm:space-y-6 pb-32 lg:pb-12">
-                  <div className="block lg:hidden">
-                    {isPremium && <WaliAutopilot lang={lang} />}
-                  </div>
-
-                  <DemoWealthSummary cash={balance} invested={totalPortfolioValue} pending={pendingDemoAmount} zakatDue={isZakatEligible} lang={lang} />
-
-                  <section className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 sm:p-5" aria-labelledby="next-demo-action-title" dir={lang === 'ur' ? 'rtl' : 'ltr'}>
-                    <div className="flex items-start gap-3">
-                      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-emerald-600 text-white" aria-hidden="true">→</div>
-                      <div className="min-w-0">
-                        <p className="text-xs font-black uppercase tracking-widest text-emerald-700">{t('Next demo action', 'اگلا ڈیمو ایکشن')}</p>
-                        <h2 id="next-demo-action-title" className="mt-1 text-base font-black text-emerald-950">
-                          {holdings.length === 0 ? t('Explore a halal stock before reviewing your portfolio.', 'پورٹ فولیو دیکھنے سے پہلے حلال اسٹاک دیکھیں۔') : t('Review your simulated portfolio and recent activity.', 'اپنا فرضی پورٹ فولیو اور حالیہ سرگرمی دیکھیں۔')}
-                        </h2>
-                        <p className="mt-1 text-xs font-medium leading-relaxed text-emerald-800">{t('Every action is reversible demo data and does not move real money.', 'ہر ایکشن فرضی ہے اور حقیقی رقم منتقل نہیں کرتا۔')}</p>
-                      </div>
-                    </div>
-                  </section>
-
-                  <PortfolioChart balance={balance} holdings={holdings} totalValue={totalPortfolioValue} />
-
-                  <section className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-slate-200 shadow-sm">
-                    <div className="flex justify-between items-center mb-3 sm:mb-4">
-                      <h2 className="text-sm sm:text-base font-black text-slate-800 tracking-tight">{t('Recent Activity', 'حالیہ سرگرمی')}</h2>
-                      <button className="text-xs font-bold text-emerald-600 hover:underline">{t('View All', 'سب دیکھیں')}</button>
-                    </div>
-                    <div className="space-y-2">
-                      {transactions.length === 0 ? (
-                        <div className="p-6 text-center bg-slate-50 rounded-2xl border border-slate-100">
-                          <p className="text-slate-400 text-xs font-medium">{t('No activity recorded yet.', 'ابھی تک کوئی سرگرمی ریکارڈ نہیں ہوئی۔')}</p>
-                        </div>
-                      ) : (
-                        transactions.slice(0, 5).map((tx) => (
-                          <div key={tx.id} className="group flex justify-between items-center gap-3 p-3 sm:p-3.5 bg-slate-50/50 rounded-2xl border border-slate-100 hover:border-emerald-100 hover:bg-white hover:shadow-md transition-all duration-200">
-                            <div className="flex items-center gap-3">
-                              <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-sm sm:text-base shadow-sm ${tx.type === 'deposit' ? 'bg-emerald-50 text-emerald-600' : tx.type === 'withdraw' ? 'bg-slate-50 text-slate-600' : tx.type === 'zakat_vault' ? 'bg-amber-50 text-amber-600' : 'bg-blue-50 text-blue-600'}`}>
-                                {tx.type === 'deposit' ? '➕' : tx.type === 'withdraw' ? '➖' : tx.type === 'zakat_vault' ? '🏛️' : '📈'}
-                              </div>
-                              <div>
-                                <div className="font-black text-slate-800 text-xs tracking-tight">
-                                  {tx.type === 'deposit' ? t('Deposit', 'ڈیپازٹ') : tx.type === 'withdraw' ? t('نکالنا', 'نکالنا') : tx.type === 'zakat_vault' ? t('National Vault', 'قومی والٹ') : tx.symbol}
-                                </div>
-                                <div className="text-xs font-bold text-slate-400 uppercase mt-0.5">
-                                  {new Date(tx.date).toLocaleDateString(lang === 'ur' ? 'ur-PK' : 'en-US', { day: 'numeric', month: 'short' })}
-                                </div>
-                                <div className="text-xs font-bold text-amber-600 mt-0.5">
-                                  {tx.status === 'PENDING' ? t('Pending demo', 'زیر التوا ڈیمو') : t('Simulated demo', 'فرضی ڈیمو')} {tx.reference ? `· ${tx.reference}` : ''}
-                                </div>
-                              </div>
-                            </div>
-                            <div className="text-right shrink-0">
-                              <div className={`font-black text-xs ${tx.type === 'deposit' ? 'text-emerald-600' : 'text-slate-800'}`}>
-                                {tx.type === 'deposit' ? '+' : '-'} {tx.amount.toLocaleString()}
-                              </div>
-                              <button onClick={() => setSelectedReceipt(tx)} className="touch-target mt-1 min-h-0 h-7 px-2 rounded-lg text-xs font-black text-emerald-700 hover:bg-emerald-50" aria-label={t('View demo receipt', 'ڈیمو رسید دیکھیں')}>
-                                {t('Receipt', 'رسید')} ↗
-                              </button>
-                            </div>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  </section>
-                </div>
-              )}
-
-              {/* ASSETS TAB */}
-              {activeTab === 'assets' && (
-                <div className="space-y-4 sm:space-y-6 pb-32 lg:pb-12 animate-in fade-in duration-300">
-                  <div className="mb-1">
-                    <h2 className="text-xl sm:text-2xl font-black text-slate-800 tracking-tight">{t('Sovereign Assets', 'خود مختار اثاثے')}</h2>
-                    <p className="text-slate-500 text-xs mt-0.5">{t('Invest in land, Hajj, Sukuks, and Overseas funds.', 'زمین، حج، سکوک، اور اوورسیز فنڈز میں سرمایہ کاری کریں۔')}</p>
-                  </div>
-                  {currentUser?.isOverseas && (
-                    <OverseasInvest balance={balance} onInvest={handleOverseasInvest} lang={lang} cnic={currentUser.cnic} country={currentUser.country} />
-                  )}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-stretch">
-                    <HajjVault onDeposit={handleHajjDeposit} />
-                    <AgriFinancing balance={balance} onInvest={(amount) => initiateSecureTransaction({ type: 'buy_sukuk', amount, symbol: 'AGRI' })} />
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-stretch">
-                    <FractionalSukuk balance={balance} onBuy={handleBuySukuk} />
-                    <GlobalHalalETFs onInvest={handleETFInvest} />
-                  </div>
-                </div>
-              )}
-
-              {/* PORTFOLIO TAB */}
-              {activeTab === 'portfolio' && (
-                <div className="space-y-4 sm:space-y-6 pb-32 lg:pb-12 animate-in fade-in duration-300">
-                  <div className="mb-1">
-                    <h2 className="text-xl sm:text-2xl font-black text-slate-800 tracking-tight">{t('My Portfolio', 'میرا پورٹ فولیو')}</h2>
-                    <p className="text-slate-500 text-xs mt-0.5">{t('Simulated demo tracking of your virtual halal wealth.', 'آپ کی مجازی حلال دولت کی ڈیمو ٹریکنگ۔')}</p>
-                  </div>
-                  <PortfolioDashboard holdings={holdings} totalValue={totalPortfolioValue} dailyPnl={dailyPnl} onSell={setSelectedSellHolding} />
-                  <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 items-start">
-                    <div className="md:col-span-7">
-                      <PortfolioChart balance={balance} holdings={holdings} totalValue={totalPortfolioValue} />
-                    </div>
-                    <div className="md:col-span-5 space-y-2.5 bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-slate-200 shadow-sm">
-                      <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest px-1">{t('Halal Marketplace', 'حلال مارکیٹ پلیس')}</h3>
-                      <HalalStockScanner balance={balance} onBuy={initiateBuyStock} />
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* KAMETI & HEALTH TAB */}
-              {activeTab === 'kameti' && (
-                <div className="space-y-4 sm:space-y-6 pb-32 lg:pb-12 animate-in fade-in duration-300">
-                  <FamilyHealthSaving balance={balance} onSave={handleHealthSave} lang={lang} cnic={currentUser?.cnic} />
-                  <DigitalCommittee onContribute={handleKametiContribute} />
-                  <WirasatCalculator />
-                </div>
-              )}
-
-              {/* ZAKAT TAB */}
-              {activeTab === 'zakat' && (
-                <div className="space-y-4 sm:space-y-6 pb-32 lg:pb-12 animate-in fade-in duration-300">
-                  <div className="mb-1">
-                    <h2 className="text-xl sm:text-2xl font-black text-slate-800 tracking-tight">{t('Social Impact', 'سماجی اثر')}</h2>
-                    <p className="text-slate-500 text-xs mt-0.5">{t('Purify wealth and empower the Ummah.', 'دولت کو پاک کریں اور امت کو بااختیار بنائیں۔')}</p>
-                  </div>
-                  <ZakatDistribution balance={balance} portfolioValue={totalPortfolioValue} />
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-stretch">
-                    <PurificationTracker onPurify={(amount) => handleZakatDonation(amount, 'Dividend Purification')} />
-                    <FinancialHealthScore balance={balance} portfolioValue={totalPortfolioValue} holdings={holdings} transactions={transactions} zakatHistory={zakatHistory} isZakatEligible={isZakatEligible} />
-                  </div>
-                </div>
-              )}
-
-              {/* SETTINGS TAB */}
-              {activeTab === 'settings' && (
-                <div className="space-y-4 sm:space-y-6 pb-32 lg:pb-12 animate-in fade-in duration-300">
-                  <SettingsTab lang={lang} darkMode={darkMode} onLangChange={handleLangChange} onDarkToggle={toggleDark} onLock={() => setIsAuthorized(false)} isPremium={isPremium} eligibility={{ totalInvested: totalInvestedHistory, totalProfit: totalRealizedProfit, reqInvest: 250000000, reqProfit: 500000000 }} />
-                </div>
-              )}
-            </div>
-          </div>
-        </main>
-
-        {modal && (
-          <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 z-[60] animate-in fade-in" role="presentation">
-            <div className="mobile-modal-safe relative w-full max-w-sm sm:max-w-md bg-white rounded-t-3xl sm:rounded-3xl p-4 sm:p-5 shadow-2xl animate-in slide-in-from-bottom-full duration-200" role="dialog" aria-modal="true" aria-label={modal === 'deposit' ? t('Demo deposit', 'ڈیمو ڈیپازٹ') : t('Demo withdrawal', 'ڈیمو وِڈڈرا') }>
-              <button onClick={() => setModal(null)} aria-label={t('Close dialog', 'ڈائیلاگ بند کریں')} className="touch-target absolute top-2 right-3 text-slate-400 hover:text-slate-600 transition-colors p-1 text-sm">✕</button>
-              <div className="mt-1">
-                {modal === 'deposit' ? <DepositFlow onSuccess={handleTransactionSuccess} /> : <WithdrawFlow onSuccess={handleTransactionSuccess} />}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {selectedSellHolding && (
-          <div className="fixed inset-0 z-[65] flex items-end justify-center bg-slate-900/50 p-0 backdrop-blur-sm sm:items-center sm:p-4" role="presentation">
-            <div className="mobile-modal-safe relative w-full max-w-md rounded-t-3xl bg-white p-4 shadow-2xl sm:rounded-3xl sm:p-5" role="dialog" aria-modal="true" aria-label={t('Sell demo holding', 'ڈیمو ہولڈنگ فروخت کریں')}>
-              <SellStockFlow holding={selectedSellHolding} onSuccess={handleSellRequest} onCancel={() => setSelectedSellHolding(null)} />
-            </div>
-          </div>
-        )}
-
-        {/* Bottom Navigation Bar (Visible only on mobile/tablet) */}
-        <div className="mobile-bottom-nav fixed left-1/2 -translate-x-1/2 w-[95%] max-w-md z-50 block lg:hidden">
-          <nav className="glass-dark rounded-2xl sm:rounded-[2rem] p-1 sm:p-1.5 flex justify-between items-center shadow-2xl border border-white/10 bg-slate-900/95 backdrop-blur-xl text-white" aria-label={t('Primary navigation', 'بنیادی نیویگیشن')}>
-            {[
-              { id: 'home', icon: '🏠', labelEn: 'Home', labelUr: 'ڈیش بورڈ' },
-              { id: 'portfolio', icon: '📈', labelEn: 'Stocks', labelUr: 'اسٹاکس' },
-              { id: 'assets', icon: '🏛️', labelEn: 'Assets', labelUr: 'اثاثے' },
-              { id: 'kameti', icon: '🤝', labelEn: 'Family', labelUr: 'خاندان' },
-              { id: 'zakat', icon: '🕋', labelEn: 'Zakat', labelUr: 'زکوٰۃ' },
-            ].map((tab) => {
-              const isActive = activeTab === tab.id;
+          {/* Nav */}
+          <nav className="flex-1 px-3 py-4 space-y-0.5">
+            {NAV_ITEMS.map(item => {
+              const isActive = activeTab === (item.id as DashboardTab);
               return (
                 <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
-                  aria-current={isActive ? 'page' : undefined}
-                  aria-label={lang === 'ur' ? tab.labelUr : tab.labelEn}
-                  className={`touch-target flex-1 py-1.5 px-1 rounded-xl sm:rounded-2xl flex flex-col items-center justify-center transition-all duration-200 active:scale-95 ${
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id as DashboardTab)}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all duration-150 ${
                     isActive
-                      ? 'bg-emerald-600 text-white shadow-md shadow-emerald-900/40'
-                      : 'text-slate-400 hover:text-slate-200'
+                      ? 'bg-white/10 text-white'
+                      : 'text-slate-500 hover:text-slate-200 hover:bg-white/5'
                   }`}
                 >
-                  <span className={`text-base sm:text-lg leading-none transition-transform duration-200 ${isActive ? 'scale-110' : ''}`}>
-                    {tab.icon}
-                  </span>
-                  <span className={`text-xs font-black uppercase tracking-wide mt-1 truncate max-w-[56px] leading-tight ${isActive ? 'text-white' : 'text-slate-300'}`}>
-                    {lang === 'ur' ? tab.labelUr : tab.labelEn}
-                  </span>
+                  <span className={isActive ? 'text-emerald-400' : ''}>{item.icon}</span>
+                  <div className="min-w-0">
+                    <div className={`text-sm font-medium ${isActive ? 'text-white' : ''}`}>
+                      {lang === 'ur' ? item.labelUr : item.labelEn}
+                    </div>
+                    {isActive && <div className="text-xs text-slate-500 truncate">{item.sub}</div>}
+                  </div>
+                  {isActive && <div className="ml-auto w-1 h-5 rounded-full bg-emerald-500" />}
                 </button>
               );
             })}
           </nav>
-        </div>
 
-        <SovereignScan isOpen={isScanning} onComplete={onScanComplete} />
+          {/* Zakat badge */}
+          {isZakatEligible && (
+            <div className="mx-3 mb-3 rounded-xl border border-amber-500/20 bg-amber-500/10 p-3">
+              <p className="text-xs font-semibold text-amber-400">{t('Zakat Due', 'زکوٰۃ واجب')}</p>
+              <p className="text-xs text-amber-500/70 mt-0.5">{t('You are Nisab eligible', 'آپ نصاب کی شرط پوری کرتے ہیں')}</p>
+            </div>
+          )}
+
+          {/* Reset */}
+          <div className="px-3 pb-4">
+            <button
+              onClick={() => setShowResetModal(true)}
+              className="w-full flex items-center justify-center gap-2 rounded-xl border border-red-500/20 bg-red-500/5 py-2.5 text-xs font-medium text-red-400 hover:bg-red-500/10 transition-colors"
+            >
+              🗑️ {t('Delete Account & Demo Data', 'اکاؤنٹ ڈیلیٹ کریں')}
+            </button>
+          </div>
+        </aside>
+
+        {/* ── Main content ── */}
+        <div className="flex flex-1 flex-col min-w-0">
+
+          {/* Demo banner */}
+          <div className="px-4 pt-3 lg:px-6">
+            <DemoModeBanner lang={lang} />
+          </div>
+
+          {/* ── Tab 1: Dashboard ── */}
+          {activeTab === 'home' && (
+            <main className="flex-1 px-4 py-5 lg:px-6 pb-32 lg:pb-8 space-y-5">
+              {/* Header */}
+              <div className="flex items-center justify-between">
+                <h1 className="text-xl font-bold text-white">Dashboard</h1>
+                <div className="flex items-center gap-2">
+                  <span className="rounded-lg border border-white/10 px-3 py-1.5 text-xs font-medium text-slate-400">Demo account</span>
+                  <button onClick={() => setModal('deposit')} className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-semibold text-black hover:bg-emerald-400 transition-colors">
+                    Add funds
+                  </button>
+                </div>
+              </div>
+
+              {/* Top cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Total wealth */}
+                <div className="rounded-xl border border-white/8 p-5" style={{ background: '#1a1a1a' }}>
+                  <p className="text-xs text-slate-500 mb-2">Total wealth</p>
+                  <p className="text-2xl font-bold text-white mb-3">PKR {totalWealth.toLocaleString()}</p>
+                  <div className="flex gap-1 mb-4">
+                    <div className="h-1.5 rounded-full bg-emerald-500" style={{ width: `${Math.min(100, (balance / totalWealth) * 100)}%` }} />
+                    <div className="h-1.5 rounded-full bg-blue-500" style={{ width: `${Math.min(100, (totalPortfolioValue / totalWealth) * 70)}%` }} />
+                    <div className="h-1.5 rounded-full bg-amber-500 flex-1" />
+                    <div className="h-1.5 w-8 rounded-full bg-white/10" />
+                  </div>
+                  <div className="border-t border-white/5 pt-3">
+                    <p className="text-xs font-semibold text-slate-400 mb-2">Recent activity</p>
+                    {transactions.length === 0 ? (
+                      <p className="text-xs text-slate-600">No activity yet.</p>
+                    ) : (
+                      <div className="space-y-1.5">
+                        {transactions.slice(0, 3).map(tx => (
+                          <div key={tx.id} className="flex justify-between text-xs">
+                            <span className="text-slate-300 font-medium">
+                              {tx.type === 'buy_stock' ? `Bought ${tx.symbol}` : tx.type === 'deposit' ? 'Deposit' : tx.type === 'zakat' ? 'Zakat paid' : tx.type === 'sell_stock' ? `Sold ${tx.symbol}` : tx.type}
+                            </span>
+                            <span className={tx.type === 'deposit' ? 'text-emerald-400' : tx.type === 'buy_stock' ? 'text-slate-400' : 'text-slate-400'}>
+                              {tx.type === 'deposit' ? '+' : '- '}{tx.amount.toLocaleString()}
+                            </span>
+                          </div>
+                        ))}
+                        {holdings.length > 0 && (
+                          <div className="flex justify-between text-xs">
+                            <span className="text-slate-300 font-medium">Dividend purified</span>
+                            <span className="text-emerald-400">4.2%</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Right column */}
+                <div className="space-y-4">
+                  {/* Zakat due */}
+                  <div className="rounded-xl border border-white/8 p-5" style={{ background: '#1a1a1a' }}>
+                    <p className="text-xs text-slate-500 mb-1">Zakat due</p>
+                    <p className="text-2xl font-bold text-white">PKR {zakatDue.toLocaleString()}</p>
+                    <p className="mt-1 text-xs font-semibold text-emerald-400">{isZakatEligible ? 'Above Nisab' : 'Below Nisab'}</p>
+                  </div>
+
+                  {/* Available cash */}
+                  <div className="rounded-xl border border-white/5 p-5" style={{ background: '#f9f9f9' }}>
+                    <p className="text-xs text-slate-500 mb-1">Available cash</p>
+                    <p className="text-2xl font-bold text-slate-900">PKR {balance.toLocaleString()}</p>
+                    <div className="mt-3 flex gap-4">
+                      <button onClick={() => setModal('deposit')} className="text-xs font-semibold text-slate-700 hover:text-slate-900 underline">Deposit</button>
+                      <button onClick={() => setModal('withdraw')} className="text-xs font-semibold text-slate-700 hover:text-slate-900 underline">Withdraw</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Full portfolio chart + wealth summary */}
+              {isPremium && <WaliAutopilot lang={lang} />}
+              <PortfolioChart balance={balance} holdings={holdings} totalValue={totalPortfolioValue} />
+              <DemoWealthSummary cash={balance} invested={totalPortfolioValue} pending={pendingDemoAmount} zakatDue={isZakatEligible} lang={lang} />
+            </main>
+          )}
+
+          {/* ── Tab 2: Stocks ── */}
+          {activeTab === 'portfolio' && (
+            <main className="flex-1 px-4 py-5 lg:px-6 pb-32 lg:pb-8 space-y-5">
+              <h1 className="text-xl font-bold text-white">Halal stocks</h1>
+
+              {/* Controls */}
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 flex-1 min-w-[180px]">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className="text-slate-500 flex-shrink-0">
+                    <circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" strokeWidth="1.5"/>
+                    <path d="M10 10l3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                  <input
+                    value={stockSearch}
+                    onChange={e => setStockSearch(e.target.value)}
+                    placeholder="Search"
+                    className="bg-transparent text-sm text-white placeholder-slate-500 outline-none w-full"
+                  />
+                </div>
+                <div className="flex gap-1 rounded-full bg-white/8 p-1">
+                  {(['all', 'halal', 'excluded'] as const).map(f => (
+                    <button
+                      key={f}
+                      onClick={() => setStockFilter(f)}
+                      className={`rounded-full px-3.5 py-1.5 text-xs font-medium capitalize transition-colors ${
+                        stockFilter === f ? 'bg-white text-black' : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      {f === 'all' ? 'All' : f === 'halal' ? 'Halal' : 'Excluded'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Table */}
+              <div className="rounded-xl border border-white/8 overflow-hidden" style={{ background: '#1a1a1a' }}>
+                <div className="grid grid-cols-6 gap-2 px-4 py-3 border-b border-white/5 text-xs font-medium text-slate-500 uppercase tracking-wide">
+                  <span className="col-span-2">Company</span>
+                  <span className="text-right">Price</span>
+                  <span className="text-right">Change</span>
+                  <span className="text-right">Debt</span>
+                  <span className="text-right">Impure</span>
+                </div>
+                <div>
+                  {filteredStocks.map(s => (
+                    <div key={s.name} className="grid grid-cols-6 gap-2 items-center px-4 py-3.5 border-b border-white/5 last:border-0 hover:bg-white/3 transition-colors">
+                      <div className="col-span-2 flex items-center justify-between pr-2">
+                        <span className="text-sm font-medium text-white">{s.name}</span>
+                        <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${s.compliant ? 'bg-emerald-500/15 text-emerald-400' : 'bg-red-500/15 text-red-400'}`}>
+                          {s.compliant ? 'Compliant' : 'Excluded'}
+                        </span>
+                      </div>
+                      <span className="text-sm text-slate-300 text-right">{s.price.toFixed(2)}</span>
+                      <span className={`text-sm text-right font-medium ${s.change.startsWith('+') ? 'text-emerald-400' : 'text-red-400'}`}>{s.change}</span>
+                      <span className="text-sm text-slate-400 text-right">{s.debt}</span>
+                      <span className="text-sm text-slate-400 text-right">{s.impure}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Full scanner below */}
+              <div className="rounded-xl border border-white/8 overflow-hidden" style={{ background: '#1a1a1a' }}>
+                <div className="px-4 py-3 border-b border-white/5">
+                  <h3 className="text-sm font-semibold text-white">Trade stocks</h3>
+                </div>
+                <div className="p-4">
+                  <HalalStockScanner balance={balance} onBuy={initiateBuyStock} />
+                </div>
+              </div>
+              <PortfolioDashboard holdings={holdings} totalValue={totalPortfolioValue} dailyPnl={dailyPnl} onSell={setSelectedSellHolding} />
+            </main>
+          )}
+
+          {/* ── Tab 3: Sukuk and assets ── */}
+          {activeTab === 'assets' && (
+            <main className="flex-1 px-4 py-5 lg:px-6 pb-32 lg:pb-8 space-y-5">
+              <h1 className="text-xl font-bold text-white">Sukuk and assets</h1>
+
+              {/* 3-col overview cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {[
+                  { icon: '🏛️', title: 'Sovereign Sukuk', desc: 'Asset-backed infrastructure', progress: 62, color: 'bg-emerald-500', cta: 'Invest' },
+                  { icon: '🕌', title: 'Hajj savings', desc: 'Save toward your goal', progress: 28, color: 'bg-blue-500', cta: 'Start saving' },
+                  { icon: '🌾', title: 'Agri finance', desc: "Bay' Al-Salam contracts", progress: 45, color: 'bg-amber-500', cta: 'View contracts' },
+                ].map(({ icon, title, desc, progress, color, cta }) => (
+                  <div key={title} className="flex flex-col rounded-xl border border-white/8 p-5" style={{ background: '#1a1a1a' }}>
+                    <span className="mb-3 text-2xl">{icon}</span>
+                    <h3 className="mb-1 text-sm font-semibold text-white">{title}</h3>
+                    <p className="mb-3 text-xs text-slate-500 flex-1">{desc}</p>
+                    <div className="mb-3 h-1 rounded-full bg-white/10">
+                      <div className={`h-full rounded-full ${color}`} style={{ width: `${progress}%` }} />
+                    </div>
+                    <button className="w-full rounded-lg border border-white/15 py-2 text-xs font-semibold text-white hover:bg-white/8 transition-colors">{cta}</button>
+                  </div>
+                ))}
+              </div>
+
+              {/* Full components */}
+              {currentUser?.isOverseas && (
+                <OverseasInvest balance={balance} onInvest={handleOverseasInvest} lang={lang} cnic={currentUser.cnic} country={currentUser.country} />
+              )}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
+                <HajjVault onDeposit={handleHajjDeposit} />
+                <AgriFinancing balance={balance} onInvest={amount => initiateSecureTransaction({ type: 'buy_sukuk', amount, symbol: 'AGRI' })} />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
+                <FractionalSukuk balance={balance} onBuy={handleBuySukuk} />
+                <GlobalHalalETFs onInvest={handleETFInvest} />
+              </div>
+            </main>
+          )}
+
+          {/* ── Tab 4: Family ── */}
+          {activeTab === 'kameti' && (
+            <main className="flex-1 px-4 py-5 lg:px-6 pb-32 lg:pb-8 space-y-5">
+              <h1 className="text-xl font-bold text-white">Family and Takaful</h1>
+
+              {/* Overview row */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Kameti circle */}
+                <div className="rounded-xl border border-white/8 p-5" style={{ background: '#1a1a1a' }}>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-sm font-semibold text-white">Kameti circle</h3>
+                    <span className="text-xs text-slate-500">Monthly</span>
+                  </div>
+                  <div className="space-y-2.5">
+                    {[
+                      { initial: 'A', name: 'Ahmed', status: 'Paid', color: 'bg-emerald-600' },
+                      { initial: 'S', name: 'Sana', status: 'Paid', color: 'bg-blue-600' },
+                      { initial: 'B', name: 'Bilal', status: 'Due soon', color: 'bg-amber-600' },
+                    ].map(({ initial, name, status, color }) => (
+                      <div key={name} className="flex items-center gap-3">
+                        <div className={`flex h-8 w-8 items-center justify-center rounded-full ${color} text-xs font-bold text-white`}>{initial}</div>
+                        <span className="flex-1 text-sm text-white">{name}</span>
+                        <span className={`text-xs font-semibold ${status === 'Paid' ? 'text-emerald-400' : 'text-amber-400'}`}>{status}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Right column */}
+                <div className="space-y-4">
+                  {/* Next payout */}
+                  <div className="rounded-xl border border-white/5 p-5" style={{ background: '#f9f9f9' }}>
+                    <p className="text-xs text-slate-500 mb-1">Next payout</p>
+                    <p className="text-2xl font-bold text-slate-900">PKR 250,000</p>
+                    <p className="text-xs text-slate-500 mt-1">Sana, in 12 days</p>
+                  </div>
+                  {/* Takaful pool */}
+                  <div className="rounded-xl border border-white/8 p-5" style={{ background: '#1a1a1a' }}>
+                    <p className="text-sm font-semibold text-white">Takaful pool</p>
+                    <p className="text-xs text-slate-500 mt-1">Family health cover active</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Full components */}
+              <FamilyHealthSaving balance={balance} onSave={handleHealthSave} lang={lang} cnic={currentUser?.cnic} />
+              <DigitalCommittee onContribute={handleKametiContribute} />
+              <WirasatCalculator />
+            </main>
+          )}
+
+          {/* ── Tab 5: Zakat ── */}
+          {activeTab === 'zakat' && (
+            <main className="flex-1 px-4 py-5 lg:px-6 pb-32 lg:pb-8 space-y-5">
+              <div className="flex items-center justify-between">
+                <h1 className="text-xl font-bold text-white">Zakat and impact</h1>
+                <button
+                  onClick={() => handleZakatDonation(zakatDue, 'Zakat Fund')}
+                  className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-black hover:bg-emerald-400 transition-colors"
+                >
+                  Pay Zakat
+                </button>
+              </div>
+
+              {/* Overview cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Zakat due */}
+                <div className="rounded-xl border border-white/8 p-5" style={{ background: '#1a1a1a' }}>
+                  <p className="text-xs text-slate-500 mb-1">Zakat due</p>
+                  <p className="text-2xl font-bold text-white">PKR {zakatDue.toLocaleString()}</p>
+                  <p className="mt-1 text-xs font-semibold text-emerald-400">{isZakatEligible ? 'Above Nisab' : 'Below Nisab'}</p>
+                </div>
+
+                {/* Nisab threshold */}
+                <div className="rounded-xl border border-white/8 p-5" style={{ background: '#1a1a1a' }}>
+                  <p className="text-xs text-slate-500 mb-3">Nisab threshold</p>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm text-white">Gold</span>
+                      <span className="text-xs text-emerald-400">Live price</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-white">Silver</span>
+                      <span className="text-xs text-emerald-400">Live price</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Charity receipts */}
+              <div className="rounded-xl border border-white/8 overflow-hidden" style={{ background: '#1a1a1a' }}>
+                <div className="px-5 py-3 border-b border-white/5">
+                  <h3 className="text-sm font-semibold text-white">Charity receipts</h3>
+                </div>
+                <div className="divide-y divide-white/5">
+                  <div className="flex items-center justify-between px-5 py-3.5">
+                    <span className="text-sm text-white">Dividend purification</span>
+                    <span className="text-sm text-slate-300">PKR 1,240</span>
+                  </div>
+                  <div className="flex items-center justify-between px-5 py-3.5">
+                    <span className="text-sm text-white">Zakat payment</span>
+                    <span className="text-xs text-emerald-400 font-medium">Receipt ready</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Full components */}
+              <ZakatDistribution balance={balance} portfolioValue={totalPortfolioValue} />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
+                <PurificationTracker onPurify={amount => handleZakatDonation(amount, 'Dividend Purification')} />
+                <FinancialHealthScore balance={balance} portfolioValue={totalPortfolioValue} holdings={holdings} transactions={transactions} zakatHistory={zakatHistory} isZakatEligible={isZakatEligible} />
+              </div>
+            </main>
+          )}
+
+          {/* ── Settings Tab (user will provide design) ── */}
+          {activeTab === 'settings' && (
+            <main className="flex-1 px-4 py-5 lg:px-6 pb-32 lg:pb-8 space-y-5">
+              <h1 className="text-xl font-bold text-white">Settings & Security</h1>
+              <SettingsTab
+                lang={lang}
+                darkMode={darkMode}
+                onLangChange={handleLangChange}
+                onDarkToggle={toggleDark}
+                onLock={() => setIsAuthorized(false)}
+                isPremium={isPremium}
+                eligibility={{ totalInvested: totalInvestedHistory, totalProfit: totalRealizedProfit, reqInvest: 250000000, reqProfit: 500000000 }}
+              />
+            </main>
+          )}
+        </div>
       </div>
+
+      {/* ── Modals ── */}
+      {modal && (
+        <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4" style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}>
+          <div className="relative w-full max-w-md rounded-t-2xl sm:rounded-2xl border border-white/10 p-5 shadow-2xl" style={{ background: '#1a1a1a' }}>
+            <button onClick={() => setModal(null)} className="absolute right-4 top-4 text-slate-500 hover:text-white transition-colors">✕</button>
+            {modal === 'deposit' ? <DepositFlow onSuccess={handleTransactionSuccess} /> : <WithdrawFlow onSuccess={handleTransactionSuccess} />}
+          </div>
+        </div>
+      )}
+
+      {selectedSellHolding && (
+        <div className="fixed inset-0 z-[65] flex items-end sm:items-center justify-center p-0 sm:p-4" style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}>
+          <div className="relative w-full max-w-md rounded-t-2xl sm:rounded-2xl border border-white/10 p-5" style={{ background: '#1a1a1a' }}>
+            <SellStockFlow holding={selectedSellHolding} onSuccess={handleSellRequest} onCancel={() => setSelectedSellHolding(null)} />
+          </div>
+        </div>
+      )}
+
+      {/* ── Mobile Bottom Nav ── */}
+      <div className="mobile-bottom-nav fixed left-1/2 -translate-x-1/2 w-[95%] max-w-md z-50 block lg:hidden">
+        <nav className="rounded-2xl border border-white/10 p-1.5 flex justify-between items-center shadow-2xl" style={{ background: 'rgba(17,17,17,0.97)', backdropFilter: 'blur(20px)' }}>
+          {NAV_ITEMS.filter(n => n.id !== 'settings').map(item => {
+            const isActive = activeTab === (item.id as DashboardTab);
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id as DashboardTab)}
+                className={`flex-1 flex flex-col items-center gap-1 py-2 px-1 rounded-xl transition-all ${
+                  isActive ? 'bg-emerald-500/15 text-emerald-400' : 'text-slate-500 hover:text-slate-300'
+                }`}
+              >
+                <span className={isActive ? 'text-emerald-400' : ''}>{item.icon}</span>
+                <span className="text-xs font-medium">{lang === 'ur' ? item.labelUr : item.labelEn}</span>
+              </button>
+            );
+          })}
+        </nav>
+      </div>
+
+      <SovereignScan isOpen={isScanning} onComplete={onScanComplete} />
     </>
   );
 }
