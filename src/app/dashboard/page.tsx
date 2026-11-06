@@ -385,6 +385,7 @@ export default function Dashboard() {
                   { id: 'assets', icon: '🏛️', labelEn: 'Sovereign Assets', labelUr: 'خود مختار اثاثے', sub: t('Sukuk, Hajj, Agri', 'سکوک، حج') },
                   { id: 'kameti', icon: '🤝', labelEn: 'Family & Takaful', labelUr: 'فیملی ہیلتھ تکافل', sub: t('Health & Kameti', 'صحت') },
                   { id: 'zakat', icon: '🕋', labelEn: 'Zakat & Impact', labelUr: 'زکوٰۃ اور اثر', sub: t('Social Finance', 'سماجی مالیات') },
+                  { id: 'settings', icon: '⚙️', labelEn: 'Settings & Security', labelUr: 'سیٹنگز اور سیکیورٹی', sub: t('Preferences & PIN', 'ترجیحات اور پن') },
                 ].map((tab) => (
                   <button
                     key={tab.id}
@@ -440,7 +441,7 @@ export default function Dashboard() {
             <div className="lg:col-span-8 space-y-4 sm:space-y-6">
               {/* HOME TAB */}
               {activeTab === 'home' && (
-                <div className="space-y-4 sm:space-y-6 pb-20">
+                <div className="space-y-4 sm:space-y-6 pb-32 lg:pb-12">
                   <div className="block lg:hidden">
                     {isPremium && <WaliAutopilot lang={lang} />}
                   </div>
@@ -509,7 +510,7 @@ export default function Dashboard() {
 
               {/* ASSETS TAB */}
               {activeTab === 'assets' && (
-                <div className="space-y-4 sm:space-y-6 pb-20 animate-in fade-in duration-300">
+                <div className="space-y-4 sm:space-y-6 pb-32 lg:pb-12 animate-in fade-in duration-300">
                   <div className="mb-1">
                     <h2 className="text-xl sm:text-2xl font-black text-slate-800 tracking-tight">{t('Sovereign Assets', 'خود مختار اثاثے')}</h2>
                     <p className="text-slate-500 text-xs mt-0.5">{t('Invest in land, Hajj, Sukuks, and Overseas funds.', 'زمین، حج، سکوک، اور اوورسیز فنڈز میں سرمایہ کاری کریں۔')}</p>
@@ -530,7 +531,7 @@ export default function Dashboard() {
 
               {/* PORTFOLIO TAB */}
               {activeTab === 'portfolio' && (
-                <div className="space-y-4 sm:space-y-6 pb-20 animate-in fade-in duration-300">
+                <div className="space-y-4 sm:space-y-6 pb-32 lg:pb-12 animate-in fade-in duration-300">
                   <div className="mb-1">
                     <h2 className="text-xl sm:text-2xl font-black text-slate-800 tracking-tight">{t('My Portfolio', 'میرا پورٹ فولیو')}</h2>
                     <p className="text-slate-500 text-xs mt-0.5">{t('Simulated demo tracking of your virtual halal wealth.', 'آپ کی مجازی حلال دولت کی ڈیمو ٹریکنگ۔')}</p>
@@ -550,7 +551,7 @@ export default function Dashboard() {
 
               {/* KAMETI & HEALTH TAB */}
               {activeTab === 'kameti' && (
-                <div className="space-y-4 sm:space-y-6 pb-20 animate-in fade-in duration-300">
+                <div className="space-y-4 sm:space-y-6 pb-32 lg:pb-12 animate-in fade-in duration-300">
                   <FamilyHealthSaving balance={balance} onSave={handleHealthSave} lang={lang} cnic={currentUser?.cnic} />
                   <DigitalCommittee onContribute={handleKametiContribute} />
                   <WirasatCalculator />
@@ -559,7 +560,7 @@ export default function Dashboard() {
 
               {/* ZAKAT TAB */}
               {activeTab === 'zakat' && (
-                <div className="space-y-4 sm:space-y-6 pb-20 animate-in fade-in duration-300">
+                <div className="space-y-4 sm:space-y-6 pb-32 lg:pb-12 animate-in fade-in duration-300">
                   <div className="mb-1">
                     <h2 className="text-xl sm:text-2xl font-black text-slate-800 tracking-tight">{t('Social Impact', 'سماجی اثر')}</h2>
                     <p className="text-slate-500 text-xs mt-0.5">{t('Purify wealth and empower the Ummah.', 'دولت کو پاک کریں اور امت کو بااختیار بنائیں۔')}</p>
@@ -574,7 +575,7 @@ export default function Dashboard() {
 
               {/* SETTINGS TAB */}
               {activeTab === 'settings' && (
-                <div className="space-y-4 sm:space-y-6 pb-20 animate-in fade-in duration-300">
+                <div className="space-y-4 sm:space-y-6 pb-32 lg:pb-12 animate-in fade-in duration-300">
                   <SettingsTab lang={lang} darkMode={darkMode} onLangChange={handleLangChange} onDarkToggle={toggleDark} onLock={() => setIsAuthorized(false)} isPremium={isPremium} eligibility={{ totalInvested: totalInvestedHistory, totalProfit: totalRealizedProfit, reqInvest: 250000000, reqProfit: 500000000 }} />
                 </div>
               )}

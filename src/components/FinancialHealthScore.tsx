@@ -85,7 +85,7 @@ export default function FinancialHealthScore({
   const strokeDashoffset = circumference - (score / 100) * circumference;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5 mb-4 sm:mb-6">
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5 h-full flex flex-col justify-between">
       <div className="flex justify-between items-center mb-3 sm:mb-4">
         <h2 className="text-base sm:text-lg font-bold text-gray-800 tracking-tight">📈 Financial Health</h2>
         <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${

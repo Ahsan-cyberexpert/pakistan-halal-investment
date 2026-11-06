@@ -19,7 +19,7 @@ export default function DigitalCommittee({ onContribute }: DigitalCommitteeProps
   const contribution = 10000;
 
   return (
-    <div className="premium-card p-0 overflow-hidden group rounded-2xl sm:rounded-3xl bg-slate-950 border border-indigo-500/20 shadow-lg mb-4 sm:mb-6 animate-in fade-in duration-300">
+    <div className="premium-card p-0 overflow-hidden group rounded-2xl sm:rounded-3xl bg-slate-950 border border-indigo-500/20 shadow-lg animate-in fade-in duration-300">
       <div className="bg-indigo-950/40 p-4 sm:p-5 text-white relative border-b border-white/5">
         <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none"></div>
         

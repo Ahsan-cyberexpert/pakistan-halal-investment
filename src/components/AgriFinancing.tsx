@@ -2,7 +2,7 @@
 
 export default function AgriFinancing({ onInvest }: { balance?: number; onInvest?: (amount: number) => void }) {
   return (
-    <div className="premium-card p-4 sm:p-5 bg-gradient-to-br from-amber-900 to-amber-950 text-white relative overflow-hidden group rounded-2xl sm:rounded-3xl shadow-lg">
+    <div className="premium-card p-4 sm:p-5 bg-gradient-to-br from-amber-900 to-amber-950 text-white relative overflow-hidden group rounded-2xl sm:rounded-3xl shadow-lg h-full flex flex-col justify-between">
       {/* Texture Overlay */}
       <div className="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80')] bg-cover bg-center mix-blend-overlay group-hover:scale-105 transition-transform duration-[5s] pointer-events-none"></div>
       

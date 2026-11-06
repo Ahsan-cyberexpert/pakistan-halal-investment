@@ -11,7 +11,7 @@ export default function HajjVault({ onDeposit }: HajjVaultProps) {
   const yearlyProfit = 8.5; // 8.5% Sukuk Yield
 
   return (
-    <div className="premium-card p-0 overflow-hidden group rounded-2xl sm:rounded-3xl bg-slate-900 border border-emerald-500/20 shadow-lg relative">
+    <div className="premium-card p-0 overflow-hidden group rounded-2xl sm:rounded-3xl bg-slate-900 border border-emerald-500/20 shadow-lg relative h-full flex flex-col justify-between">
       <div className="bg-gradient-to-br from-emerald-950 via-slate-900 to-black p-4 sm:p-5 text-white relative border-b border-white/5">
         <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
         <div className="absolute top-2 right-4 text-4xl opacity-10 rotate-12 pointer-events-none">🕋</div>

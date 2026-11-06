@@ -43,7 +43,7 @@ export default function FractionalSukuk({ balance, onBuy }: { balance: number; o
   };
 
   return (
-    <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:rounded-3xl sm:p-5">
+    <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:rounded-3xl sm:p-5 h-full flex flex-col justify-between">
       <DemoModeBanner compact />
       {step === 'choose' && (
         <>

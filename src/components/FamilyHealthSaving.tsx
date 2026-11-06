@@ -109,7 +109,7 @@ export default function FamilyHealthSaving({ balance, onSave, lang = 'en', cnic 
   };
 
   return (
-    <div className="space-y-3 sm:space-y-4 animate-in fade-in duration-300 mb-4 sm:mb-6" dir={isUrdu ? 'rtl' : 'ltr'}>
+    <div className="space-y-3 sm:space-y-4 animate-in fade-in duration-300" dir={isUrdu ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div>
         <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-emerald-50 text-emerald-700 rounded-full text-xs font-semibold mb-1 border border-emerald-100">

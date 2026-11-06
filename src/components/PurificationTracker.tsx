@@ -25,7 +25,7 @@ export default function PurificationTracker({ onPurify }: PurificationTrackerPro
   };
 
   return (
-    <div className="premium-card p-4 sm:p-6 overflow-hidden relative group mb-4 sm:mb-6">
+    <div className="premium-card p-4 sm:p-6 overflow-hidden relative group h-full flex flex-col justify-between">
       {/* Dynamic Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-white via-white to-emerald-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
       
