@@ -564,7 +564,7 @@ export default function Dashboard() {
 
       {/* ── Main Shell with Roziq Canvas Background (#F4F7F5) ── */}
       <div
-        className="min-h-screen w-full max-w-full overflow-x-hidden flex bg-[#F4F7F5] dark:bg-[#0a0a0c] text-[#0B1F17] dark:text-white transition-colors duration-200"
+        className="min-h-screen w-full flex bg-[#F2F5F3] dark:bg-[#0B0D11] text-[#0B1F17] dark:text-white transition-colors duration-200"
         dir={lang === 'ur' ? 'rtl' : 'ltr'}
       >
         {/* ── Sidebar (Desktop - Exact Match to Image 1) ── */}
@@ -631,7 +631,7 @@ export default function Dashboard() {
         </aside>
 
         {/* ── Main Content Area ── */}
-        <div className="flex flex-1 flex-col min-w-0 w-full max-w-full overflow-x-hidden">
+        <div className="flex flex-1 flex-col min-w-0 w-full">
           {/* Header hidden on mobile/desktop as tabs render their own exact headers */}
           <header className="hidden">
             <div className="flex items-center gap-2 ml-auto">

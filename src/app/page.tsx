@@ -35,9 +35,58 @@ export default function Home() {
     <>
       {/* ── Global styles scoped to landing page ── */}
       <style dangerouslySetInnerHTML={{ __html: `
-        :root{--bg:#FBFCFB;--sf:#fff;--alt:#F2F6F4;--ink:#0F1F1A;--mut:#566761;--ln:#E1E9E5;--br:#0B5D45;--brh:#094A37;--tint:#E6F1EC;--gold:#A67C2E;--bad:#B42318;--badbg:#FCECEA;--onb:#fff;--sh:0 1px 2px rgba(15,31,26,.05),0 28px 56px -28px rgba(15,31,26,.22)}
-        @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0A1410;--sf:#101D18;--alt:#0D1914;--ink:#EAF2EE;--mut:#9AAFA6;--ln:#1F342C;--br:#4CC9A0;--brh:#6FDDB9;--tint:#13302A;--gold:#D9AE5B;--bad:#F97066;--badbg:#3A1714;--onb:#07231A;--sh:0 28px 56px -28px #000;color-scheme:dark}}
-        :root[data-theme="dark"],html.dark{--bg:#0A1410;--sf:#101D18;--alt:#0D1914;--ink:#EAF2EE;--mut:#9AAFA6;--ln:#1F342C;--br:#4CC9A0;--brh:#6FDDB9;--tint:#13302A;--gold:#D9AE5B;--bad:#F97066;--badbg:#3A1714;--onb:#07231A;--sh:0 28px 56px -28px #000;color-scheme:dark}
+        :root{
+          --bg:#F2F5F3;
+          --sf:#FFFFFF;
+          --alt:#E8EDEA;
+          --ink:#0B1F17;
+          --mut:#4D6157;
+          --ln:#D8E2DC;
+          --br:#065F46;
+          --brh:#044E39;
+          --tint:#E1EFE8;
+          --gold:#B48529;
+          --bad:#B42318;
+          --badbg:#FCECEA;
+          --onb:#FFFFFF;
+          --sh:0 2px 8px -2px rgba(11,31,23,.06),0 20px 40px -20px rgba(11,31,23,.16)
+        }
+        @media (prefers-color-scheme:dark){
+          :root:not([data-theme="light"]){
+            --bg:#0B0D11;
+            --sf:#14171E;
+            --alt:#1B1F27;
+            --ink:#F0F4F2;
+            --mut:#93A1AD;
+            --ln:#242A35;
+            --br:#10B981;
+            --brh:#34D399;
+            --tint:#112820;
+            --gold:#F59E0B;
+            --bad:#F87171;
+            --badbg:#2B1618;
+            --onb:#041F16;
+            --sh:0 12px 36px -10px rgba(0,0,0,.65);
+            color-scheme:dark
+          }
+        }
+        :root[data-theme="dark"],html.dark{
+          --bg:#0B0D11;
+          --sf:#14171E;
+          --alt:#1B1F27;
+          --ink:#F0F4F2;
+          --mut:#93A1AD;
+          --ln:#242A35;
+          --br:#10B981;
+          --brh:#34D399;
+          --tint:#112820;
+          --gold:#F59E0B;
+          --bad:#F87171;
+          --badbg:#2B1618;
+          --onb:#041F16;
+          --sh:0 12px 36px -10px rgba(0,0,0,.65);
+          color-scheme:dark
+        }
         *{box-sizing:border-box;margin:0}
         html{scroll-behavior:smooth;scroll-padding-top:84px}
         :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -47,7 +96,7 @@ export default function Home() {
         .skip{position:absolute;left:12px;top:-60px;background:var(--br);color:var(--onb);padding:10px 16px;border-radius:8px;z-index:30}.skip:focus{top:calc(env(safe-area-inset-top,0px) + 12px)}
         .wrap{max-width:1120px;margin:0 auto;padding:0 28px}
         body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:11;background:var(--bg)}
-        header{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--ln)}
+        header{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);border-bottom:1px solid var(--ln);transition:border-color .15s}
         nav{display:flex;align-items:center;height:72px;gap:36px}
         .logo{display:flex;align-items:center;gap:10px;font:500 27px Newsreader,Georgia,serif;letter-spacing:-.01em}
         .logo svg{width:32px;height:32px}
@@ -130,7 +179,8 @@ export default function Home() {
         summary::after{content:"+";color:var(--br);font-size:26px;line-height:1}
         details[open] summary::after{content:"−"}
         details p{color:var(--mut);margin-top:12px}
-        .final{background:#0B3D2E;color:#fff;border-radius:20px;padding:80px 32px;text-align:center}
+        .final{background:#064E3B;color:#fff;border-radius:20px;padding:80px 32px;text-align:center;border:1px solid rgba(255,255,255,.08)}
+        html.dark .final,:root[data-theme="dark"] .final{background:#0F241C;border-color:#1E3E30}
         .final h2{margin:0 auto;color:#fff}
         .final p{color:#B9D9CC;margin:16px 0 34px;font-size:19px}
         .final .btn.p{background:#fff;border-color:#fff;color:#0B3D2E}
@@ -141,8 +191,8 @@ export default function Home() {
         .fg a{display:block;padding:5px 0}.fg a:hover{color:var(--ink)}
         .fg p{max-width:26em;margin-top:14px}
         .legal{margin-top:48px;padding-top:24px;border-top:1px solid var(--ln);font-size:13px;line-height:1.7}
-        /* Fluid auto-fit guarantees */
-        html,body{width:100%;max-width:100vw;overflow-x:hidden}
+        /* Fluid auto-fit without scroll lock */
+        main,section,header,footer{overflow-x:clip}
         .wrap{width:100%;max-width:1120px;margin:0 auto;padding:0 24px}
         .tabs{max-width:100%;overflow-x:auto;scrollbar-width:none}
         .tabs::-webkit-scrollbar{display:none}
