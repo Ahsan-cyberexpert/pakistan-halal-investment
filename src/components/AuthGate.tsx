@@ -209,7 +209,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-[2000] bg-[#0d0d0f] lg:bg-[#F4F7F5] dark:lg:bg-[#0a0a0c] flex overflow-y-auto">
+    <div className="fixed inset-0 z-[2000] bg-[#F4F7F5] dark:bg-[#0a0a0c] flex overflow-y-auto">
       {/* ── Left Hero Showcase Banner (Desktop Only - from Login.dc.html / Signup.dc.html) ── */}
       <aside className="hidden lg:flex w-[520px] xl:w-[600px] flex-none bg-[#064E3B] text-white p-12 xl:p-14 flex-col justify-between relative overflow-hidden">
         {/* Giant Crescent Watermark */}
@@ -312,59 +312,81 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
 
       {/* ── Right Content Form Shell (Mobile & Desktop Responsive) ── */}
       <main className="flex-1 flex flex-col items-center justify-center p-5 sm:p-8 relative min-w-0">
-        {/* Top Urdu Toggle Button */}
+        {/* Mobile Top Header: Logo + Urdu (Matches Phone Screenshot media_1794527886748_d4a86452.png) */}
+        <div className="flex lg:hidden items-center justify-between w-full max-w-[420px] mb-6">
+          <div className="flex items-center gap-2.5">
+            <div className="w-10 h-10 rounded-xl bg-[#047857] flex items-center justify-center text-white shadow-xs">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+              </svg>
+            </div>
+            <span className="text-2xl font-extrabold tracking-tight text-[#0B1F17] dark:text-white">Roziq</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => {}}
+            className="px-4 py-1.5 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white font-bold text-sm shadow-xs hover:bg-slate-50 transition-colors"
+          >
+            اردو
+          </button>
+        </div>
+
+        {/* Desktop Urdu Toggle Button */}
         <button
           type="button"
           onClick={() => {}}
-          className="absolute top-6 right-6 px-4 py-2 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white font-bold text-sm shadow-xs hover:bg-slate-50 transition-colors"
+          className="hidden lg:block absolute top-6 right-6 px-4 py-2 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white font-bold text-sm shadow-xs hover:bg-slate-50 transition-colors"
         >
           اردو
         </button>
 
-        {/* Ambient glow on dark mode */}
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-96 h-96 bg-emerald-500/8 rounded-full blur-[140px] pointer-events-none lg:hidden" />
+        <div className="relative z-10 w-full max-w-[420px] my-auto py-2">
 
-        <div className="relative z-10 w-full max-w-[420px] my-auto py-4">
-
-        {/* ── LOGIN SCREEN ── */}
+        {/* ── LOGIN SCREEN (Matches media_1794527886748_d4a86452.png) ── */}
         {screen === 'login' && (
           <div className="space-y-5">
-            {/* Logo */}
-            <div className="flex flex-col items-center text-center mb-2">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/30 mb-4">
-                {/* Crescent moon icon matching reference */}
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" className="text-[#0d0d0f]">
+            {/* Desktop Only Logo */}
+            <div className="hidden lg:flex flex-col items-center text-center mb-2">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#047857] text-white shadow-md mb-3">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
                 </svg>
               </div>
-              <h1 className="text-2xl font-bold text-white tracking-tight">Welcome back</h1>
-              <p className="text-sm text-slate-400 mt-1">Log in with your CNIC and password</p>
+            </div>
+
+            <div>
+              <h1 className="text-2xl lg:text-[28px] font-extrabold text-[#0B1F17] dark:text-white tracking-tight">
+                Welcome back
+              </h1>
+              <p className="text-sm text-[#55695F] dark:text-slate-400 mt-1 font-medium">
+                Log in with your CNIC and password
+              </p>
             </div>
 
             {error && (
-              <p className="text-red-400 text-xs font-semibold text-center bg-red-500/10 border border-red-500/20 py-2.5 px-4 rounded-2xl">
+              <p className="text-[#B42318] text-xs font-semibold text-center bg-[#FEE4E2] border border-[#FECDCA] py-2.5 px-4 rounded-2xl">
                 {error}
               </p>
             )}
 
             {/* CNIC */}
-            <div>
-              <label className="text-sm font-medium text-white block mb-2">CNIC</label>
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-[#0B1F17] dark:text-white uppercase tracking-wider block">CNIC</label>
               <input
                 type="text"
                 inputMode="numeric"
                 value={cnic}
                 onChange={e => setCnic(formatCnic(e.target.value))}
-                placeholder="42101-1234567-1"
-                className="w-full px-4 py-3 bg-[#1a1c20] border border-white/10 rounded-2xl text-white font-mono text-sm focus:outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/20 transition-all placeholder:text-slate-600"
+                placeholder="00000-0000000-0"
+                className="w-full px-4 py-3 bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 rounded-2xl text-[#0B1F17] dark:text-white font-mono text-sm focus:outline-none focus:border-[#047857] transition-all placeholder:text-[#55695F]/50 shadow-xs"
               />
             </div>
 
             {/* Password */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="text-sm font-medium text-white">Password</label>
-                <button type="button" className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition-colors">
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-[#0B1F17] dark:text-white uppercase tracking-wider">Password</label>
+                <button type="button" className="text-xs font-bold text-[#047857] hover:underline transition-colors">
                   Forgot password?
                 </button>
               </div>
@@ -375,12 +397,12 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
                   onChange={e => setPassword(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && handleLogin()}
                   placeholder="Enter your password"
-                  className="w-full px-4 py-3 pr-11 bg-[#1a1c20] border border-white/10 rounded-2xl text-white text-sm focus:outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/20 transition-all placeholder:text-slate-600"
+                  className="w-full px-4 py-3 pr-11 bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 rounded-2xl text-[#0B1F17] dark:text-white text-sm focus:outline-none focus:border-[#047857] transition-all placeholder:text-[#55695F]/50 shadow-xs"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(v => !v)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#55695F] hover:text-[#0B1F17] dark:hover:text-white transition-colors"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? (
@@ -400,16 +422,16 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
             {/* Primary Log In button */}
             <button
               onClick={handleLogin}
-              className="w-full py-3.5 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-full transition-all active:scale-[0.98] text-sm shadow-lg shadow-emerald-500/20"
+              className="w-full h-12 bg-[#047857] hover:bg-[#064E3B] text-white font-bold rounded-2xl transition-all active:scale-[0.98] text-base shadow-xs"
             >
               Log in
             </button>
 
             {/* OR divider */}
             <div className="flex items-center gap-3">
-              <div className="flex-1 h-px bg-white/10" />
-              <span className="text-xs text-slate-500 font-medium">or</span>
-              <div className="flex-1 h-px bg-white/10" />
+              <div className="flex-1 h-px bg-[#E3ECE7] dark:bg-white/10" />
+              <span className="text-xs text-[#55695F] dark:text-slate-400 font-medium">or</span>
+              <div className="flex-1 h-px bg-[#E3ECE7] dark:bg-white/10" />
             </div>
 
             {/* Biometric + Google side-by-side */}
@@ -417,9 +439,9 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
               {/* Biometric */}
               <button
                 onClick={biometricAvailable ? handleBiometricLogin : handleInstantDemo}
-                className="flex items-center justify-center gap-2 py-3 bg-[#1a1c20] border border-white/10 hover:border-white/20 text-white text-sm font-semibold rounded-2xl transition-all active:scale-95"
+                className="flex items-center justify-center gap-2 h-12 bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 hover:bg-slate-50 text-[#0B1F17] dark:text-white text-sm font-bold rounded-2xl transition-all shadow-xs active:scale-98"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-400">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#047857" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 11c0-1.66-1.34-3-3-3S6 9.34 6 11c0 2.22 1.2 4.15 3 5.19"/>
                   <path d="M12 2a10 10 0 0 0-10 10c0 3.38 1.7 6.37 4.29 8.16"/>
                   <path d="M12 17c1.66 0 3-1.34 3-3 0-.75-.28-1.44-.75-1.96"/>
@@ -432,9 +454,9 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
               {/* Google */}
               <button
                 onClick={handleGoogleLogin}
-                className="flex items-center justify-center gap-2 py-3 bg-[#1a1c20] border border-white/10 hover:border-white/20 text-white text-sm font-semibold rounded-2xl transition-all active:scale-95"
+                className="flex items-center justify-center gap-2 h-12 bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 hover:bg-slate-50 text-[#0B1F17] dark:text-white text-sm font-bold rounded-2xl transition-all shadow-xs active:scale-98"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24">
+                <svg width="18" height="18" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.66v3.05h3.9c2.28-2.1 3.64-5.2 3.64-9.15z"/>
                   <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.9-3.05c-1.08.72-2.45 1.16-4.03 1.16-3.1 0-5.74-2.09-6.68-4.91H1.26v3.15C3.26 21.36 7.36 24 12 24z"/>
                   <path fill="#FBBC05" d="M5.32 14.29c-.24-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.56H1.26C.46 8.15 0 9.99 0 12s.46 3.85 1.26 5.44l4.06-3.15z"/>
@@ -445,94 +467,98 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
             </div>
 
             {/* Register link */}
-            <p className="text-center text-sm text-slate-400">
+            <p className="text-center text-sm text-[#55695F] dark:text-slate-400">
               New to Roziq?{' '}
               <button
                 onClick={() => { setScreen('register'); setError(''); }}
-                className="text-emerald-400 font-semibold hover:text-emerald-300 transition-colors"
+                className="text-[#047857] dark:text-emerald-400 font-bold hover:underline transition-colors"
               >
                 Create an account
               </button>
             </p>
 
             {/* Demo account link */}
-            <p className="text-center text-sm text-slate-500">
+            <p className="text-center text-sm text-[#55695F] dark:text-slate-400">
               Just exploring?{' '}
               <button
                 onClick={handleInstantDemo}
-                className="text-slate-300 font-semibold underline underline-offset-2 hover:text-white transition-colors"
+                className="text-[#047857] dark:text-emerald-400 font-bold hover:underline transition-colors"
               >
                 Use a demo account
               </button>
+            </p>
+
+            <p className="text-center text-xs text-[#55695F]/80 dark:text-slate-400 pt-2 leading-relaxed">
+              End-to-end encrypted · SECP inspired framework · AAOIFI standards
             </p>
           </div>
         )}
 
         {/* ── REGISTER SCREEN ── */}
         {screen === 'register' && (
-          <div className="bg-[#121316] border border-white/10 rounded-3xl p-6 sm:p-7 space-y-4 shadow-2xl backdrop-blur-xl">
+          <div className="bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 rounded-[20px] p-6 sm:p-7 space-y-4 shadow-xs">
             <div className="text-center">
-              <h2 className="text-lg font-bold text-white">Create Account</h2>
-              <p className="text-xs text-slate-400 mt-0.5 font-medium">Register for verified Shariah wealth management</p>
+              <h2 className="text-xl font-extrabold text-[#0B1F17] dark:text-white">Create Account</h2>
+              <p className="text-xs text-[#55695F] dark:text-slate-400 mt-1 font-medium">Register for verified Shariah wealth management</p>
             </div>
 
             {error && (
-              <p className="text-red-400 text-xs font-semibold text-center bg-red-500/10 border border-red-500/20 py-2 px-3 rounded-xl">
+              <p className="text-[#B42318] text-xs font-semibold text-center bg-[#FEE4E2] border border-[#FECDCA] py-2 px-3 rounded-xl">
                 {error}
               </p>
             )}
 
             <div>
-              <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">Full Name</label>
+              <label className="text-xs font-bold text-[#0B1F17] dark:text-white uppercase tracking-wider block mb-1">Full Name</label>
               <input
                 type="text"
                 value={name}
                 onChange={e => setName(e.target.value)}
                 placeholder="Muhammad Ali"
-                className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white text-xs focus:outline-none focus:border-emerald-500 transition-colors"
+                className="w-full px-4 py-3 bg-[#F4F7F5] dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 rounded-xl text-[#0B1F17] dark:text-white text-xs focus:outline-none focus:border-[#047857] transition-colors"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">CNIC Number</label>
+                <label className="text-xs font-bold text-[#0B1F17] dark:text-white uppercase tracking-wider block mb-1">CNIC Number</label>
                 <input
                   type="text"
                   inputMode="numeric"
                   value={cnic}
                   onChange={e => setCnic(formatCnic(e.target.value))}
-                  placeholder="42101-1234567-1"
-                  className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-emerald-500 transition-colors"
+                  placeholder="00000-0000000-0"
+                  className="w-full px-4 py-3 bg-[#F4F7F5] dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 rounded-xl text-[#0B1F17] dark:text-white font-mono text-xs focus:outline-none focus:border-[#047857] transition-colors"
                 />
               </div>
               <div>
-                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">Mobile Number</label>
+                <label className="text-xs font-bold text-[#0B1F17] dark:text-white uppercase tracking-wider block mb-1">Mobile Number</label>
                 <input
                   type="text"
                   inputMode="numeric"
                   value={mobile}
                   onChange={e => setMobile(formatMobile(e.target.value))}
                   placeholder="0300-1234567"
-                  className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full px-4 py-3 bg-[#F4F7F5] dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 rounded-xl text-[#0B1F17] dark:text-white font-mono text-xs focus:outline-none focus:border-[#047857] transition-colors"
                 />
               </div>
             </div>
 
             {/* Live Location Picker */}
             <div>
-              <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">Location Verification</label>
+              <label className="text-xs font-bold text-[#0B1F17] dark:text-white uppercase tracking-wider block mb-1">Location Verification</label>
               <div className="flex gap-2 items-center">
                 <input
                   type="text"
                   readOnly
                   value={location}
                   placeholder="Click button to verify location..."
-                  className="flex-1 px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-emerald-300 font-semibold text-xs outline-none"
+                  className="flex-1 px-4 py-3 bg-[#F4F7F5] dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 rounded-xl text-[#047857] font-semibold text-xs outline-none"
                 />
                 <button 
                   onClick={handleGetLiveLocation} 
                   disabled={isLocating}
-                  className="px-3.5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold transition-all active:scale-95 flex items-center gap-1 flex-shrink-0 shadow-xs disabled:opacity-50"
+                  className="px-4 py-3 bg-[#047857] hover:bg-[#064E3B] text-white rounded-xl text-xs font-bold transition-all active:scale-95 flex items-center gap-1 flex-shrink-0 shadow-xs disabled:opacity-50"
                 >
                   {isLocating ? 'Verifying...' : 'Verify GPS'}
                 </button>
@@ -541,37 +567,37 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">Password</label>
+                <label className="text-xs font-bold text-[#0B1F17] dark:text-white uppercase tracking-wider block mb-1">Password</label>
                 <input
                   type="password"
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white text-xs focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full px-4 py-3 bg-[#F4F7F5] dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 rounded-xl text-[#0B1F17] dark:text-white text-xs focus:outline-none focus:border-[#047857] transition-colors"
                 />
               </div>
               <div>
-                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">Confirm</label>
+                <label className="text-xs font-bold text-[#0B1F17] dark:text-white uppercase tracking-wider block mb-1">Confirm</label>
                 <input
                   type="password"
                   value={confirmPassword}
                   onChange={e => setConfirmPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white text-xs focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full px-4 py-3 bg-[#F4F7F5] dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 rounded-xl text-[#0B1F17] dark:text-white text-xs focus:outline-none focus:border-[#047857] transition-colors"
                 />
               </div>
             </div>
 
             {/* Overseas toggle */}
-            <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/10">
+            <div className="flex items-center justify-between p-3.5 bg-[#F4F7F5] dark:bg-white/5 rounded-xl border border-[#E3ECE7] dark:border-white/10">
               <div>
-                <p className="text-white font-semibold text-xs">Overseas Pakistani?</p>
-                <p className="text-slate-400 text-xs">Living or working abroad</p>
+                <p className="text-[#0B1F17] dark:text-white font-bold text-xs">Overseas Pakistani?</p>
+                <p className="text-[#55695F] dark:text-slate-400 text-xs">Living or working abroad</p>
               </div>
               <button
                 type="button"
                 onClick={() => setIsOverseas(v => !v)}
-                className={`w-10 h-5 rounded-full transition-colors flex items-center px-1 ${isOverseas ? 'bg-emerald-500' : 'bg-slate-700'}`}
+                className={`w-10 h-5 rounded-full transition-colors flex items-center px-1 ${isOverseas ? 'bg-[#047857]' : 'bg-slate-300 dark:bg-slate-700'}`}
               >
                 <div className={`w-3.5 h-3.5 rounded-full bg-white transition-transform ${isOverseas ? 'translate-x-5' : ''}`} />
               </button>
@@ -579,25 +605,25 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
 
             {isOverseas && (
               <div>
-                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">Country of Residence</label>
+                <label className="text-xs font-bold text-[#0B1F17] dark:text-white uppercase tracking-wider block mb-1">Country of Residence</label>
                 <select
                   value={country}
                   onChange={e => setCountry(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white text-xs focus:outline-none focus:border-emerald-500"
+                  className="w-full px-4 py-3 bg-[#F4F7F5] dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 rounded-xl text-[#0B1F17] dark:text-white text-xs focus:outline-none focus:border-[#047857]"
                 >
-                  <option value="" className="bg-[#121316]">Select Country</option>
-                  {COUNTRIES.map(c => <option key={c} value={c} className="bg-[#121316]">{c}</option>)}
+                  <option value="">Select Country</option>
+                  {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
             )}
 
             <button
               onClick={handleRegister}
-              className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-all active:scale-95 text-xs sm:text-sm shadow-md"
+              className="w-full py-3 bg-[#047857] hover:bg-[#064E3B] text-white font-bold rounded-xl transition-all active:scale-95 text-xs sm:text-sm shadow-xs"
             >
               Continue to PIN Setup →
             </button>
-            <p className="text-center text-xs text-slate-400 font-medium">
+            <p className="text-center text-xs text-[#55695F] dark:text-slate-400 font-medium">
               Already registered?{' '}
               <button
                 onClick={() => { setScreen('login'); setError(''); }}
@@ -611,24 +637,24 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
 
         {/* ── TRADING PIN SETUP ── */}
         {screen === 'trading-pin' && (
-          <div className="bg-[#121316] border border-white/10 rounded-3xl p-6 sm:p-7 space-y-4 text-center shadow-2xl backdrop-blur-xl">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mx-auto mb-2 border border-emerald-500/20">
+          <div className="bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 rounded-[20px] p-6 sm:p-7 space-y-4 text-center shadow-xs">
+            <div className="w-12 h-12 rounded-2xl bg-[#D1FAE5] text-[#047857] flex items-center justify-center mx-auto mb-2 border border-[#A7F3D0]">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                 <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
               </svg>
             </div>
-            <h2 className="text-lg font-bold text-white">Set 4-Digit Security PIN</h2>
-            <p className="text-slate-400 text-xs font-medium leading-relaxed">
-              Required every time you <strong className="text-white">buy stocks, Sukuk, or transfer funds</strong>.
+            <h2 className="text-xl font-extrabold text-[#0B1F17] dark:text-white">Set 4-Digit Security PIN</h2>
+            <p className="text-[#55695F] dark:text-slate-400 text-xs font-medium leading-relaxed">
+              Required every time you <strong className="text-[#0B1F17] dark:text-white">buy stocks, Sukuk, or transfer funds</strong>.
             </p>
             {error && (
-              <p className="text-red-400 text-xs font-semibold bg-red-500/10 border border-red-500/20 py-2 px-3 rounded-xl">
+              <p className="text-[#B42318] text-xs font-semibold bg-[#FEE4E2] border border-[#FECDCA] py-2 px-3 rounded-xl">
                 {error}
               </p>
             )}
             <div>
-              <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1.5">Enter 4-Digit PIN</label>
+              <label className="text-xs font-bold text-[#0B1F17] dark:text-white uppercase tracking-wider block mb-1.5">Enter 4-Digit PIN</label>
               <input
                 type="password"
                 inputMode="numeric"
@@ -636,11 +662,11 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
                 value={tradingPin}
                 onChange={e => setTradingPin(e.target.value.replace(/\D/g, '').slice(0, 4))}
                 placeholder="••••"
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-center text-2xl tracking-[0.8em] focus:outline-none focus:border-emerald-500 transition-colors"
+                className="w-full px-4 py-3 bg-[#F4F7F5] dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 rounded-xl text-[#0B1F17] dark:text-white text-center text-2xl tracking-[0.8em] focus:outline-none focus:border-[#047857] transition-colors"
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1.5">Confirm 4-Digit PIN</label>
+              <label className="text-xs font-bold text-[#0B1F17] dark:text-white uppercase tracking-wider block mb-1.5">Confirm 4-Digit PIN</label>
               <input
                 type="password"
                 inputMode="numeric"
@@ -648,12 +674,12 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
                 value={confirmTradingPin}
                 onChange={e => setConfirmTradingPin(e.target.value.replace(/\D/g, '').slice(0, 4))}
                 placeholder="••••"
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-center text-2xl tracking-[0.8em] focus:outline-none focus:border-emerald-500 transition-colors"
+                className="w-full px-4 py-3 bg-[#F4F7F5] dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 rounded-xl text-[#0B1F17] dark:text-white text-center text-2xl tracking-[0.8em] focus:outline-none focus:border-[#047857] transition-colors"
               />
             </div>
             <button
               onClick={handleTradingPin}
-              className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-all active:scale-95 text-xs sm:text-sm shadow-md"
+              className="w-full py-3 bg-[#047857] hover:bg-[#064E3B] text-white font-bold rounded-xl transition-all active:scale-95 text-xs sm:text-sm shadow-xs"
             >
               Save PIN &amp; Enter Dashboard
             </button>
@@ -662,15 +688,15 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
 
         {/* ── BIOMETRIC QUICK LOGIN ── */}
         {screen === 'biometric' && pendingUser && (
-          <div className="bg-[#121316] border border-white/10 rounded-3xl p-7 text-center space-y-5 shadow-2xl backdrop-blur-xl">
-            <h2 className="text-lg font-bold text-white">
+          <div className="bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 rounded-[20px] p-7 text-center space-y-5 shadow-xs">
+            <h2 className="text-xl font-extrabold text-[#0B1F17] dark:text-white">
               Welcome back,<br />
-              <span className="text-emerald-400 font-bold">{pendingUser.name}</span>
+              <span className="text-[#047857] dark:text-emerald-400 font-extrabold">{pendingUser.name}</span>
             </h2>
             <button
               onClick={handleBiometricLogin}
               disabled={loading}
-              className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-all active:scale-95 text-xs sm:text-sm flex items-center justify-center gap-2.5 shadow-md"
+              className="w-full py-3.5 bg-[#047857] hover:bg-[#064E3B] text-white font-bold rounded-xl transition-all active:scale-95 text-xs sm:text-sm flex items-center justify-center gap-2.5 shadow-xs"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 11c0-1.66-1.34-3-3-3S6 9.34 6 11c0 2.22 1.2 4.15 3 5.19"/>
