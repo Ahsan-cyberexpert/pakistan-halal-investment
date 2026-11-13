@@ -121,12 +121,12 @@ export default function WaliAutopilot({ lang }: WaliAutopilotProps) {
 
   return (
     <div className="p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-slate-950 border border-emerald-500/10 shadow-lg overflow-hidden relative transition-all duration-300 mb-4 sm:mb-6">
-      <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl" />
+      <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 dark:bg-emerald-950/600/5 rounded-full blur-2xl" />
       
       {/* Header */}
       <div className="flex items-center justify-between mb-3 sm:mb-4">
         <div className="flex items-center gap-2.5 sm:gap-3">
-          <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-lg sm:text-xl transition-all duration-500 flex-shrink-0 ${status === 'scanning' ? 'bg-emerald-500 shadow-md shadow-emerald-900/40 rotate-12' : 'bg-slate-900 border border-white/5'}`}>
+          <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-lg sm:text-xl transition-all duration-500 flex-shrink-0 ${status === 'scanning' ? 'bg-emerald-50 dark:bg-emerald-950/600 shadow-md shadow-emerald-900/40 rotate-12' : 'bg-slate-900 border border-white/5'}`}>
             
           </div>
           <div>
@@ -139,7 +139,7 @@ export default function WaliAutopilot({ lang }: WaliAutopilotProps) {
           status === 'idle' && (
             <button
               onClick={startScanning}
-              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-black text-xs uppercase tracking-wider shadow-md transition-all active:scale-95"
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-50 dark:bg-emerald-950/600 text-white rounded-xl font-black text-xs uppercase tracking-wider shadow-md transition-all active:scale-95"
             >
               {t('Start Scanning', 'اسکیننگ شروع کریں')}
             </button>
@@ -149,10 +149,10 @@ export default function WaliAutopilot({ lang }: WaliAutopilotProps) {
             <p className="text-xs font-black text-amber-500 uppercase tracking-widest mb-0.5">{t('Elite Access Pending', 'ایلیٹ رسائی باقی ہے')}</p>
             <div className="flex gap-1 justify-end">
               <div className="w-8 h-1 bg-white/10 rounded-full overflow-hidden">
-                <div className="h-full bg-emerald-500" style={{ width: `${Math.min(100, (eligibility.totalInvested / 250000000) * 100)}%` }}></div>
+                <div className="h-full bg-emerald-50 dark:bg-emerald-950/600" style={{ width: `${Math.min(100, (eligibility.totalInvested / 250000000) * 100)}%` }}></div>
               </div>
               <div className="w-8 h-1 bg-white/10 rounded-full overflow-hidden">
-                <div className="h-full bg-emerald-500" style={{ width: `${Math.min(100, (eligibility.totalProfit / 500000000) * 100)}%` }}></div>
+                <div className="h-full bg-emerald-50 dark:bg-emerald-950/600" style={{ width: `${Math.min(100, (eligibility.totalProfit / 500000000) * 100)}%` }}></div>
               </div>
             </div>
           </div>
@@ -189,11 +189,11 @@ export default function WaliAutopilot({ lang }: WaliAutopilotProps) {
             {t('Manage Capital', 'سرمایہ کا انتظام')} <span>→</span>
           </button>
         </div>
-        <div className="col-span-2 bg-emerald-500/5 border border-emerald-500/10 rounded-xl p-3 flex flex-col justify-center items-center text-center">
+        <div className="col-span-2 bg-emerald-50 dark:bg-emerald-950/600/5 border border-emerald-500/10 rounded-xl p-3 flex flex-col justify-center items-center text-center">
           <p className="text-xs font-bold text-emerald-400/80 uppercase tracking-widest mb-0.5">{t('Security', 'سیکیورٹی')}</p>
           <p className="text-xs sm:text-sm font-black text-emerald-400">{t('Verified', 'تصدیق شدہ')}</p>
           <div className="flex gap-1 mt-1">
-            {[1,2,3].map(i => <div key={i} className="w-1 h-1 bg-emerald-500 rounded-full" />)}
+            {[1,2,3].map(i => <div key={i} className="w-1 h-1 bg-emerald-50 dark:bg-emerald-950/600 rounded-full" />)}
           </div>
         </div>
       </div>
@@ -210,7 +210,7 @@ export default function WaliAutopilot({ lang }: WaliAutopilotProps) {
               className="flex-1 bg-black border border-white/10 rounded-xl px-3 py-2 text-white font-bold focus:border-emerald-500 outline-none transition-all text-xs"
             />
             <div className="flex flex-col gap-1">
-              <button onClick={() => handleAllocate('allocate')} className="bg-emerald-600 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-emerald-500 transition-colors">Deposit</button>
+              <button onClick={() => handleAllocate('allocate')} className="bg-emerald-600 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-emerald-50 dark:bg-emerald-950/600 transition-colors">Deposit</button>
               <button onClick={() => handleAllocate('deallocate')} className="bg-slate-800 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-slate-700 transition-colors">Refund</button>
             </div>
           </div>
@@ -250,7 +250,7 @@ export default function WaliAutopilot({ lang }: WaliAutopilotProps) {
                   {t(`This investment supports approximately ${proposal.jobsCreated || 50} jobs in Pakistan's economy.`, `یہ سرمایہ کاری پاکستان کی معیشت میں تقریباً ${proposal.jobsCreated || 50} ملازمتوں کا باعث بنتی ہے۔`)}
                 </p>
                 <div className="mt-2 w-full bg-white/20 h-1 sm:h-1.5 rounded-full overflow-hidden">
-                  <div className="bg-white h-full" style={{ width: `${(proposal.gdpImpact || 7) * 10}%` }} />
+                  <div className="bg-white dark:bg-[#15181F] h-full" style={{ width: `${(proposal.gdpImpact || 7) * 10}%` }} />
                 </div>
               </div>
             </div>
@@ -259,7 +259,7 @@ export default function WaliAutopilot({ lang }: WaliAutopilotProps) {
           <div className="flex gap-3 sm:gap-4">
             <button 
               onClick={() => setShowPinEntry(true)}
-              className="flex-1 bg-white text-emerald-700 py-3 sm:py-5 rounded-xl sm:rounded-[1.5rem] font-black text-xs uppercase tracking-[0.2em] hover:scale-105 transition-all active:scale-95 shadow-lg shadow-emerald-900/20"
+              className="flex-1 bg-white dark:bg-[#15181F] text-emerald-700 py-3 sm:py-5 rounded-xl sm:rounded-[1.5rem] font-black text-xs uppercase tracking-[0.2em] hover:scale-105 transition-all active:scale-95 shadow-lg shadow-emerald-900/20"
             >
               {t('Confirm & Invest', 'تصدیق کریں اور سرمایہ کاری کریں')}
             </button>
@@ -275,7 +275,7 @@ export default function WaliAutopilot({ lang }: WaliAutopilotProps) {
 
       {/* PIN Entry */}
       {showPinEntry && (
-        <div className="mb-4 sm:mb-6 p-6 sm:p-10 bg-white rounded-2xl sm:rounded-[3.5rem] text-slate-900 shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-300">
+        <div className="mb-4 sm:mb-6 p-6 sm:p-10 bg-white dark:bg-[#15181F] rounded-2xl sm:rounded-[3.5rem] text-[#0B1F17] dark:text-white shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-300">
           <p className="text-center text-xs font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] text-slate-400 mb-4 sm:mb-8">{t('Authorize Transaction', 'لین دین کی تصدیق کریں')}</p>
           <input 
             type="password" 
@@ -283,11 +283,11 @@ export default function WaliAutopilot({ lang }: WaliAutopilotProps) {
             value={pin}
             onChange={(e) => setPin(e.target.value)}
             placeholder="****"
-            className="w-full text-center text-4xl sm:text-6xl font-black tracking-[1rem] sm:tracking-[1.5rem] py-4 sm:py-6 bg-slate-50 rounded-xl sm:rounded-[2rem] border-2 border-slate-100 focus:border-emerald-500 outline-none transition-all mb-4 sm:mb-8"
+            className="w-full text-center text-4xl sm:text-6xl font-black tracking-[1rem] sm:tracking-[1.5rem] py-4 sm:py-6 bg-[#F4F7F5] dark:bg-[#1C2029] rounded-xl sm:rounded-[2rem] border-2 border-[#E3ECE7] dark:border-[#262B35] focus:border-emerald-500 outline-none transition-all mb-4 sm:mb-8"
           />
           <button 
             onClick={confirmInvestment}
-            className="w-full bg-emerald-600 text-white py-3 sm:py-6 rounded-xl sm:rounded-[2rem] font-black text-xs sm:text-sm uppercase tracking-widest shadow-lg shadow-emerald-900/40 hover:bg-emerald-500 transition-all active:scale-95"
+            className="w-full bg-emerald-600 text-white py-3 sm:py-6 rounded-xl sm:rounded-[2rem] font-black text-xs sm:text-sm uppercase tracking-widest shadow-lg shadow-emerald-900/40 hover:bg-emerald-50 dark:bg-emerald-950/600 transition-all active:scale-95"
           >
             {t('Verify Security PIN', 'سیکیورٹی پن کی تصدیق کریں')}
           </button>
@@ -299,13 +299,13 @@ export default function WaliAutopilot({ lang }: WaliAutopilotProps) {
         <div className="flex justify-between items-center px-1 sm:px-2">
           <h3 className="text-xs font-black text-slate-600 uppercase tracking-widest">{t('Guardian Log', 'محافظ لاگ')}</h3>
           <div className="flex gap-1 sm:gap-1.5">
-            <div className={`w-1.5 h-1.5 rounded-full ${status === 'scanning' ? 'bg-emerald-500 animate-ping' : 'bg-slate-800'}`} />
-            <div className={`w-1.5 h-1.5 rounded-full ${status === 'proposing' ? 'bg-amber-500 animate-pulse' : 'bg-slate-800'}`} />
+            <div className={`w-1.5 h-1.5 rounded-full ${status === 'scanning' ? 'bg-emerald-50 dark:bg-emerald-950/600 animate-ping' : 'bg-slate-800'}`} />
+            <div className={`w-1.5 h-1.5 rounded-full ${status === 'proposing' ? 'bg-amber-50 dark:bg-amber-950/600 animate-pulse' : 'bg-slate-800'}`} />
           </div>
         </div>
         <div className="space-y-2 sm:space-y-3 max-h-32 sm:max-h-40 overflow-y-auto pr-1 sm:pr-2 scrollbar-hide">
           {logs.length === 0 ? (
-            <p className="text-slate-700 text-xs italic font-medium p-4 sm:p-6 text-center border-2 border-dashed border-white/5 rounded-xl sm:rounded-[2rem]">
+            <p className="text-[#374151] dark:text-[#CBD5E1] text-xs italic font-medium p-4 sm:p-6 text-center border-2 border-dashed border-white/5 rounded-xl sm:rounded-[2rem]">
               {t('Awaiting sovereign instructions...', 'خود مختار ہدایات کا انتظار ہے...')}
             </p>
           ) : (

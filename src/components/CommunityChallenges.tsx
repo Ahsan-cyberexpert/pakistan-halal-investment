@@ -35,7 +35,7 @@ export default function CommunityChallenges() {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
+    <div className="bg-white dark:bg-[#15181F] rounded-2xl shadow-sm border border-[#E3ECE7] dark:border-[#262B35] p-4 mb-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-bold text-gray-800">🤝 Community Challenges</h2>
         <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Nation Building</span>
@@ -46,7 +46,7 @@ export default function CommunityChallenges() {
           const progress = Math.min(100, (c.current / c.target) * 100);
           const isJoined = joined.has(c.id);
           return (
-            <div key={c.id} className={`p-4 rounded-xl border transition ${isJoined ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200 hover:border-blue-300'}`}>
+            <div key={c.id} className={`p-4 rounded-xl border transition ${isJoined ? 'bg-emerald-50 dark:bg-emerald-950/60 border-green-200' : 'bg-gray-50 border-[#E3ECE7] dark:border-[#262B35] hover:border-blue-300'}`}>
               <div className="flex items-start gap-3">
                 <span className="text-2xl">{c.icon}</span>
                 <div className="flex-1">
@@ -60,7 +60,7 @@ export default function CommunityChallenges() {
                     </div>
                     <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
                       <div 
-                        className={`h-full rounded-full transition-all duration-1000 ${isJoined ? 'bg-green-500' : 'bg-blue-500'}`} 
+                        className={`h-full rounded-full transition-all duration-1000 ${isJoined ? 'bg-emerald-50 dark:bg-emerald-950/600' : 'bg-sky-50 dark:bg-sky-950/600'}`} 
                         style={{ width: `${progress}%` }}
                       ></div>
                     </div>

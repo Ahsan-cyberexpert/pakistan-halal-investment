@@ -81,10 +81,10 @@ export default function OverseasInvest({ balance, onInvest, lang = 'en', cnic = 
     <div className="space-y-4 sm:space-y-6 animate-in fade-in duration-500" dir={isUrdu ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div>
-        <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-bold mb-1.5 sm:mb-2">
+        <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 rounded-full text-xs font-bold mb-1.5 sm:mb-2">
           <span>🌍</span> {t('Roshan Digital Gateway', 'روشن ڈیجیٹل گیٹ وے')}
         </div>
-        <h2 className="text-lg sm:text-2xl font-black text-slate-800 tracking-tight">
+        <h2 className="text-lg sm:text-2xl font-black text-[#0B1F17] dark:text-[#F0F4F2] tracking-tight">
           {t('Overseas Pakistanis Investment', 'اوورسیز پاکستانیز انویسٹمنٹ')}
         </h2>
         <p className="text-slate-500 text-xs mt-0.5 sm:mt-1 leading-relaxed">
@@ -94,7 +94,7 @@ export default function OverseasInvest({ balance, onInvest, lang = 'en', cnic = 
 
       {/* Roshan Digital Stats Card */}
       <div className="bg-gradient-to-br from-slate-900 to-emerald-950 rounded-2xl sm:rounded-[2.5rem] p-4 sm:p-6 text-white shadow-xl shadow-slate-900/20 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 sm:w-48 sm:h-48 bg-emerald-500/10 rounded-full blur-[40px] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-32 h-32 sm:w-48 sm:h-48 bg-emerald-50 dark:bg-emerald-950/600/10 rounded-full blur-[40px] pointer-events-none" />
         <div className="flex justify-between items-start mb-4 sm:mb-6">
           <div>
             <p className="text-xs font-bold uppercase tracking-widest text-emerald-400 mb-0.5 sm:mb-1">
@@ -121,19 +121,19 @@ export default function OverseasInvest({ balance, onInvest, lang = 'en', cnic = 
 
       {/* Available Sovereign Assets */}
       <div className="space-y-3 sm:space-y-4">
-        <h3 className="text-xs sm:text-sm font-black text-slate-800 tracking-tight px-1">
+        <h3 className="text-xs sm:text-sm font-black text-[#0B1F17] dark:text-[#F0F4F2] tracking-tight px-1">
           {t('Roshan Digital Investment Opportunities', 'روشن ڈیجیٹل سرمایہ کاری کے مواقع')}
         </h3>
 
         <div className="space-y-2.5 sm:space-y-3">
           {assets.map(a => (
-            <div key={a.id} className="p-4 sm:p-5 bg-white rounded-2xl sm:rounded-3xl border border-slate-100 shadow-sm hover:border-emerald-200 transition-all space-y-2.5 sm:space-y-3">
+            <div key={a.id} className="p-4 sm:p-5 bg-white dark:bg-[#15181F] rounded-2xl sm:rounded-3xl border border-[#E3ECE7] dark:border-[#262B35] shadow-sm hover:border-emerald-200 transition-all space-y-2.5 sm:space-y-3">
               <div className="flex justify-between items-start">
                 <div>
-                  <span className="text-xs font-black uppercase tracking-widest px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-lg border border-emerald-100">
+                  <span className="text-xs font-black uppercase tracking-widest px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 rounded-lg border border-emerald-100">
                     {a.cat}
                   </span>
-                  <h4 className="font-bold text-xs sm:text-sm text-slate-800 mt-1 sm:mt-2">{a.name}</h4>
+                  <h4 className="font-bold text-xs sm:text-sm text-[#0B1F17] dark:text-[#F0F4F2] mt-1 sm:mt-2">{a.name}</h4>
                   <p className="text-xs text-slate-500 mt-0.5">{isUrdu ? a.descUr : a.descEn}</p>
                 </div>
                 <div className="text-right flex-shrink-0">
@@ -145,7 +145,7 @@ export default function OverseasInvest({ balance, onInvest, lang = 'en', cnic = 
               <div className="flex justify-between items-center pt-2.5 sm:pt-3 border-t border-slate-50">
                 <div>
                   <p className="text-xs text-slate-400 font-medium">{t('Min Investment', 'کم از کم سرمایہ کاری')}</p>
-                  <p className="text-xs font-bold text-slate-700">Rs {a.min.toLocaleString()}</p>
+                  <p className="text-xs font-bold text-[#374151] dark:text-[#CBD5E1]">Rs {a.min.toLocaleString()}</p>
                 </div>
                 <button onClick={() => setSelectedAsset(a)}
                   className="px-4 py-2 sm:px-5 sm:py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl sm:rounded-2xl font-bold text-xs shadow-md hover:shadow-slate-900/20 transition-all active:scale-95">
@@ -160,15 +160,15 @@ export default function OverseasInvest({ balance, onInvest, lang = 'en', cnic = 
       {/* Investment Modal */}
       {selectedAsset && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-white rounded-2xl sm:rounded-[3rem] p-5 sm:p-6 max-w-sm w-full shadow-2xl space-y-3 sm:space-y-4 animate-in slide-in-from-bottom-4 duration-200">
+          <div className="bg-white dark:bg-[#15181F] rounded-2xl sm:rounded-[3rem] p-5 sm:p-6 max-w-sm w-full shadow-2xl space-y-3 sm:space-y-4 animate-in slide-in-from-bottom-4 duration-200">
             <div className="flex justify-between items-center">
-              <h4 className="font-black text-sm sm:text-base text-slate-800">{selectedAsset.name}</h4>
+              <h4 className="font-black text-sm sm:text-base text-[#0B1F17] dark:text-[#F0F4F2]">{selectedAsset.name}</h4>
               <button onClick={() => setSelectedAsset(null)} className="text-slate-400 hover:text-slate-600 text-xs sm:text-sm">✕</button>
             </div>
             <p className="text-xs text-slate-500">{isUrdu ? selectedAsset.descUr : selectedAsset.descEn}</p>
 
-            {error && <p className="text-xs font-bold text-red-500 bg-red-50 p-2 sm:p-2.5 rounded-xl">{error}</p>}
-            {successMsg && <p className="text-xs font-bold text-emerald-600 bg-emerald-50 p-2 sm:p-2.5 rounded-xl">{successMsg}</p>}
+            {error && <p className="text-xs font-bold text-red-500 bg-red-50 dark:bg-red-950/60 p-2 sm:p-2.5 rounded-xl">{error}</p>}
+            {successMsg && <p className="text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 p-2 sm:p-2.5 rounded-xl">{successMsg}</p>}
 
             <div>
               <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-1">
@@ -176,7 +176,7 @@ export default function OverseasInvest({ balance, onInvest, lang = 'en', cnic = 
               </label>
               <input type="number" value={investAmount} onChange={e => setInvestAmount(e.target.value)}
                 placeholder={selectedAsset.min.toString()}
-                className="w-full px-3.5 py-2.5 sm:px-4 sm:py-3 bg-slate-50 border border-slate-200 rounded-xl sm:rounded-2xl text-slate-800 font-bold focus:outline-none focus:border-emerald-500 text-xs sm:text-sm" />
+                className="w-full px-3.5 py-2.5 sm:px-4 sm:py-3 bg-[#F4F7F5] dark:bg-[#1C2029] border border-[#E3ECE7] dark:border-[#262B35] rounded-xl sm:rounded-2xl text-[#0B1F17] dark:text-[#F0F4F2] font-bold focus:outline-none focus:border-emerald-500 text-xs sm:text-sm" />
               <div className="flex justify-between text-xs text-slate-400 mt-1">
                 <span>{t('Min: Rs', 'کم از کم: روپے')} {selectedAsset.min.toLocaleString()}</span>
                 <span>{t('Wallet: Rs', 'والٹ: روپے')} {balance.toLocaleString()}</span>
@@ -184,7 +184,7 @@ export default function OverseasInvest({ balance, onInvest, lang = 'en', cnic = 
             </div>
 
             <button onClick={handleInvestConfirm}
-              className="w-full py-2.5 sm:py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-xl sm:rounded-2xl transition-all shadow-md shadow-emerald-900/20 active:scale-95 text-xs">
+              className="w-full py-2.5 sm:py-3 bg-emerald-600 hover:bg-emerald-50 dark:bg-emerald-950/600 text-white font-black rounded-xl sm:rounded-2xl transition-all shadow-md shadow-emerald-900/20 active:scale-95 text-xs">
               {t('Confirm Sovereign Investment', 'سرمایہ کاری کی تصدیق کریں')}
             </button>
           </div>
@@ -194,17 +194,17 @@ export default function OverseasInvest({ balance, onInvest, lang = 'en', cnic = 
       {/* Current Holdings */}
       {holdings.length > 0 && (
         <div className="space-y-2.5 sm:space-y-3 pt-2 sm:pt-4">
-          <h3 className="text-xs sm:text-sm font-black text-slate-800 tracking-tight px-1">
+          <h3 className="text-xs sm:text-sm font-black text-[#0B1F17] dark:text-[#F0F4F2] tracking-tight px-1">
             {t('My Roshan Holdings', 'میرے روشن اثاثے')}
           </h3>
           {holdings.map(h => (
-            <div key={h.id} className="p-3 sm:p-4 bg-white rounded-2xl sm:rounded-3xl border border-slate-100 flex justify-between items-center shadow-sm">
+            <div key={h.id} className="p-3 sm:p-4 bg-white dark:bg-[#15181F] rounded-2xl sm:rounded-3xl border border-[#E3ECE7] dark:border-[#262B35] flex justify-between items-center shadow-sm">
               <div>
-                <h4 className="font-bold text-xs text-slate-800">{h.assetName}</h4>
+                <h4 className="font-bold text-xs text-[#0B1F17] dark:text-[#F0F4F2]">{h.assetName}</h4>
                 <p className="text-xs text-slate-400 font-medium">{h.category} · {h.expectedReturn}</p>
               </div>
               <div className="text-right">
-                <p className="font-black text-xs text-slate-800">Rs {h.amountInvested.toLocaleString()}</p>
+                <p className="font-black text-xs text-[#0B1F17] dark:text-[#F0F4F2]">Rs {h.amountInvested.toLocaleString()}</p>
                 <p className="text-xs font-bold text-emerald-600 mt-0.5">{t('Active', 'فعال')}</p>
               </div>
             </div>

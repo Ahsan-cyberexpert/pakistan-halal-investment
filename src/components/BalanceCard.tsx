@@ -94,7 +94,7 @@ export default function BalanceCard({ balance, onDeposit, onWithdraw, portfolioV
         <div className="grid grid-cols-2 gap-2.5">
           <button
             onClick={onDeposit}
-            className="touch-target py-2.5 bg-white text-emerald-900 rounded-xl font-semibold text-xs sm:text-sm hover:bg-emerald-50 transition-all active:scale-95 flex items-center justify-center gap-1.5 shadow-sm"
+            className="touch-target py-2.5 bg-white dark:bg-[#15181F] text-emerald-900 rounded-xl font-semibold text-xs sm:text-sm hover:bg-emerald-50 dark:bg-emerald-950/60 transition-all active:scale-95 flex items-center justify-center gap-1.5 shadow-sm"
           >
             <svg className="w-4 h-4 text-emerald-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M12 4v16m8-8H4" />

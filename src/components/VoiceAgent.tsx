@@ -100,16 +100,16 @@ export default function VoiceAgent({ onCommand, lang = 'en' }: VoiceAgentProps) 
 
       {/* Manual Command Helper / Fallback Menu */}
       {showHelp && (
-        <div className="bg-white border border-slate-200 rounded-[2rem] p-4.5 shadow-2xl max-w-xs w-full animate-in fade-in slide-in-from-bottom-4 duration-300">
-          <div className="flex justify-between items-center mb-3 border-b border-slate-100 pb-2.5">
-            <h4 className="text-xs font-black text-slate-800 flex items-center gap-1.5">
+        <div className="bg-white dark:bg-[#15181F] border border-[#E3ECE7] dark:border-[#262B35] rounded-[2rem] p-4.5 shadow-2xl max-w-xs w-full animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <div className="flex justify-between items-center mb-3 border-b border-[#E3ECE7] dark:border-[#262B35] pb-2.5">
+            <h4 className="text-xs font-black text-[#0B1F17] dark:text-[#F0F4F2] flex items-center gap-1.5">
               <span>⌨️</span> {lang === 'ur' ? 'آواز کے احکامات (مینوئل)' : 'Voice Commands (Manual)'}
             </h4>
             <button onClick={() => setShowHelp(false)} className="text-slate-400 hover:text-slate-600 text-xs font-bold p-1">✕</button>
           </div>
           
           {!hasSupport && (
-            <p className="text-amber-700 text-xs font-bold mb-3 bg-amber-50 p-2.5 rounded-xl border border-amber-200/60 leading-relaxed">
+            <p className="text-amber-700 text-xs font-bold mb-3 bg-amber-50 dark:bg-amber-950/60 p-2.5 rounded-xl border border-amber-200/60 leading-relaxed">
               ⚠️ {lang === 'ur' ? 'آپ کا براؤزر وائس فیچر کو سپورٹ نہیں کرتا۔ نیچے دیے گئے بٹن استعمال کریں:' : 'Your browser does not support speech recognition. Use quick commands below:'}
             </p>
           )}
@@ -117,7 +117,7 @@ export default function VoiceAgent({ onCommand, lang = 'en' }: VoiceAgentProps) 
           <div className="grid grid-cols-2 gap-2">
             {sampleCommands.map((sc, i) => (
               <button key={i} onClick={() => { onCommand(sc.cmd); setShowHelp(false); }}
-                className="p-2.5 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-700 text-slate-700 rounded-xl text-xs font-bold border border-slate-200/60 hover:border-emerald-200 transition-all text-center active:scale-95 shadow-sm">
+                className="p-2.5 bg-[#F4F7F5] dark:bg-[#1C2029] hover:bg-emerald-50 dark:bg-emerald-950/60 hover:text-emerald-700 text-[#374151] dark:text-[#CBD5E1] rounded-xl text-xs font-bold border border-slate-200/60 hover:border-emerald-200 transition-all text-center active:scale-95 shadow-sm">
                 {lang === 'ur' ? sc.labelUr : sc.labelEn}
               </button>
             ))}
@@ -130,7 +130,7 @@ export default function VoiceAgent({ onCommand, lang = 'en' }: VoiceAgentProps) 
       <div className="flex items-center gap-2">
         <button 
           onClick={() => setShowHelp(v => !v)}
-          className="w-11 h-11 rounded-2xl bg-white border border-slate-200 shadow-lg flex items-center justify-center text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all active:scale-95 text-lg"
+          className="w-11 h-11 rounded-2xl bg-white dark:bg-[#15181F] border border-[#E3ECE7] dark:border-[#262B35] shadow-lg flex items-center justify-center text-slate-600 hover:bg-[#F4F7F5] dark:bg-[#1C2029] hover:text-[#0B1F17] dark:text-white transition-all active:scale-95 text-lg"
           title="Manual Command Menu"
         >
           💬
@@ -139,7 +139,7 @@ export default function VoiceAgent({ onCommand, lang = 'en' }: VoiceAgentProps) 
         <button
           onClick={toggleListening}
           className={`px-4.5 py-3 rounded-2xl shadow-xl transition-all duration-300 font-black text-xs flex items-center gap-2 ${
-            isListening ? 'bg-red-500 text-white scale-105 animate-pulse ring-4 ring-red-500/30' : 
+            isListening ? 'bg-red-50 dark:bg-red-950/600 text-white scale-105 animate-pulse ring-4 ring-red-500/30' : 
             hasSupport ? 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white hover:shadow-emerald-900/20' : 
             'bg-slate-800 text-white hover:bg-slate-700'
           }`}

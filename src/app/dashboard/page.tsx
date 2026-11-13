@@ -525,7 +525,7 @@ export default function Dashboard() {
       {showResetModal && (
         <div className="fixed inset-0 z-[5000] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="w-full max-w-sm rounded-[24px] border border-[#E3ECE7] dark:border-[#262B35] p-6 text-center space-y-4 bg-white dark:bg-[#15181F] shadow-2xl">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50 dark:bg-red-500/10 text-red-600">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50 dark:bg-red-50 dark:bg-red-950/600/10 text-red-600">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="3 6 5 6 21 6"/>
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
@@ -543,7 +543,7 @@ export default function Dashboard() {
             <div className="flex gap-3 pt-2">
               <button
                 onClick={() => setShowResetModal(false)}
-                className="flex-1 rounded-[14px] border border-[#E3ECE7] dark:border-white/10 py-2.5 text-xs font-semibold text-[#0B1F17] dark:text-slate-300 hover:bg-slate-50 transition-colors"
+                className="flex-1 rounded-[14px] border border-[#E3ECE7] dark:border-white/10 py-2.5 text-xs font-semibold text-[#0B1F17] dark:text-slate-300 hover:bg-[#F4F7F5] dark:bg-[#1C2029] transition-colors"
               >
                 {t('Cancel', 'کینسل')}
               </button>
@@ -574,7 +574,7 @@ export default function Dashboard() {
             <div className="flex items-center gap-2.5">
               <Logo variant="full" className="h-8 w-auto" />
             </div>
-            <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#FEF3C7] dark:bg-amber-500/10 text-[#92400E] dark:text-amber-400 border border-[#FDE68A] dark:border-amber-500/20">
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#FEF3C7] dark:bg-amber-50 dark:bg-amber-950/600/10 text-[#92400E] dark:text-amber-400 border border-[#FDE68A] dark:border-amber-500/20">
               Demo
             </span>
           </div>
@@ -589,8 +589,8 @@ export default function Dashboard() {
                   onClick={() => setActiveTab(item.id as DashboardTab)}
                   className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-[14px] text-left transition-all duration-150 ${
                     isActive
-                      ? 'bg-[#D1FAE5] dark:bg-emerald-500/20 text-[#047857] dark:text-emerald-400 font-bold'
-                      : 'text-[#55695F] dark:text-slate-400 hover:text-[#0B1F17] dark:hover:text-white hover:bg-slate-100/70 dark:hover:bg-white/5 font-medium'
+                      ? 'bg-[#D1FAE5] dark:bg-emerald-50 dark:bg-emerald-950/600/20 text-[#047857] dark:text-emerald-400 font-bold'
+                      : 'text-[#55695F] dark:text-slate-400 hover:text-[#0B1F17] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#232936]/70 dark:hover:bg-white/5 font-medium'
                   }`}
                 >
                   <span className={isActive ? 'text-[#047857] dark:text-emerald-400' : 'text-[#55695F] dark:text-slate-400'}>
@@ -610,8 +610,8 @@ export default function Dashboard() {
               onClick={() => setActiveTab('settings')}
               className={`w-full flex items-center gap-3 px-3.5 py-2 rounded-[14px] text-left transition-all ${
                 activeTab === 'settings'
-                  ? 'bg-[#D1FAE5] dark:bg-emerald-500/20 text-[#047857] dark:text-emerald-400 font-bold'
-                  : 'text-[#55695F] dark:text-slate-400 hover:text-[#0B1F17] dark:hover:text-white hover:bg-slate-100/70 font-medium'
+                  ? 'bg-[#D1FAE5] dark:bg-emerald-50 dark:bg-emerald-950/600/20 text-[#047857] dark:text-emerald-400 font-bold'
+                  : 'text-[#55695F] dark:text-slate-400 hover:text-[#0B1F17] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#232936]/70 font-medium'
               }`}
             >
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -623,7 +623,7 @@ export default function Dashboard() {
 
             <button
               onClick={() => setShowResetModal(true)}
-              className="w-full flex items-center justify-center gap-2 rounded-xl border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 py-2.5 text-xs font-semibold text-[#0B1F17] dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10 transition-colors shadow-xs"
+              className="w-full flex items-center justify-center gap-2 rounded-xl border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 py-2.5 text-xs font-semibold text-[#0B1F17] dark:text-slate-300 hover:bg-[#F4F7F5] dark:bg-[#1C2029] dark:hover:bg-white/10 transition-colors shadow-xs"
             >
               {t('Reset Account Data', 'ڈیٹا ری سیٹ کریں')}
             </button>
@@ -638,7 +638,7 @@ export default function Dashboard() {
               {/* Language pill toggle */}
               <button
                 onClick={() => handleLangChange(lang === 'en' ? 'ur' : 'en')}
-                className="px-3 py-1 text-xs font-semibold rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white hover:bg-slate-50 dark:hover:bg-white/10 transition-colors shadow-xs"
+                className="px-3 py-1 text-xs font-semibold rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white hover:bg-[#F4F7F5] dark:bg-[#1C2029] dark:hover:bg-white/10 transition-colors shadow-xs"
               >
                 {lang === 'en' ? 'اردو' : 'EN'}
               </button>
@@ -663,7 +663,7 @@ export default function Dashboard() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handleLangChange(lang === 'en' ? 'ur' : 'en')}
-                    className="px-4 py-1.5 text-sm font-semibold rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white shadow-xs hover:bg-slate-50 transition-colors"
+                    className="px-4 py-1.5 text-sm font-semibold rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white shadow-xs hover:bg-[#F4F7F5] dark:bg-[#1C2029] transition-colors"
                   >
                     {lang === 'en' ? 'اردو' : 'EN'}
                   </button>
@@ -686,7 +686,7 @@ export default function Dashboard() {
                   <p className="text-[36px] font-extrabold text-[#0B1F17] dark:text-white tracking-tight mt-1 tabular-nums">
                     PKR 312,500
                   </p>
-                  <div className="mt-1.5 inline-flex items-center gap-1 bg-[#D1FAE5] dark:bg-emerald-500/20 text-[#047857] dark:text-emerald-400 text-xs font-bold px-2.5 py-1 rounded-full">
+                  <div className="mt-1.5 inline-flex items-center gap-1 bg-[#D1FAE5] dark:bg-emerald-50 dark:bg-emerald-950/600/20 text-[#047857] dark:text-emerald-400 text-xs font-bold px-2.5 py-1 rounded-full">
                     <span>▲</span>
                     <span>PKR 12,300 (+4.10%)</span>
                   </div>
@@ -760,7 +760,7 @@ export default function Dashboard() {
                   </button>
                   <button
                     onClick={() => setModal('withdraw')}
-                    className="h-12 bg-white dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 hover:bg-slate-50 text-[#0B1F17] dark:text-white font-bold rounded-[14px] text-center text-sm shadow-xs active:scale-98 transition-all flex items-center justify-center"
+                    className="h-12 bg-white dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 hover:bg-[#F4F7F5] dark:bg-[#1C2029] text-[#0B1F17] dark:text-white font-bold rounded-[14px] text-center text-sm shadow-xs active:scale-98 transition-all flex items-center justify-center"
                   >
                     Withdraw
                   </button>
@@ -827,7 +827,7 @@ export default function Dashboard() {
                         <p className="text-[36px] leading-tight font-extrabold text-[#0B1F17] dark:text-white tracking-tight mt-1 tabular-nums">
                           PKR 312,500
                         </p>
-                        <div className="mt-2 inline-flex items-center gap-1 bg-[#D1FAE5] dark:bg-emerald-500/20 text-[#047857] dark:text-emerald-400 text-xs font-bold px-2.5 py-0.5 rounded-full">
+                        <div className="mt-2 inline-flex items-center gap-1 bg-[#D1FAE5] dark:bg-emerald-50 dark:bg-emerald-950/600/20 text-[#047857] dark:text-emerald-400 text-xs font-bold px-2.5 py-0.5 rounded-full">
                           <span>▲</span>
                           <span>PKR 12,300 (+4.10%)</span>
                         </div>
@@ -949,7 +949,7 @@ export default function Dashboard() {
                       </button>
                       <button
                         onClick={() => setModal('withdraw')}
-                        className="flex-1 py-2.5 bg-white dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 hover:bg-slate-50 text-[#0B1F17] dark:text-white font-semibold rounded-[14px] text-center text-sm shadow-xs transition-all"
+                        className="flex-1 py-2.5 bg-white dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 hover:bg-[#F4F7F5] dark:bg-[#1C2029] text-[#0B1F17] dark:text-white font-semibold rounded-[14px] text-center text-sm shadow-xs transition-all"
                       >
                         Withdraw
                       </button>
@@ -1011,7 +1011,7 @@ export default function Dashboard() {
                   <div className="flex items-center gap-4">
                     <button
                       onClick={() => handleLangChange(lang === 'en' ? 'ur' : 'en')}
-                      className="h-11 px-5 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white font-bold text-[15px] shadow-xs hover:bg-slate-50 transition-colors"
+                      className="h-11 px-5 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white font-bold text-[15px] shadow-xs hover:bg-[#F4F7F5] dark:bg-[#1C2029] transition-colors"
                     >
                       اردو
                     </button>
@@ -1053,7 +1053,7 @@ export default function Dashboard() {
                         className={`h-11 px-6 rounded-full font-bold text-[15px] capitalize transition-all ${
                           stockFilter === filterKey
                             ? 'bg-[#064E3B] text-white shadow-xs'
-                            : 'bg-white dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 text-[#0B1F17] dark:text-white hover:bg-slate-50'
+                            : 'bg-white dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 text-[#0B1F17] dark:text-white hover:bg-[#F4F7F5] dark:bg-[#1C2029]'
                         }`}
                       >
                         {filterKey === 'all' ? 'All' : filterKey === 'halal' ? 'Halal' : 'Excluded'}
@@ -1110,7 +1110,7 @@ export default function Dashboard() {
                       return (
                         <div
                           key={s.symbol}
-                          className="grid grid-cols-[minmax(0,1fr)_120px_150px_110px_110px_110px_110px] items-center h-16 px-6 border-t border-[#E3ECE7] dark:border-white/10 hover:bg-slate-50/40 dark:hover:bg-white/[0.02] transition-colors"
+                          className="grid grid-cols-[minmax(0,1fr)_120px_150px_110px_110px_110px_110px] items-center h-16 px-6 border-t border-[#E3ECE7] dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#232936]/40 dark:hover:bg-white/[0.02] transition-colors"
                         >
                           <div className="flex items-center gap-4">
                             <div
@@ -1270,7 +1270,7 @@ export default function Dashboard() {
                 {/* Stock List Card (Image media_1794527886755_ebe088f8.png) */}
                 <div className="rounded-[20px] bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 divide-y divide-[#E3ECE7] dark:divide-white/10 shadow-xs overflow-hidden">
                   {filteredStocks.map((s) => (
-                    <div key={s.name} className="p-4 flex items-center justify-between hover:bg-slate-50/50 dark:hover:bg-white/[0.02] transition-colors">
+                    <div key={s.name} className="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-[#232936]/50 dark:hover:bg-white/[0.02] transition-colors">
                       <div className="flex items-center gap-3">
                         <div
                           className={`h-12 w-12 rounded-2xl flex items-center justify-center font-extrabold text-sm ${
@@ -1337,7 +1337,7 @@ export default function Dashboard() {
                   <div className="flex items-center gap-4">
                     <button
                       onClick={() => handleLangChange(lang === 'en' ? 'ur' : 'en')}
-                      className="h-11 px-5 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white font-bold text-[15px] shadow-xs hover:bg-slate-50 transition-colors"
+                      className="h-11 px-5 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white font-bold text-[15px] shadow-xs hover:bg-[#F4F7F5] dark:bg-[#1C2029] transition-colors"
                     >
                       اردو
                     </button>
@@ -1379,7 +1379,7 @@ export default function Dashboard() {
                         className={`h-11 px-6 rounded-full font-bold text-[15px] capitalize transition-all ${
                           sukukFilter === filterKey
                             ? 'bg-[#064E3B] text-white shadow-xs'
-                            : 'bg-white dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 text-[#0B1F17] dark:text-white hover:bg-slate-50'
+                            : 'bg-white dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 text-[#0B1F17] dark:text-white hover:bg-[#F4F7F5] dark:bg-[#1C2029]'
                         }`}
                       >
                         {filterKey === 'all' ? 'All' : filterKey === 'govt' ? 'Government' : 'Corporate'}
@@ -1429,7 +1429,7 @@ export default function Dashboard() {
                     .map((s) => (
                       <div
                         key={s.name}
-                        className="grid grid-cols-[minmax(0,1fr)_110px_120px_130px_130px_120px_110px] items-center h-16 px-6 border-t border-[#E3ECE7] dark:border-white/10 hover:bg-slate-50/40 dark:hover:bg-white/[0.02] transition-colors"
+                        className="grid grid-cols-[minmax(0,1fr)_110px_120px_130px_130px_120px_110px] items-center h-16 px-6 border-t border-[#E3ECE7] dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#232936]/40 dark:hover:bg-white/[0.02] transition-colors"
                       >
                         <div className="flex items-center gap-4">
                           <div className="w-10 h-10 rounded-[12px] bg-[#D1FAE5] text-[#064E3B] flex items-center justify-center flex-shrink-0">
@@ -1614,7 +1614,7 @@ export default function Dashboard() {
                   <div className="flex items-center gap-4">
                     <button
                       onClick={() => handleLangChange(lang === 'en' ? 'ur' : 'en')}
-                      className="h-11 px-5 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white font-bold text-[15px] shadow-xs hover:bg-slate-50 transition-colors"
+                      className="h-11 px-5 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white font-bold text-[15px] shadow-xs hover:bg-[#F4F7F5] dark:bg-[#1C2029] transition-colors"
                     >
                       اردو
                     </button>
@@ -1779,7 +1779,7 @@ export default function Dashboard() {
                         </button>
                         <button
                           onClick={() => {}}
-                          className="h-[52px] rounded-[14px] border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white font-bold text-base hover:bg-slate-50 transition-colors"
+                          className="h-[52px] rounded-[14px] border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white font-bold text-base hover:bg-[#F4F7F5] dark:bg-[#1C2029] transition-colors"
                         >
                           Invite members
                         </button>
@@ -1871,7 +1871,7 @@ export default function Dashboard() {
                         </button>
                         <button
                           onClick={() => setActiveTab('mufti')}
-                          className="h-[52px] rounded-[14px] border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white font-bold text-base hover:bg-slate-50 transition-colors flex items-center justify-center"
+                          className="h-[52px] rounded-[14px] border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white font-bold text-base hover:bg-[#F4F7F5] dark:bg-[#1C2029] transition-colors flex items-center justify-center"
                         >
                           Ask AI Mufti
                         </button>
@@ -1988,7 +1988,7 @@ export default function Dashboard() {
 
                       <button
                         onClick={() => setFamilySubTab('inheritance')}
-                        className="w-full h-11 bg-white dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 hover:bg-slate-50 text-[#0B1F17] dark:text-white font-bold rounded-[14px] text-center text-sm shadow-xs transition-all flex items-center justify-center"
+                        className="w-full h-11 bg-white dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 hover:bg-[#F4F7F5] dark:bg-[#1C2029] text-[#0B1F17] dark:text-white font-bold rounded-[14px] text-center text-sm shadow-xs transition-all flex items-center justify-center"
                       >
                         Plan inheritance
                       </button>
@@ -2020,7 +2020,7 @@ export default function Dashboard() {
                   <div className="flex items-center gap-4">
                     <button
                       onClick={() => handleLangChange(lang === 'en' ? 'ur' : 'en')}
-                      className="h-11 px-5 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white font-bold text-[15px] shadow-xs hover:bg-slate-50 transition-colors"
+                      className="h-11 px-5 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white font-bold text-[15px] shadow-xs hover:bg-[#F4F7F5] dark:bg-[#1C2029] transition-colors"
                     >
                       اردو
                     </button>
@@ -2145,7 +2145,7 @@ export default function Dashboard() {
                               className={`h-16 px-4 rounded-[14px] flex items-center gap-3 font-bold text-[15px] text-left transition-all ${
                                 isSel
                                   ? 'border-2 border-[#047857] bg-[#D1FAE5] dark:bg-emerald-950/60 text-[#064E3B] dark:text-emerald-300 shadow-xs'
-                                  : 'border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white hover:bg-slate-50'
+                                  : 'border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white hover:bg-[#F4F7F5] dark:bg-[#1C2029]'
                               }`}
                             >
                               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -2309,7 +2309,7 @@ export default function Dashboard() {
                   <div className="flex items-center gap-4">
                     <button
                       onClick={() => handleLangChange(lang === 'en' ? 'ur' : 'en')}
-                      className="h-11 px-5 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white font-bold text-[15px] shadow-xs hover:bg-slate-50 transition-colors"
+                      className="h-11 px-5 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white font-bold text-[15px] shadow-xs hover:bg-[#F4F7F5] dark:bg-[#1C2029] transition-colors"
                     >
                       اردو
                     </button>
@@ -2365,7 +2365,7 @@ export default function Dashboard() {
                             key={sug}
                             type="button"
                             onClick={() => handleSendMuftiMessage(sug)}
-                            className="h-11 px-5 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 font-semibold text-sm text-[#0B1F17] dark:text-white hover:bg-slate-50 transition-colors shadow-xs"
+                            className="h-11 px-5 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 font-semibold text-sm text-[#0B1F17] dark:text-white hover:bg-[#F4F7F5] dark:bg-[#1C2029] transition-colors shadow-xs"
                           >
                             {sug}
                           </button>
@@ -2482,13 +2482,13 @@ export default function Dashboard() {
                 <div className="flex items-center gap-2 pb-3 overflow-x-auto">
                   <button
                     onClick={() => handleSendMuftiMessage('Is Meezan Bank compliant?')}
-                    className="px-4 py-2 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-xs font-bold text-[#0B1F17] dark:text-white hover:bg-slate-50 transition-colors whitespace-nowrap shadow-xs"
+                    className="px-4 py-2 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-xs font-bold text-[#0B1F17] dark:text-white hover:bg-[#F4F7F5] dark:bg-[#1C2029] transition-colors whitespace-nowrap shadow-xs"
                   >
                     Is Meezan Bank compliant?
                   </button>
                   <button
                     onClick={() => handleSendMuftiMessage('Zakat on gold')}
-                    className="px-4 py-2 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-xs font-bold text-[#0B1F17] dark:text-white hover:bg-slate-50 transition-colors whitespace-nowrap shadow-xs"
+                    className="px-4 py-2 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-xs font-bold text-[#0B1F17] dark:text-white hover:bg-[#F4F7F5] dark:bg-[#1C2029] transition-colors whitespace-nowrap shadow-xs"
                   >
                     Zakat on gold
                   </button>
@@ -2569,7 +2569,7 @@ export default function Dashboard() {
                       onClick={() => toggleTheme('light')}
                       className={`rounded-full px-4 py-1.5 text-xs font-bold transition-all ${
                         theme === 'light'
-                          ? 'bg-white text-[#0B1F17] shadow-xs'
+                          ? 'bg-white dark:bg-[#15181F] text-[#0B1F17] shadow-xs'
                           : 'text-[#55695F] hover:text-[#0B1F17]'
                       }`}
                     >
@@ -2635,7 +2635,7 @@ export default function Dashboard() {
                 {/* Delete account */}
                 <button
                   onClick={() => setShowResetModal(true)}
-                  className="flex w-full items-center justify-between p-5 hover:bg-red-50/50 dark:hover:bg-red-500/5 transition-colors text-left"
+                  className="flex w-full items-center justify-between p-5 hover:bg-red-50/50 dark:hover:bg-red-50 dark:bg-red-950/600/5 transition-colors text-left"
                 >
                   <div>
                     <span className="text-sm font-bold text-[#B42318] dark:text-red-400">

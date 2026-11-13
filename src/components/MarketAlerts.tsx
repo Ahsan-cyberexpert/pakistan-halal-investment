@@ -78,7 +78,7 @@ export default function MarketAlerts() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h3 className="text-xs font-black text-emerald-600 uppercase tracking-widest mb-1">Price Alerts</h3>
-          <p className="text-xl font-black text-slate-800 tracking-tight">Market Alerts</p>
+          <p className="text-xl font-black text-[#0B1F17] dark:text-[#F0F4F2] tracking-tight">Market Alerts</p>
         </div>
         <button
           onClick={() => setShowAdd(v => !v)}
@@ -90,13 +90,13 @@ export default function MarketAlerts() {
 
       {/* Add Alert Form */}
       {showAdd && (
-        <div className="bg-slate-50 rounded-3xl p-5 mb-6 space-y-4 animate-in slide-in-from-top-2 duration-300">
+        <div className="bg-[#F4F7F5] dark:bg-[#1C2029] rounded-3xl p-5 mb-6 space-y-4 animate-in slide-in-from-top-2 duration-300">
           <div>
             <label className="text-xs font-black text-slate-500 uppercase tracking-widest block mb-2">Stock</label>
             <select
               value={selectedSymbol}
               onChange={e => setSelectedSymbol(e.target.value)}
-              className="w-full px-4 py-3 bg-white border border-slate-200 rounded-2xl font-bold text-slate-800 focus:outline-none focus:border-emerald-400 text-sm"
+              className="w-full px-4 py-3 bg-white dark:bg-[#15181F] border border-[#E3ECE7] dark:border-[#262B35] rounded-2xl font-bold text-[#0B1F17] dark:text-[#F0F4F2] focus:outline-none focus:border-emerald-400 text-sm"
             >
               {halalStocks.map(s => (
                 <option key={s.symbol} value={s.symbol}>{s.symbol} — {s.name} (₨{s.price})</option>
@@ -113,7 +113,7 @@ export default function MarketAlerts() {
                     key={d}
                     onClick={() => setDirection(d)}
                     className={`flex-1 py-2.5 rounded-2xl font-black text-xs transition-all ${
-                      direction === d ? 'bg-emerald-600 text-white' : 'bg-white text-slate-600 border border-slate-200'
+                      direction === d ? 'bg-emerald-600 text-white' : 'bg-white dark:bg-[#15181F] text-slate-600 border border-[#E3ECE7] dark:border-[#262B35]'
                     }`}
                   >
                     {d === 'above' ? '▲ Above' : '▼ Below'}
@@ -128,7 +128,7 @@ export default function MarketAlerts() {
                 value={targetPrice}
                 onChange={e => setTargetPrice(e.target.value)}
                 placeholder="e.g. 150"
-                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-2xl font-bold text-slate-800 focus:outline-none focus:border-emerald-400 text-sm"
+                className="w-full px-4 py-2.5 bg-white dark:bg-[#15181F] border border-[#E3ECE7] dark:border-[#262B35] rounded-2xl font-bold text-[#0B1F17] dark:text-[#F0F4F2] focus:outline-none focus:border-emerald-400 text-sm"
               />
             </div>
           </div>
@@ -144,7 +144,7 @@ export default function MarketAlerts() {
       )}
 
       {saved && (
-        <div className="mb-4 p-3 bg-emerald-50 border border-emerald-100 rounded-2xl text-emerald-700 text-xs font-black text-center animate-in fade-in">
+        <div className="mb-4 p-3 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-100 rounded-2xl text-emerald-700 text-xs font-black text-center animate-in fade-in">
           ✅ Alert set! You&apos;ll be notified when the price is reached.
         </div>
       )}
@@ -166,16 +166,16 @@ export default function MarketAlerts() {
 
             return (
               <div key={alert.id} className={`flex items-center gap-4 p-4 rounded-3xl border transition-all ${
-                isTriggered ? 'bg-emerald-50 border-emerald-200' : 'bg-white border-slate-100'
+                isTriggered ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-200' : 'bg-white dark:bg-[#15181F] border-[#E3ECE7] dark:border-[#262B35]'
               }`}>
                 <div className={`w-11 h-11 rounded-2xl flex items-center justify-center text-lg flex-shrink-0 ${
-                  isTriggered ? 'bg-emerald-100' : 'bg-slate-50'
+                  isTriggered ? 'bg-emerald-100' : 'bg-[#F4F7F5] dark:bg-[#1C2029]'
                 }`}>
                   {isTriggered ? '🔔' : '⏳'}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="font-black text-slate-800 text-sm">{alert.symbol}</span>
+                    <span className="font-black text-[#0B1F17] dark:text-[#F0F4F2] text-sm">{alert.symbol}</span>
                     <span className={`text-xs font-black px-2 py-0.5 rounded-lg ${
                       alert.direction === 'above' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'
                     }`}>

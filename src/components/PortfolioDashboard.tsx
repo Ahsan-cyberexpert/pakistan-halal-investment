@@ -18,8 +18,8 @@ interface PortfolioDashboardProps {
 }
 
 const COLORS = [
-  "bg-emerald-500", "bg-teal-500", "bg-cyan-500",
-  "bg-blue-500", "bg-indigo-500", "bg-violet-500",
+  "bg-emerald-50 dark:bg-emerald-950/600", "bg-teal-500", "bg-cyan-500",
+  "bg-sky-50 dark:bg-sky-950/600", "bg-indigo-500", "bg-violet-500",
 ];
 
 export default function PortfolioDashboard({ holdings, totalValue, dailyPnl, onSell }: PortfolioDashboardProps) {
@@ -35,7 +35,7 @@ export default function PortfolioDashboard({ holdings, totalValue, dailyPnl, onS
       <div className="premium-card p-6 sm:p-10 text-center overflow-hidden relative">
         <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/40 to-transparent pointer-events-none rounded-[2rem]" />
         <div className="relative z-10">
-          <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-[1.5rem] flex items-center justify-center text-3xl mx-auto mb-4 shadow-inner border border-emerald-100">
+          <div className="w-16 h-16 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 rounded-[1.5rem] flex items-center justify-center text-3xl mx-auto mb-4 shadow-inner border border-emerald-100">
             
           </div>
           <h3 className="text-base sm:text-lg font-black mb-2" style={{ color: "var(--text-primary)" }}>
@@ -67,8 +67,8 @@ export default function PortfolioDashboard({ holdings, totalValue, dailyPnl, onS
         <div
           className={`flex flex-col items-end gap-0.5 px-3 sm:px-4 py-2 rounded-2xl font-bold text-xs border ${
             isDailyPositive
-              ? "bg-emerald-50 text-emerald-700 border-emerald-100"
-              : "bg-red-50 text-red-600 border-red-100"
+              ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 border-emerald-100"
+              : "bg-red-50 dark:bg-red-950/60 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-800/60 border-red-100"
           }`}
         >
           <div className="flex items-center gap-1 font-black">
@@ -149,8 +149,8 @@ export default function PortfolioDashboard({ holdings, totalValue, dailyPnl, onS
                       {h.symbol}
                     </span>
                     {h.isWali && (
-                      <span className="bg-emerald-500 text-white text-xs font-black uppercase px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
-                        <span className="w-1 h-1 bg-white rounded-full animate-pulse" />
+                      <span className="bg-emerald-50 dark:bg-emerald-950/600 text-white text-xs font-black uppercase px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
+                        <span className="w-1 h-1 bg-white dark:bg-[#15181F] rounded-full animate-pulse" />
                         Wali
                       </span>
                     )}
@@ -171,7 +171,7 @@ export default function PortfolioDashboard({ holdings, totalValue, dailyPnl, onS
                 >
                   {h.pnl >= 0 ? "+" : ""}{pnlPct}%
                 </div>
-                {onSell && <button onClick={() => onSell(h)} className="touch-target mt-1 min-h-0 h-7 rounded-lg px-2 text-xs font-bold text-red-600 dark:text-red-400 hover:bg-red-500/10">Sell</button>}
+                {onSell && <button onClick={() => onSell(h)} className="touch-target mt-1 min-h-0 h-7 rounded-lg px-2 text-xs font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:bg-red-950/600/10">Sell</button>}
               </div>
             </div>
           );

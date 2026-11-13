@@ -66,13 +66,13 @@ export default function HalalStockScanner({ balance, onBuy }: { balance: number;
     return (
       <div className="space-y-2.5 sm:space-y-3">
         {[1,2,3,4,5].map(i => (
-          <div key={i} className="bg-white rounded-2xl sm:rounded-3xl p-3 sm:p-4 animate-pulse">
+          <div key={i} className="bg-white dark:bg-[#15181F] rounded-2xl sm:rounded-3xl p-3 sm:p-4 animate-pulse">
             <div className="flex justify-between items-center">
               <div className="space-y-2">
-                <div className="h-3.5 bg-slate-100 rounded w-24" />
-                <div className="h-2.5 bg-slate-100 rounded w-32" />
+                <div className="h-3.5 bg-[#E8EDEA] dark:bg-[#232936] rounded w-24" />
+                <div className="h-2.5 bg-[#E8EDEA] dark:bg-[#232936] rounded w-32" />
               </div>
-              <div className="h-5 bg-slate-100 rounded w-20" />
+              <div className="h-5 bg-[#E8EDEA] dark:bg-[#232936] rounded w-20" />
             </div>
           </div>
         ))}
@@ -85,7 +85,7 @@ export default function HalalStockScanner({ balance, onBuy }: { balance: number;
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5 sm:gap-2">
-          <div className={`w-2 h-2 rounded-full ${isLive ? 'bg-emerald-500 animate-pulse' : 'bg-amber-400'}`} />
+          <div className={`w-2 h-2 rounded-full ${isLive ? 'bg-emerald-50 dark:bg-emerald-950/600 animate-pulse' : 'bg-amber-400'}`} />
           <span className="text-xs font-bold text-slate-400">Market feed · {lastUpdated}</span>
         </div>
         <button onClick={fetchStocks} className="text-xs text-emerald-600 font-bold hover:underline">↻ Refresh</button>
@@ -100,11 +100,11 @@ export default function HalalStockScanner({ balance, onBuy }: { balance: number;
           aria-label="Search PSX stocks"
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="w-full pl-8 pr-3 py-2 sm:py-2.5 rounded-xl border border-slate-200 focus:border-emerald-400 outline-none text-xs font-medium shadow-inner"
+          className="w-full pl-8 pr-3 py-2 sm:py-2.5 rounded-xl border border-[#E3ECE7] dark:border-[#262B35] focus:border-emerald-400 outline-none text-xs font-medium shadow-inner"
         />
       </div>
 
-      {error && <p className="text-amber-600 text-xs font-medium bg-amber-50 px-3 py-1.5 rounded-xl">{error}</p>}
+      {error && <p className="text-amber-600 text-xs font-medium bg-amber-50 dark:bg-amber-950/60 px-3 py-1.5 rounded-xl">{error}</p>}
 
       {/* Stock List — Contained in a streamlined scrollable box */}
       <div className="space-y-1.5 max-h-[300px] sm:max-h-[360px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-slate-200">
@@ -114,21 +114,21 @@ export default function HalalStockScanner({ balance, onBuy }: { balance: number;
               onClick={() => setSelectedStock(selectedStock?.symbol === stock.symbol ? null : stock)}
               className={`w-full flex justify-between items-center p-2.5 sm:p-3 rounded-xl sm:rounded-2xl border transition-all duration-150 active:scale-95 ${
                 selectedStock?.symbol === stock.symbol
-                  ? 'border-emerald-300 bg-emerald-50 shadow-sm shadow-emerald-100'
+                  ? 'border-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 shadow-sm shadow-emerald-100'
                   : 'border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 hover:border-emerald-500/50 hover:shadow-sm text-slate-900 dark:text-white'
               }`}
             >
               <div className="flex items-center gap-2 sm:gap-2.5 text-left">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-100 flex items-center justify-center font-black text-xs text-slate-700 flex-shrink-0">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#E8EDEA] dark:bg-[#232936] flex items-center justify-center font-black text-xs text-[#374151] dark:text-[#CBD5E1] flex-shrink-0">
                   {stock.symbol.slice(0,3)}
                 </div>
                 <div>
-                  <div className="font-black text-slate-800 text-xs tracking-tight">{stock.symbol}</div>
+                  <div className="font-black text-[#0B1F17] dark:text-[#F0F4F2] text-xs tracking-tight">{stock.symbol}</div>
                   <div className="text-xs text-slate-400 truncate max-w-[130px] sm:max-w-none">{stock.name} · {stock.sector}</div>
                 </div>
               </div>
               <div className="text-right flex-shrink-0">
-                <div className="font-black text-slate-800 text-xs">₨{stock.price.toLocaleString()}</div>
+                <div className="font-black text-[#0B1F17] dark:text-[#F0F4F2] text-xs">₨{stock.price.toLocaleString()}</div>
                 <div className={`text-xs font-bold ${stock.changePercent >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
                   {stock.changePercent >= 0 ? '▲' : '▼'} {Math.abs(stock.changePercent).toFixed(2)}%
                 </div>
@@ -137,7 +137,7 @@ export default function HalalStockScanner({ balance, onBuy }: { balance: number;
 
             {/* Inline Buy Panel */}
             {selectedStock?.symbol === stock.symbol && (
-              <div className="mt-1 mx-0.5 bg-white border border-emerald-200 rounded-2xl p-3.5 sm:p-4 space-y-2.5 sm:space-y-3 animate-in slide-in-from-top-2 duration-150 shadow-md">
+              <div className="mt-1 mx-0.5 bg-white dark:bg-[#15181F] border border-emerald-200 rounded-2xl p-3.5 sm:p-4 space-y-2.5 sm:space-y-3 animate-in slide-in-from-top-2 duration-150 shadow-md">
                 <div className="flex justify-between text-xs">
                   <span className="text-slate-500">Your Balance</span>
                   <span className="font-black text-emerald-600">₨{balance.toLocaleString()}</span>
@@ -155,7 +155,7 @@ export default function HalalStockScanner({ balance, onBuy }: { balance: number;
                       inputMode="decimal"
                       value={buyAmount}
                       onChange={e => setBuyAmount(e.target.value)}
-                      className="w-full pl-6 pr-3 py-2 rounded-xl border border-slate-200 focus:border-emerald-400 outline-none font-bold text-slate-800 text-xs"
+                      className="w-full pl-6 pr-3 py-2 rounded-xl border border-[#E3ECE7] dark:border-[#262B35] focus:border-emerald-400 outline-none font-bold text-[#0B1F17] dark:text-[#F0F4F2] text-xs"
                     />
                   </div>
                   {buyAmount && parseFloat(buyAmount) > 0 && (
@@ -165,7 +165,7 @@ export default function HalalStockScanner({ balance, onBuy }: { balance: number;
                   )}
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <button onClick={() => { setSelectedStock(null); setBuyAmount(''); }} className="py-2 rounded-xl border border-slate-200 font-black text-slate-600 hover:bg-slate-50 active:scale-95 transition-all text-xs">Cancel</button>
+                  <button onClick={() => { setSelectedStock(null); setBuyAmount(''); }} className="py-2 rounded-xl border border-[#E3ECE7] dark:border-[#262B35] font-black text-slate-600 hover:bg-[#F4F7F5] dark:bg-[#1C2029] active:scale-95 transition-all text-xs">Cancel</button>
                   <button
                     onClick={handleBuy}
                     disabled={buying || !buyAmount || parseFloat(buyAmount) > balance}

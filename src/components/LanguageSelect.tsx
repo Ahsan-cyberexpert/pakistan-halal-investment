@@ -8,7 +8,7 @@ export default function LanguageSelect({ onSelect }: LanguageSelectProps) {
   return (
     <div className="fixed inset-0 z-[9999] bg-slate-950 flex flex-col items-center justify-center px-8 overflow-hidden">
       {/* Ambient Orbs */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-50 dark:bg-emerald-950/600/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-teal-500/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2 pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(5,150,105,0.05)_0%,transparent_70%)] pointer-events-none" />
 

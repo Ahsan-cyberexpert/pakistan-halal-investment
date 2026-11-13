@@ -37,10 +37,10 @@ export default function DemoReceipt({ transaction, onClose, lang = 'en' }: DemoR
             <p className="text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">{urdu ? 'رسید' : 'Transaction Receipt'}</p>
             <h2 id="receipt-title" className="mt-1 text-xl font-bold text-slate-900 dark:text-white">{actionLabel(transaction, urdu)}</h2>
           </div>
-          <button onClick={onClose} aria-label={urdu ? 'رسید بند کریں' : 'Close receipt'} className="h-8 w-8 rounded-xl border border-slate-200 dark:border-white/10 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition-colors">✕</button>
+          <button onClick={onClose} aria-label={urdu ? 'رسید بند کریں' : 'Close receipt'} className="h-8 w-8 rounded-xl border border-slate-200 dark:border-white/10 text-slate-500 hover:text-[#0B1F17] dark:text-white dark:hover:text-white flex items-center justify-center transition-colors">✕</button>
         </div>
 
-        <div className="mb-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-3.5 text-sm text-emerald-700 dark:text-emerald-300">
+        <div className="mb-4 rounded-2xl border border-emerald-500/20 bg-emerald-50 dark:bg-emerald-950/600/5 p-3.5 text-sm text-emerald-700 dark:text-emerald-300">
           <p className="font-bold">{urdu ? 'تصدیق شدہ کارروائی' : 'Verified Record'}</p>
           <p className="mt-0.5 text-xs text-slate-600 dark:text-slate-400">{urdu ? 'ڈیجیٹل ٹرانزیکشن کامیابی سے ریکارڈ کر لی گئی۔' : 'Transaction executed and ledger balance updated.'}</p>
         </div>

@@ -15,7 +15,7 @@ export default function MicroTakaful() {
       </div>
 
       {!optedIn ? (
-        <div className="bg-white p-4 rounded-2xl border border-sky-100 mb-2">
+        <div className="bg-white dark:bg-[#15181F] p-4 rounded-2xl border border-sky-100 mb-2">
           <div className="flex justify-between items-start mb-3">
             <div>
               <div className="font-bold text-gray-800">Family Health Cover</div>
@@ -42,7 +42,7 @@ export default function MicroTakaful() {
             <div className="text-sm font-bold">Protected ✅</div>
             <div className="text-xs text-sky-200 mt-1">PKR 500K Active Coverage</div>
           </div>
-          <button className="bg-white text-sky-700 text-xs font-bold px-3 py-1 rounded-lg hover:bg-sky-50">
+          <button className="bg-white dark:bg-[#15181F] text-sky-700 text-xs font-bold px-3 py-1 rounded-lg hover:bg-sky-50">
             View Policy
           </button>
         </div>

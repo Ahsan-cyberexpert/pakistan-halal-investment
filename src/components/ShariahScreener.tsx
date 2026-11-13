@@ -49,14 +49,14 @@ export default function ShariahScreener() {
     <div className="premium-card p-8">
       <div className="mb-8">
         <h3 className="text-xs font-black text-emerald-600 uppercase tracking-widest mb-1">Stock Guard</h3>
-        <p className="text-2xl font-black text-slate-800 tracking-tighter">Shariah Screener</p>
+        <p className="text-2xl font-black text-[#0B1F17] dark:text-[#F0F4F2] tracking-tighter">Shariah Screener</p>
       </div>
 
       <div className="relative mb-6">
         <input
           type="text"
           placeholder="Search Symbol (e.g. LUCK, SYS)..."
-          className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
+          className="w-full bg-[#F4F7F5] dark:bg-[#1C2029] border border-[#E3ECE7] dark:border-[#262B35] rounded-2xl py-4 px-6 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
@@ -68,14 +68,14 @@ export default function ShariahScreener() {
           <button
             key={s.symbol}
             onClick={() => setSelected(s)}
-            className="w-full flex justify-between items-center p-4 bg-white rounded-2xl border border-slate-50 hover:border-emerald-100 hover:shadow-lg transition-all text-left"
+            className="w-full flex justify-between items-center p-4 bg-white dark:bg-[#15181F] rounded-2xl border border-slate-50 hover:border-emerald-100 hover:shadow-lg transition-all text-left"
           >
             <div>
-              <div className="font-black text-slate-800">{s.symbol}</div>
+              <div className="font-black text-[#0B1F17] dark:text-[#F0F4F2]">{s.symbol}</div>
               <div className="text-xs font-bold text-slate-400 uppercase">{s.name}</div>
             </div>
             <div className={`px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest ${
-              s.status === 'Halal' ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'
+              s.status === 'Halal' ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60' : 'bg-red-50 dark:bg-red-950/60 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-800/60'
             }`}>
               {s.status}
             </div>
@@ -93,7 +93,7 @@ export default function ShariahScreener() {
                 {loadingPrice && <span className="text-xs text-slate-500 font-bold animate-pulse">Fetching latest price...</span>}
                 {livePrice && (
                   <span className={`text-xs px-2 py-0.5 rounded-full font-black ${
-                    livePrice.changePercent >= 0 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
+                    livePrice.changePercent >= 0 ? 'bg-emerald-50 dark:bg-emerald-950/600/20 text-emerald-400' : 'bg-red-50 dark:bg-red-950/600/20 text-red-400'
                   }`}>
                     PKR {livePrice.price.toLocaleString()} ({livePrice.changePercent >= 0 ? '+' : ''}{livePrice.changePercent.toFixed(2)}%)
                   </span>

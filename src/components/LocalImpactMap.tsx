@@ -28,18 +28,18 @@ export default function LocalImpactMap() {
     <div className="premium-card p-8 overflow-hidden relative group">
       <div className="flex justify-between items-start mb-8">
         <div>
-          <h2 className="text-xl font-black text-slate-800 tracking-tight">Impact Radar</h2>
+          <h2 className="text-xl font-black text-[#0B1F17] dark:text-[#F0F4F2] tracking-tight">Impact Radar</h2>
           <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest mt-1">Sovereign Sukuk Projects</p>
         </div>
         <div className="flex gap-2">
-          <div className="px-3 py-1 bg-slate-50 border border-slate-100 rounded-full text-xs font-black text-slate-400">PAKISTAN</div>
-          <div className="px-3 py-1 bg-emerald-50 border border-emerald-100 rounded-full text-xs font-black text-emerald-600 uppercase tracking-widest">Active</div>
+          <div className="px-3 py-1 bg-[#F4F7F5] dark:bg-[#1C2029] border border-[#E3ECE7] dark:border-[#262B35] rounded-full text-xs font-black text-slate-400">PAKISTAN</div>
+          <div className="px-3 py-1 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-100 rounded-full text-xs font-black text-emerald-600 uppercase tracking-widest">Active</div>
         </div>
       </div>
 
       <div className="relative w-full aspect-[4/5] bg-slate-900 rounded-[2.5rem] overflow-hidden border border-slate-800 shadow-2xl group-hover:shadow-emerald-500/10 transition-all duration-700">
         {/* Animated Background Gradients */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px] animate-pulse"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-50 dark:bg-emerald-950/600/10 rounded-full blur-[80px] animate-pulse"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-[80px]"></div>
 
         {/* Pakistan stylized map */}
@@ -68,10 +68,10 @@ export default function LocalImpactMap() {
           >
             <div className="relative">
               {/* Pulsing ring */}
-              <div className="absolute inset-0 bg-emerald-500/40 rounded-full animate-ping scale-150"></div>
+              <div className="absolute inset-0 bg-emerald-50 dark:bg-emerald-950/600/40 rounded-full animate-ping scale-150"></div>
               <div className={`w-10 h-10 rounded-2xl flex items-center justify-center text-xl shadow-2xl border transition-all duration-300 ${
                 selectedProject?.city === p.city 
-                  ? 'bg-emerald-500 border-emerald-400 scale-110' 
+                  ? 'bg-emerald-50 dark:bg-emerald-950/600 border-emerald-400 scale-110' 
                   : 'bg-slate-800 border-slate-700'
               }`}>
                 {p.icon}
@@ -99,7 +99,7 @@ export default function LocalImpactMap() {
                 <div className="text-xs font-black text-white/40 uppercase tracking-widest mb-1">Portfolio Allocation</div>
                 <div className="text-sm font-black text-white">PKR {selectedProject.amount}</div>
               </div>
-              <div className="p-3 bg-emerald-500/10 rounded-2xl">
+              <div className="p-3 bg-emerald-50 dark:bg-emerald-950/600/10 rounded-2xl">
                 <div className="text-xs font-black text-emerald-400/70 uppercase tracking-widest mb-1">Direct Impact</div>
                 <div className="text-xs font-black text-white leading-tight">{selectedProject.impact}</div>
               </div>
@@ -108,8 +108,8 @@ export default function LocalImpactMap() {
         )}
       </div>
 
-      <div className="mt-8 flex items-center gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
-        <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+      <div className="mt-8 flex items-center gap-3 p-4 bg-[#F4F7F5] dark:bg-[#1C2029] rounded-2xl border border-[#E3ECE7] dark:border-[#262B35]">
+        <div className="w-2 h-2 bg-emerald-50 dark:bg-emerald-950/600 rounded-full animate-pulse"></div>
         <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">
           Your Sukuk holdings are directly funding these projects.
         </p>

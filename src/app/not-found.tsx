@@ -7,13 +7,13 @@ export default function NotFound() {
       style={{ background: "var(--bg-primary)" }}
     >
       <div className="text-center max-w-md">
-        <div className="w-24 h-24 bg-emerald-50 rounded-[2rem] flex items-center justify-center text-5xl mx-auto mb-8 shadow-xl border border-emerald-100">
+        <div className="w-24 h-24 bg-emerald-50 dark:bg-emerald-950/60 rounded-[2rem] flex items-center justify-center text-5xl mx-auto mb-8 shadow-xl border border-emerald-100">
           404
         </div>
-        <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-100 px-4 py-2 rounded-2xl mb-6">
+        <div className="inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-100 px-4 py-2 rounded-2xl mb-6">
           <span className="text-xs font-black text-emerald-600 uppercase tracking-widest">404 — Page Not Found</span>
         </div>
-        <h1 className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight mb-4">
+        <h1 className="text-4xl sm:text-5xl font-black text-[#0B1F17] dark:text-white tracking-tight mb-4">
           This path does<br />not exist.
         </h1>
         <p className="text-slate-500 font-medium mb-10 leading-relaxed">
@@ -28,7 +28,7 @@ export default function NotFound() {
           </Link>
           <Link
             href="/"
-            className="px-8 py-4 bg-white border-2 border-slate-200 text-slate-700 rounded-2xl font-black hover:border-emerald-300 hover:-translate-y-0.5 transition-all shadow-sm"
+            className="px-8 py-4 bg-white dark:bg-[#15181F] border-2 border-[#E3ECE7] dark:border-[#262B35] text-[#374151] dark:text-[#CBD5E1] rounded-2xl font-black hover:border-emerald-300 hover:-translate-y-0.5 transition-all shadow-sm"
           >
             Back to Home
           </Link>

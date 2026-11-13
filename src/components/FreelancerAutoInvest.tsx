@@ -5,7 +5,7 @@ export default function FreelancerAutoInvest() {
   const [connected, setConnected] = useState(false);
 
   return (
-    <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+    <div className="bg-white dark:bg-[#15181F] rounded-3xl p-6 shadow-sm border border-[#E3ECE7] dark:border-[#262B35]">
       <div className="flex items-center space-x-3 mb-4">
         <div className="w-12 h-12 bg-orange-100 rounded-2xl flex items-center justify-center text-2xl">💻</div>
         <div>
@@ -15,7 +15,7 @@ export default function FreelancerAutoInvest() {
       </div>
 
       {!connected ? (
-        <div className="bg-gray-50 border border-gray-200 p-4 rounded-2xl">
+        <div className="bg-gray-50 border border-[#E3ECE7] dark:border-[#262B35] p-4 rounded-2xl">
           <div className="flex justify-around items-center mb-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/Payoneer_logo.svg" alt="Payoneer" className="h-4 opacity-70 grayscale" />
@@ -33,12 +33,12 @@ export default function FreelancerAutoInvest() {
           </button>
         </div>
       ) : (
-        <div className="bg-emerald-50 border border-emerald-100 p-4 rounded-2xl">
+        <div className="bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-100 p-4 rounded-2xl">
           <div className="flex justify-between items-center mb-3">
             <span className="text-sm font-bold text-emerald-900">Payoneer Connected ✅</span>
             <span className="bg-emerald-200 text-emerald-800 text-xs font-bold px-2 py-1 rounded-md">ACTIVE</span>
           </div>
-          <div className="bg-white p-3 rounded-xl border border-emerald-100 flex justify-between items-center text-sm">
+          <div className="bg-white dark:bg-[#15181F] p-3 rounded-xl border border-emerald-100 flex justify-between items-center text-sm">
             <span className="text-gray-600">Auto-Invest Rule</span>
             <span className="font-bold text-gray-800">10% of Incoming</span>
           </div>

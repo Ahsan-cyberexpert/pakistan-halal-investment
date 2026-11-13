@@ -140,7 +140,7 @@ export default function SettingsTab({ lang, darkMode, onLangChange, onDarkToggle
     <div className="space-y-4 sm:space-y-6" dir={isRtl ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div className="mb-1 sm:mb-2">
-        <h2 className="text-xl sm:text-3xl font-black text-slate-800 tracking-tighter">{t('Settings', 'ترتیبات')}</h2>
+        <h2 className="text-xl sm:text-3xl font-black text-[#0B1F17] dark:text-[#F0F4F2] tracking-tighter">{t('Settings', 'ترتیبات')}</h2>
         <p className="text-slate-500 text-xs sm:text-sm font-medium mt-0.5">{t('Customize your Roziq experience.', 'اپنا روزق تجربہ اپنی مرضی کے مطابق بنائیں۔')}</p>
       </div>
 
@@ -150,7 +150,7 @@ export default function SettingsTab({ lang, darkMode, onLangChange, onDarkToggle
           🇵🇰
         </div>
         <div>
-          <p className="font-black text-slate-800 text-base sm:text-lg tracking-tight">{t('Halal Investor', 'حلال سرمایہ کار')}</p>
+          <p className="font-black text-[#0B1F17] dark:text-[#F0F4F2] text-base sm:text-lg tracking-tight">{t('Halal Investor', 'حلال سرمایہ کار')}</p>
           <p className="text-xs sm:text-sm text-emerald-600 font-bold">{t('Sovereign Account', 'خودمختار اکاؤنٹ')}</p>
           <p className="text-xs text-slate-400 mt-0.5">{t('Data saved on this device', 'ڈیٹا اس ڈیوائس پر محفوظ ہے')}</p>
         </div>
@@ -168,27 +168,27 @@ export default function SettingsTab({ lang, darkMode, onLangChange, onDarkToggle
                 <button
                   onClick={item.action || item.toggle?.onToggle || undefined}
                   disabled={!item.action && !item.toggle}
-                  className={`w-full flex items-center gap-3 sm:gap-4 p-3.5 sm:p-5 bg-white rounded-2xl sm:rounded-3xl border border-slate-100 transition-all duration-200 text-left ${
+                  className={`w-full flex items-center gap-3 sm:gap-4 p-3.5 sm:p-5 bg-white dark:bg-[#15181F] rounded-2xl sm:rounded-3xl border border-[#E3ECE7] dark:border-[#262B35] transition-all duration-200 text-left ${
                     item.action || item.toggle ? 'hover:border-emerald-200 hover:shadow-md active:scale-[0.98] cursor-pointer' : 'cursor-default'
                   }`}
                 >
-                  <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-slate-50 flex items-center justify-center text-lg sm:text-xl flex-shrink-0">
+                  <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-[#F4F7F5] dark:bg-[#1C2029] flex items-center justify-center text-lg sm:text-xl flex-shrink-0">
                     {item.icon}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-black text-slate-800 text-xs sm:text-sm tracking-tight">{t(item.labelEn, item.labelUr)}</p>
+                    <p className="font-black text-[#0B1F17] dark:text-[#F0F4F2] text-xs sm:text-sm tracking-tight">{t(item.labelEn, item.labelUr)}</p>
                     <p className="text-xs text-slate-400 font-medium mt-0.5">{t(item.descEn, item.descUr)}</p>
                   </div>
                   {item.badge && (
-                    <span className="text-xs font-black bg-emerald-50 text-emerald-700 px-2.5 py-1 sm:px-3 sm:py-1 rounded-xl border border-emerald-100 flex-shrink-0">
+                    <span className="text-xs font-black bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 px-2.5 py-1 sm:px-3 sm:py-1 rounded-xl border border-emerald-100 flex-shrink-0">
                       {item.badge}
                     </span>
                   )}
                   {item.toggle && (
                     <div className={`w-10 h-5 sm:w-12 sm:h-6 rounded-full transition-colors flex items-center px-1 flex-shrink-0 ${
-                      item.toggle.value ? 'bg-emerald-500' : 'bg-slate-200'
+                      item.toggle.value ? 'bg-emerald-50 dark:bg-emerald-950/600' : 'bg-slate-200'
                     }`}>
-                      <div className={`w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-white transition-transform ${
+                      <div className={`w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-white dark:bg-[#15181F] transition-transform ${
                         item.toggle.value ? 'translate-x-5 sm:translate-x-6' : 'translate-x-0'
                       }`} />
                     </div>
@@ -213,7 +213,7 @@ export default function SettingsTab({ lang, darkMode, onLangChange, onDarkToggle
                           <span className="text-emerald-500">15 Cr / 25 Cr</span>
                         </div>
                         <div className="w-full h-1 sm:h-1.5 bg-white/5 rounded-full overflow-hidden">
-                          <div className="h-full bg-emerald-500" style={{ width: '60%' }}></div>
+                          <div className="h-full bg-emerald-50 dark:bg-emerald-950/600" style={{ width: '60%' }}></div>
                         </div>
                       </div>
                       <div className="space-y-1.5 sm:space-y-2">
@@ -222,12 +222,12 @@ export default function SettingsTab({ lang, darkMode, onLangChange, onDarkToggle
                           <span className="text-emerald-500">20 Cr / 50 Cr</span>
                         </div>
                         <div className="w-full h-1 sm:h-1.5 bg-white/5 rounded-full overflow-hidden">
-                          <div className="h-full bg-emerald-500" style={{ width: '40%' }}></div>
+                          <div className="h-full bg-emerald-50 dark:bg-emerald-950/600" style={{ width: '40%' }}></div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="p-3 sm:p-4 bg-emerald-500/5 rounded-xl sm:rounded-2xl border border-emerald-500/10 text-center">
+                    <div className="p-3 sm:p-4 bg-emerald-50 dark:bg-emerald-950/600/5 rounded-xl sm:rounded-2xl border border-emerald-500/10 text-center">
                       <p className="text-xs text-emerald-400/80 font-bold leading-relaxed italic">
                         {t('Reach 25 Crore Invested and 50 Crore Profit to Unlock Elite Subscription.', 'ایلیٹ سبسکرپشن کھولنے کے لیے 25 کروڑ کی سرمایہ کاری اور 50 کروڑ کا منافع حاصل کریں۔')}
                       </p>
@@ -245,7 +245,7 @@ export default function SettingsTab({ lang, darkMode, onLangChange, onDarkToggle
                 )}
                 {/* PIN Change Form */}
                 {item.labelEn === 'Change PIN' && showPinChange && (
-                  <div className="mt-2 p-4 sm:p-6 bg-slate-50 rounded-2xl sm:rounded-3xl border border-slate-100 space-y-3 sm:space-y-4 animate-in fade-in slide-in-from-top-2 duration-300 shadow-md">
+                  <div className="mt-2 p-4 sm:p-6 bg-[#F4F7F5] dark:bg-[#1C2029] rounded-2xl sm:rounded-3xl border border-[#E3ECE7] dark:border-[#262B35] space-y-3 sm:space-y-4 animate-in fade-in slide-in-from-top-2 duration-300 shadow-md">
                     {[
                       { label: t('Current PIN', 'موجودہ پن'), val: oldPin, set: setOldPin },
                       { label: t('New PIN', 'نیا پن'), val: newPin, set: setNewPin },
@@ -259,7 +259,7 @@ export default function SettingsTab({ lang, darkMode, onLangChange, onDarkToggle
                           maxLength={4}
                           value={val}
                           onChange={e => set(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                          className="w-full px-3.5 py-2.5 sm:px-4 sm:py-3 bg-white border border-slate-200 rounded-xl sm:rounded-2xl font-black text-slate-800 text-center text-xl sm:text-2xl tracking-[0.5em] focus:outline-none focus:border-emerald-400 transition-colors outline-none"
+                          className="w-full px-3.5 py-2.5 sm:px-4 sm:py-3 bg-white dark:bg-[#15181F] border border-[#E3ECE7] dark:border-[#262B35] rounded-xl sm:rounded-2xl font-black text-[#0B1F17] dark:text-[#F0F4F2] text-center text-xl sm:text-2xl tracking-[0.5em] focus:outline-none focus:border-emerald-400 transition-colors outline-none"
                           placeholder="••••"
                         />
                       </div>
