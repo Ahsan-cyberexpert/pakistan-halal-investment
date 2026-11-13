@@ -524,7 +524,7 @@ export default function Dashboard() {
       {/* Reset Modal */}
       {showResetModal && (
         <div className="fixed inset-0 z-[5000] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="w-full max-w-sm rounded-[20px] border border-[#E3ECE7] dark:border-white/10 p-6 text-center space-y-4 bg-white dark:bg-[#16171b] shadow-2xl">
+          <div className="w-full max-w-sm rounded-[24px] border border-[#E3ECE7] dark:border-[#262B35] p-6 text-center space-y-4 bg-white dark:bg-[#15181F] shadow-2xl">
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50 dark:bg-red-500/10 text-red-600">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="3 6 5 6 21 6"/>
@@ -2658,7 +2658,7 @@ export default function Dashboard() {
       {/* ── Modals: Deposit / Withdraw ── */}
       {modal && (
         <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm">
-          <div className="relative w-full max-w-md rounded-t-[20px] sm:rounded-[20px] border border-[#E3ECE7] dark:border-white/10 p-5 shadow-2xl bg-white dark:bg-[#16171b]">
+          <div className="relative w-full max-w-md rounded-t-[24px] sm:rounded-[24px] border border-[#E3ECE7] dark:border-[#262B35] p-5 sm:p-6 shadow-2xl bg-white dark:bg-[#15181F]">
             <button
               onClick={() => setModal(null)}
               className="absolute right-4 top-4 text-[#55695F] hover:text-[#0B1F17] dark:text-slate-400 dark:hover:text-white transition-colors"
@@ -2680,7 +2680,7 @@ export default function Dashboard() {
 
       {selectedSellHolding && (
         <div className="fixed inset-0 z-[65] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm">
-          <div className="relative w-full max-w-md rounded-t-[20px] sm:rounded-[20px] border border-[#E3ECE7] dark:border-white/10 p-5 bg-white dark:bg-[#16171b] shadow-2xl">
+          <div className="relative w-full max-w-md rounded-t-[24px] sm:rounded-[24px] border border-[#E3ECE7] dark:border-[#262B35] p-5 sm:p-6 bg-white dark:bg-[#15181F] shadow-2xl">
             <SellStockFlow
               holding={selectedSellHolding}
               onSuccess={handleSellRequest}

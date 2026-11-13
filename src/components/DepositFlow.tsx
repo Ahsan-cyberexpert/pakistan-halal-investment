@@ -1,19 +1,63 @@
 'use client';
 import { useState } from 'react';
 
-const PAYMENT_METHODS = [
-  { id: 'easypaisa', name: 'EasyPaisa', icon: 'EP', color: 'bg-green-50 border-green-200', activeColor: 'bg-green-600', type: 'mobile' },
-  { id: 'jazzcash', name: 'JazzCash', icon: 'JC', color: 'bg-red-50 border-red-200', activeColor: 'bg-red-600', type: 'mobile' },
-  { id: 'meezan', name: 'Meezan Bank', icon: 'MBL', color: 'bg-blue-50 border-blue-200', activeColor: 'bg-blue-600', type: 'bank' },
-  { id: 'hbl', name: 'HBL', icon: 'HBL', color: 'bg-emerald-50 border-emerald-200', activeColor: 'bg-emerald-600', type: 'bank' },
-  { id: 'ubl', name: 'UBL', icon: 'UBL', color: 'bg-indigo-50 border-indigo-200', activeColor: 'bg-indigo-600', type: 'bank' },
+interface PaymentMethod {
+  id: string;
+  name: string;
+  badge: string;
+  badgeLight: string;
+  badgeDark: string;
+  type: 'mobile' | 'bank';
+}
+
+const PAYMENT_METHODS: PaymentMethod[] = [
+  {
+    id: 'easypaisa',
+    name: 'EasyPaisa',
+    badge: 'EP',
+    badgeLight: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+    badgeDark: 'dark:bg-emerald-950/70 dark:text-emerald-300 dark:border-emerald-800/70',
+    type: 'mobile',
+  },
+  {
+    id: 'jazzcash',
+    name: 'JazzCash',
+    badge: 'JC',
+    badgeLight: 'bg-rose-100 text-rose-800 border-rose-200',
+    badgeDark: 'dark:bg-rose-950/70 dark:text-rose-300 dark:border-rose-800/70',
+    type: 'mobile',
+  },
+  {
+    id: 'meezan',
+    name: 'Meezan Bank',
+    badge: 'MBL',
+    badgeLight: 'bg-sky-100 text-sky-800 border-sky-200',
+    badgeDark: 'dark:bg-sky-950/70 dark:text-sky-300 dark:border-sky-800/70',
+    type: 'bank',
+  },
+  {
+    id: 'hbl',
+    name: 'HBL',
+    badge: 'HBL',
+    badgeLight: 'bg-teal-100 text-teal-800 border-teal-200',
+    badgeDark: 'dark:bg-teal-950/70 dark:text-teal-300 dark:border-teal-800/70',
+    type: 'bank',
+  },
+  {
+    id: 'ubl',
+    name: 'UBL',
+    badge: 'UBL',
+    badgeLight: 'bg-indigo-100 text-indigo-800 border-indigo-200',
+    badgeDark: 'dark:bg-indigo-950/70 dark:text-indigo-300 dark:border-indigo-800/70',
+    type: 'bank',
+  },
 ];
 
 const QUICK_AMOUNTS = [5000, 10000, 25000, 50000, 100000, 500000];
 
 export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => void }) {
   const [step, setStep] = useState<'method' | 'amount' | 'confirm' | 'processing' | 'success'>('method');
-  const [method, setMethod] = useState<any>(null);
+  const [method, setMethod] = useState<string | null>(null);
   const [amount, setAmount] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
   const [error, setError] = useState('');
@@ -21,7 +65,7 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
   const [instructions, setInstructions] = useState('');
   const [bankDetails, setBankDetails] = useState<any>(null);
 
-  const selectedMethod = PAYMENT_METHODS.find(m => m.id === method);
+  const selectedMethod = PAYMENT_METHODS.find((m) => m.id === method);
 
   const handleMethodSelect = (id: string) => {
     setMethod(id);
@@ -31,8 +75,14 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
 
   const handleAmountNext = () => {
     const num = parseFloat(amount);
-    if (!num || num < 100) { setError('Minimum deposit is PKR 100'); return; }
-    if (num > 5000000) { setError('Maximum deposit is PKR 50 Lakh'); return; }
+    if (!num || num < 100) {
+      setError('Minimum deposit is PKR 100');
+      return;
+    }
+    if (num > 5000000) {
+      setError('Maximum deposit is PKR 50 Lakh');
+      return;
+    }
     setError('');
     setStep('confirm');
   };
@@ -51,7 +101,12 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
         setTxRef(data.txRef);
         setInstructions(data.instructions || '');
         setBankDetails(data.bankDetails || null);
-        await onSuccess({ type: 'deposit', amount: parseFloat(amount), method: selectedMethod?.name, txRef: data.txRef });
+        await onSuccess({
+          type: 'deposit',
+          amount: parseFloat(amount),
+          method: selectedMethod?.name,
+          txRef: data.txRef,
+        });
         setStep('success');
       } else {
         setError(data.message || 'Payment failed');
@@ -64,127 +119,261 @@ export default function DepositFlow({ onSuccess }: { onSuccess: (data: any) => v
   };
 
   return (
-    <div className="space-y-6">
-      {/* STEP: Method Selection */}
+    <div className="space-y-5 text-[#0B1F17] dark:text-[#F0F4F2]">
+      {/* STEP 1: Method Selection */}
       {step === 'method' && (
         <div>
-          <h2 className="text-2xl font-black text-slate-900 mb-2">Add Funds</h2>
-          <p className="text-slate-500 text-sm mb-6">Choose your payment method</p>
-          <div className="grid grid-cols-1 gap-3">
-            {PAYMENT_METHODS.map(m => (
+          <h2 className="text-xl sm:text-2xl font-black text-[#0B1F17] dark:text-white tracking-tight">
+            Add Funds
+          </h2>
+          <p className="text-xs sm:text-sm text-[#55695F] dark:text-[#94A3B8] mt-1 mb-5">
+            Choose your payment method
+          </p>
+
+          <div className="grid grid-cols-1 gap-2.5">
+            {PAYMENT_METHODS.map((m) => (
               <button
                 key={m.id}
                 onClick={() => handleMethodSelect(m.id)}
-                className={`touch-target w-full flex items-center gap-4 p-4 rounded-2xl border-2 transition-all active:scale-95 hover:shadow-md ${m.color}`}
+                className="w-full flex items-center gap-3.5 p-3.5 rounded-2xl border border-[#E3ECE7] dark:border-[#262B35] bg-[#F4F7F5] dark:bg-[#1C2029] hover:bg-emerald-50/70 dark:hover:bg-[#232936] hover:border-[#047857]/40 dark:hover:border-emerald-500/50 transition-all duration-150 active:scale-[0.98] text-left group shadow-xs"
               >
-                <span className="text-3xl">{m.icon}</span>
-                <div className="text-left">
-                  <div className="font-black text-slate-800">{m.name}</div>
-                  <div className="text-xs text-slate-500">{m.type === 'mobile' ? 'Mobile Wallet · Instant' : 'Bank Transfer · 1-2 hrs'}</div>
+                {/* Brand Badge */}
+                <div
+                  className={`w-11 h-11 rounded-xl flex items-center justify-center font-black text-xs sm:text-sm border shrink-0 transition-transform group-hover:scale-105 ${m.badgeLight} ${m.badgeDark}`}
+                >
+                  {m.badge}
                 </div>
-                <span className="ml-auto text-slate-400">›</span>
+
+                {/* Name & Subtitle */}
+                <div className="flex-1 min-w-0">
+                  <div className="font-bold text-sm sm:text-base text-[#0B1F17] dark:text-white leading-tight">
+                    {m.name}
+                  </div>
+                  <div className="text-[11px] text-[#55695F] dark:text-[#94A3B8] mt-0.5">
+                    {m.type === 'mobile' ? 'Mobile Wallet · Instant' : 'Bank Transfer · 1-2 hrs'}
+                  </div>
+                </div>
+
+                {/* Arrow */}
+                <span className="text-[#8C9B93] dark:text-[#64748B] text-base group-hover:translate-x-0.5 group-hover:text-[#047857] dark:group-hover:text-emerald-400 transition-all">
+                  ›
+                </span>
               </button>
             ))}
           </div>
         </div>
       )}
 
-      {/* STEP: Amount */}
+      {/* STEP 2: Amount Entry */}
       {step === 'amount' && (
         <div>
-          <button onClick={() => setStep('method')} className="text-slate-400 text-sm mb-4 flex items-center gap-1">‹ Back</button>
-          <h2 className="text-2xl font-black text-slate-900 mb-1">Enter Amount</h2>
-          <p className="text-slate-500 text-sm mb-6">via <span className="font-bold text-slate-700">{selectedMethod?.name}</span></p>
+          <button
+            onClick={() => setStep('method')}
+            className="text-xs font-semibold text-[#55695F] dark:text-[#94A3B8] hover:text-[#047857] dark:hover:text-emerald-400 mb-3 flex items-center gap-1 transition-colors"
+          >
+            ‹ Back to payment methods
+          </button>
+
+          <h2 className="text-xl sm:text-2xl font-black text-[#0B1F17] dark:text-white">
+            Enter Amount
+          </h2>
+          <p className="text-xs sm:text-sm text-[#55695F] dark:text-[#94A3B8] mt-0.5 mb-5">
+            via <span className="font-bold text-[#047857] dark:text-emerald-400">{selectedMethod?.name}</span>
+          </p>
 
           {selectedMethod?.type === 'mobile' && (
             <div className="mb-4">
-              <label htmlFor="deposit-mobile-number" className="text-xs font-black text-slate-400 uppercase tracking-widest">Mobile Number</label>
+              <label
+                htmlFor="deposit-mobile-number"
+                className="text-[11px] font-bold text-[#55695F] dark:text-[#94A3B8] uppercase tracking-wider"
+              >
+                Mobile Number
+              </label>
               <input
                 id="deposit-mobile-number"
                 type="tel"
                 placeholder="03XX-XXXXXXX"
                 value={mobileNumber}
-                onChange={e => setMobileNumber(e.target.value)}
-                aria-describedby="deposit-mobile-help"
-                className="w-full mt-2 p-4 rounded-2xl border-2 border-slate-200 focus:border-emerald-400 outline-none font-bold text-slate-800 text-lg"
+                onChange={(e) => setMobileNumber(e.target.value)}
+                className="w-full mt-1.5 p-3.5 rounded-2xl border border-[#E3ECE7] dark:border-[#262B35] bg-[#F4F7F5] dark:bg-[#1C2029] text-[#0B1F17] dark:text-white font-bold text-base focus:border-[#047857] dark:focus:border-emerald-500 outline-none transition-colors"
               />
-              <p id="deposit-mobile-help" className="mt-1 text-xs text-slate-400">Account linked to mobile wallet</p>
+              <p className="mt-1 text-[11px] text-[#55695F] dark:text-[#94A3B8]">
+                Account linked to your {selectedMethod.name} wallet
+              </p>
             </div>
           )}
 
-          <label htmlFor="deposit-amount" className="text-xs font-black text-slate-400 uppercase tracking-widest">Amount (PKR)</label>
-          <div className="relative mt-2 mb-4">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-black text-xl">₨</span>
+          <label
+            htmlFor="deposit-amount"
+            className="text-[11px] font-bold text-[#55695F] dark:text-[#94A3B8] uppercase tracking-wider"
+          >
+            Amount (PKR)
+          </label>
+          <div className="relative mt-1.5 mb-2">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8C9B93] dark:text-[#64748B] font-bold text-lg">
+              ₨
+            </span>
             <input
               id="deposit-amount"
               type="number"
               inputMode="decimal"
               placeholder="0"
               value={amount}
-              onChange={e => setAmount(e.target.value)}
-              aria-describedby="deposit-amount-help deposit-error"
-              aria-invalid={Boolean(error)}
-              className="w-full pl-10 pr-4 py-4 rounded-2xl border-2 border-slate-200 focus:border-emerald-400 outline-none font-black text-slate-800 text-2xl"
+              onChange={(e) => setAmount(e.target.value)}
+              className="w-full pl-10 pr-4 py-3.5 rounded-2xl border-2 border-[#E3ECE7] dark:border-[#262B35] bg-[#F4F7F5] dark:bg-[#1C2029] text-[#0B1F17] dark:text-white font-extrabold text-2xl focus:border-[#047857] dark:focus:border-emerald-500 outline-none transition-colors"
             />
           </div>
-          <p id="deposit-amount-help" className="mb-3 text-xs text-slate-400">Minimum PKR 100. Maximum PKR 50 Lakh.</p>
+          <p className="mb-4 text-[11px] text-[#55695F] dark:text-[#94A3B8]">
+            Minimum PKR 100. Maximum PKR 50 Lakh.
+          </p>
 
-          <div className="grid grid-cols-3 gap-2 mb-6">
-            {QUICK_AMOUNTS.map(a => (
-              <button key={a} onClick={() => setAmount(String(a))} className="py-2 px-3 rounded-xl bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 text-slate-600 font-bold text-xs transition-all">
-                {a >= 100000 ? `${a/100000}L` : `${a/1000}K`}
+          {/* Quick amount chips */}
+          <div className="grid grid-cols-3 gap-2 mb-5">
+            {QUICK_AMOUNTS.map((a) => (
+              <button
+                key={a}
+                onClick={() => setAmount(String(a))}
+                className="py-2.5 px-3 rounded-xl bg-[#F4F7F5] dark:bg-[#1C2029] border border-[#E3ECE7] dark:border-[#262B35] hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-[#047857] dark:hover:text-emerald-300 text-[#0B1F17] dark:text-[#F0F4F2] font-bold text-xs transition-colors"
+              >
+                ₨ {a >= 100000 ? `${a / 100000} Lakh` : `${a / 1000}K`}
               </button>
             ))}
           </div>
 
-          {error && <p id="deposit-error" role="alert" className="text-red-500 text-sm mb-3 font-medium">{error}</p>}
-          <button onClick={handleAmountNext} className="touch-target w-full py-4 bg-emerald-600 text-white rounded-2xl font-black text-lg hover:bg-emerald-700 active:scale-95 transition-all shadow-lg shadow-emerald-900/20">
+          {error && (
+            <p role="alert" className="text-red-500 dark:text-red-400 text-xs mb-3 font-semibold">
+              {error}
+            </p>
+          )}
+
+          <button
+            onClick={handleAmountNext}
+            className="w-full py-3.5 bg-[#047857] hover:bg-[#036046] active:scale-[0.98] text-white rounded-2xl font-bold text-sm sm:text-base transition-all shadow-md shadow-emerald-900/20"
+          >
             Continue →
           </button>
         </div>
       )}
 
-      {/* STEP: Confirm */}
+      {/* STEP 3: Confirm Review */}
       {step === 'confirm' && (
         <div>
-          <button onClick={() => setStep('amount')} className="text-slate-400 text-sm mb-4 flex items-center gap-1">‹ Back</button>
-          <h2 className="text-2xl font-black text-slate-900 mb-2">Review Deposit</h2>
-          <div className="bg-slate-50 rounded-3xl p-6 space-y-3 mb-6">
-            <div className="flex justify-between"><span className="text-slate-500">Method</span><span className="font-black">{selectedMethod?.icon} {selectedMethod?.name}</span></div>
-            {mobileNumber && <div className="flex justify-between"><span className="text-slate-500">Mobile</span><span className="font-bold">{mobileNumber}</span></div>}
-            <div className="flex justify-between text-lg"><span className="text-slate-500">Amount</span><span className="font-black text-emerald-600">₨ {parseFloat(amount).toLocaleString()}</span></div>
+          <button
+            onClick={() => setStep('amount')}
+            className="text-xs font-semibold text-[#55695F] dark:text-[#94A3B8] hover:text-[#047857] dark:hover:text-emerald-400 mb-3 flex items-center gap-1 transition-colors"
+          >
+            ‹ Back to amount
+          </button>
+
+          <h2 className="text-xl sm:text-2xl font-black text-[#0B1F17] dark:text-white mb-1">
+            Review Deposit
+          </h2>
+          <p className="text-xs text-[#55695F] dark:text-[#94A3B8] mb-5">
+            Confirm your transaction details
+          </p>
+
+          <div className="bg-[#F4F7F5] dark:bg-[#1C2029] border border-[#E3ECE7] dark:border-[#262B35] rounded-2xl p-4 sm:p-5 space-y-3 mb-5 text-sm">
+            <div className="flex justify-between items-center">
+              <span className="text-[#55695F] dark:text-[#94A3B8]">Payment Method</span>
+              <span className="font-bold text-[#0B1F17] dark:text-white">
+                {selectedMethod?.name}
+              </span>
+            </div>
+
+            {mobileNumber && (
+              <div className="flex justify-between items-center">
+                <span className="text-[#55695F] dark:text-[#94A3B8]">Mobile Account</span>
+                <span className="font-mono font-bold text-[#0B1F17] dark:text-white">
+                  {mobileNumber}
+                </span>
+              </div>
+            )}
+
+            <div className="pt-2 border-t border-[#E3ECE7] dark:border-[#262B35] flex justify-between items-center">
+              <span className="text-[#55695F] dark:text-[#94A3B8] font-medium">Deposit Amount</span>
+              <span className="font-black text-lg text-[#047857] dark:text-emerald-400">
+                ₨ {parseFloat(amount || '0').toLocaleString()}
+              </span>
+            </div>
           </div>
-          {error && <p id="deposit-confirm-error" role="alert" className="text-red-500 text-sm mb-3 font-medium">{error}</p>}
-          <button onClick={handleConfirm} className="touch-target w-full py-4 bg-emerald-600 text-white rounded-2xl font-black text-lg hover:bg-emerald-700 active:scale-95 transition-all shadow-lg shadow-emerald-900/20">
-            Confirm Deposit
+
+          {error && (
+            <p role="alert" className="text-red-500 dark:text-red-400 text-xs mb-3 font-semibold">
+              {error}
+            </p>
+          )}
+
+          <button
+            onClick={handleConfirm}
+            className="w-full py-3.5 bg-[#047857] hover:bg-[#036046] active:scale-[0.98] text-white rounded-2xl font-bold text-sm sm:text-base transition-all shadow-md shadow-emerald-900/20"
+          >
+            Confirm & Deposit
           </button>
         </div>
       )}
 
-      {/* STEP: Processing */}
+      {/* STEP 4: Processing Animation */}
       {step === 'processing' && (
-        <div className="flex flex-col items-center justify-center py-16 space-y-4" role="status" aria-live="polite">
-          <div className="w-16 h-16 rounded-full border-4 border-emerald-200 border-t-emerald-600 animate-spin" />
-          <p className="font-black text-slate-800 text-xl">Processing Deposit…</p>
-          <p className="text-slate-400 text-sm">Connecting with {selectedMethod?.name}</p>
+        <div className="flex flex-col items-center justify-center py-12 space-y-3" role="status">
+          <div className="w-12 h-12 rounded-full border-4 border-emerald-200 dark:border-emerald-900 border-t-[#047857] dark:border-t-emerald-400 animate-spin" />
+          <p className="font-bold text-[#0B1F17] dark:text-white text-base">
+            Processing Deposit…
+          </p>
+          <p className="text-xs text-[#55695F] dark:text-[#94A3B8]">
+            Connecting with {selectedMethod?.name} secure gateway
+          </p>
         </div>
       )}
 
-      {/* STEP: Success */}
+      {/* STEP 5: Success Confirmation */}
       {step === 'success' && (
-        <div className="flex flex-col items-center text-center py-8 space-y-4" role="status" aria-live="polite">
-          <div className="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-          <h2 className="text-2xl font-black text-slate-900">Deposit Confirmed</h2>
-          <p className="text-slate-500">₨ {parseFloat(amount).toLocaleString()} credited to your balance</p>
-          {txRef && <p className="text-xs text-slate-400 font-mono bg-slate-100 px-4 py-2 rounded-xl">Ref: {txRef}</p>}
-          {instructions && <p className="text-sm text-slate-600 bg-emerald-50 border border-emerald-100 rounded-2xl p-4">{instructions}</p>}
+        <div className="flex flex-col items-center text-center py-6 space-y-3">
+          <div className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-950/70 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-[#047857] dark:text-emerald-400">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
+
+          <h2 className="text-xl font-black text-[#0B1F17] dark:text-white">
+            Deposit Confirmed
+          </h2>
+          <p className="text-xs text-[#55695F] dark:text-[#94A3B8]">
+            ₨ {parseFloat(amount || '0').toLocaleString()} successfully credited to your sovereign balance.
+          </p>
+
+          {txRef && (
+            <p className="text-[11px] text-[#55695F] dark:text-[#94A3B8] font-mono bg-[#F4F7F5] dark:bg-[#1C2029] border border-[#E3ECE7] dark:border-[#262B35] px-3.5 py-1.5 rounded-xl">
+              Ref: {txRef}
+            </p>
+          )}
+
+          {instructions && (
+            <p className="text-xs text-[#0B1F17] dark:text-emerald-200 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 rounded-xl p-3 text-left w-full leading-relaxed">
+              {instructions}
+            </p>
+          )}
+
           {bankDetails && (
-            <div className="w-full text-left bg-slate-50 rounded-2xl p-4 space-y-2 text-sm">
-              <p className="font-black text-slate-700 mb-2">Bank Transfer Details:</p>
-              <p><span className="text-slate-400">Account:</span> <span className="font-bold">{bankDetails.accountTitle}</span></p>
-              <p><span className="text-slate-400">Number:</span> <span className="font-mono font-bold">{bankDetails.accountNumber}</span></p>
-              <p><span className="text-slate-400">IBAN:</span> <span className="font-mono text-xs">{bankDetails.iban}</span></p>
-              <p><span className="text-slate-400">Bank:</span> <span className="font-bold">{bankDetails.bank}</span></p>
+            <div className="w-full text-left bg-[#F4F7F5] dark:bg-[#1C2029] border border-[#E3ECE7] dark:border-[#262B35] rounded-2xl p-4 space-y-1.5 text-xs">
+              <p className="font-bold text-[#0B1F17] dark:text-white mb-2">
+                Bank Transfer Details:
+              </p>
+              <p className="flex justify-between">
+                <span className="text-[#55695F] dark:text-[#94A3B8]">Account Title:</span>
+                <span className="font-bold text-[#0B1F17] dark:text-white">{bankDetails.accountTitle}</span>
+              </p>
+              <p className="flex justify-between">
+                <span className="text-[#55695F] dark:text-[#94A3B8]">Account Number:</span>
+                <span className="font-mono font-bold text-[#0B1F17] dark:text-white">{bankDetails.accountNumber}</span>
+              </p>
+              <p className="flex justify-between">
+                <span className="text-[#55695F] dark:text-[#94A3B8]">IBAN:</span>
+                <span className="font-mono text-[11px] text-[#0B1F17] dark:text-white">{bankDetails.iban}</span>
+              </p>
+              <p className="flex justify-between">
+                <span className="text-[#55695F] dark:text-[#94A3B8]">Bank Name:</span>
+                <span className="font-bold text-[#0B1F17] dark:text-white">{bankDetails.bank}</span>
+              </p>
             </div>
           )}
         </div>
