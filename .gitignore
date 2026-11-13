@@ -37,11 +37,10 @@ android/build/
 
 # Code Dumps, Large Exports & SRS Reports (Local only)
 code.txt
-COMPLETE_PROJECT_CODE.md
-COMPLETE_PROJECT_CODE.txt
-ROZIQ_SRS_REPORT.docx
-ROZIQ_SRS_REPORT.md
-generate_srs_doc.py
+COMPLETE_PROJECT_CODE.*
+*.docx
+docs/ROZIQ_SRS_REPORT.*
+docs/generate_srs_doc.py
 
 # Editor & OS Artifacts
 .DS_Store
