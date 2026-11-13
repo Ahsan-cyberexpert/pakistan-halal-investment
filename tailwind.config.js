@@ -7,6 +7,20 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        roziq: {
+          primary: '#047857',
+          deep: '#064E3B',
+          mint: '#D1FAE5',
+          canvas: '#F4F7F5',
+          surface: '#FFFFFF',
+          line: '#E3ECE7',
+          ink: '#0B1F17',
+          muted: '#55695F',
+          excluded: '#B42318',
+          'zakat-tint': '#FEF3C7',
+          'zakat-ink': '#92400E',
+          'loss-tint': '#FEE4E2',
+        },
         halal: {
           50: '#f0fdf4',
           100: '#dcfce7',
@@ -32,7 +46,7 @@ module.exports = {
       },
       fontFamily: {
         nastaliq: ['"Noto Nastaliq Urdu"', 'serif'],
-        sans: ['"Inter"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        sans: ['"Plus Jakarta Sans"', '"Inter"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
       }
     },
   },

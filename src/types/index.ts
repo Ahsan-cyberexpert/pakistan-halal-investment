@@ -2,7 +2,7 @@ export * from '@/lib/types';
 
 export type SupportedLanguage = 'en' | 'ur';
 
-export type DashboardTab = 'home' | 'portfolio' | 'assets' | 'kameti' | 'zakat' | 'settings';
+export type DashboardTab = 'home' | 'portfolio' | 'assets' | 'kameti' | 'zakat' | 'settings' | 'mufti';
 
 export type PaymentMethod = 'JazzCash' | 'EasyPaisa' | 'Raast' | 'BankTransfer' | 'RoshanDigital';
 

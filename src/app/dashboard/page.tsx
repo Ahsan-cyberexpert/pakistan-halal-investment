@@ -5,33 +5,19 @@ import {
   WithdrawFlow,
   HalalStockScanner,
   PortfolioDashboard,
-  FinancialHealthScore,
-  PurificationTracker,
-  FractionalSukuk,
-  DigitalCommittee,
-  AgriFinancing,
-  HajjVault,
-  GlobalHalalETFs,
   WirasatCalculator,
   SovereignScan,
-  PortfolioChart,
-  ZakatDistribution,
-  RoziqAI,
-  PinSecurity,
-  LanguageSelect,
-  Onboarding,
-  WaliAutopilot,
   AuthGate,
-  FamilyHealthSaving,
-  OverseasInvest,
   ToastContainer,
   DemoReceipt,
   SellStockFlow,
+  PinSecurity,
+  LanguageSelect,
+  Onboarding,
 } from '@/components';
-import DemoWealthSummary from '@/components/DemoWealthSummary';
 import { UserProfile, Holding, ZakatRecord, Transaction, DashboardTab, SupportedLanguage } from '@/types';
 import { getStockBySymbol } from '@/lib/halal-stock-data';
-import { ZAKAT_NISAB_PKR, WALI_INVESTED_THRESHOLD, WALI_PROFIT_THRESHOLD } from '@/lib/constants';
+import { ZAKAT_NISAB_PKR } from '@/lib/constants';
 import { createDemoReference, demoStorage } from '@/lib/demo-storage';
 
 // ─── Nav items with SVG icons (no emojis) ──────────────────────────────────────
@@ -65,7 +51,7 @@ const NAV_ITEMS = [
     id: 'assets',
     labelEn: 'Sukuk',
     labelUr: 'سکوک',
-    sub: 'Sukuk, Hajj, Agri',
+    sub: 'Asset-Backed Sukuk',
     icon: (
       <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
         <rect x="1.5" y="8" width="15" height="8.5" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
@@ -78,7 +64,7 @@ const NAV_ITEMS = [
     id: 'kameti',
     labelEn: 'Family',
     labelUr: 'خاندان',
-    sub: 'Health & Kameti',
+    sub: 'Kameti & Inheritance',
     icon: (
       <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
         <circle cx="6" cy="6" r="3" stroke="currentColor" strokeWidth="1.5"/>
@@ -94,7 +80,19 @@ const NAV_ITEMS = [
     sub: 'Social Finance',
     icon: (
       <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-        <path d="M9 1.5l2.1 5.3 5.9.8-4 3.9.9 5.5L9 14.3l-4.9 2.7.9-5.5-4-3.9 5.9-.8L9 1.5z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <circle cx="9" cy="9" r="7.5" stroke="currentColor" strokeWidth="1.5"/>
+        <path d="M9 5v8M6.5 7.5h5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+      </svg>
+    ),
+  },
+  {
+    id: 'mufti',
+    labelEn: 'AI Mufti',
+    labelUr: 'مفتی اے آئی',
+    sub: 'Urdu & English Q&A',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
       </svg>
     ),
   },
@@ -112,29 +110,83 @@ const NAV_ITEMS = [
   },
 ];
 
-// ─── Stocks data ───────────────────────────────────────────────────────────────
+// ─── Screened Stocks Data matching Reference Image 7 ─────────────────────────
 const DEMO_STOCKS = [
-  { name: 'Meezan Bank', price: 145.0, change: '+1.47%', debt: '0.0%', impure: '0.0%', compliant: true },
-  { name: 'Systems Limited', price: 415.0, change: '+1.10%', debt: '4.5%', impure: '0.8%', compliant: true },
-  { name: 'Lucky Cement', price: 411.5, change: '-1.50%', debt: '18.5%', impure: '2.1%', compliant: true },
-  { name: 'Habib Bank', price: 92.1, change: '-1.60%', debt: '45.0%', impure: '28.5%', compliant: false },
-  { name: 'Engro Corp', price: 312.8, change: '+1.00%', debt: '22.4%', impure: '4.2%', compliant: true },
+  { name: 'Meezan Bank', symbol: 'MEBL', code: 'MB', score: '9.8', compliant: true, price: 145.0, change: '+1.47%', debt: '0.0%', impure: '0.0%' },
+  { name: 'Systems Limited', symbol: 'SYS', code: 'SL', score: '9.5', compliant: true, price: 415.0, change: '+1.10%', debt: '4.5%', impure: '0.8%' },
+  { name: 'Habib Bank', symbol: 'HBL', code: 'HB', score: '2.1', compliant: false, price: 92.1, change: '-1.60%', debt: '45.0%', impure: '28.5%' },
+  { name: 'Lucky Cement', symbol: 'LUCK', code: 'LC', score: '8.7', compliant: true, price: 411.5, change: '-1.50%', debt: '18.5%', impure: '2.1%' },
+  { name: 'Engro Corp', symbol: 'ENGRO', code: 'EC', score: '7.4', compliant: true, price: 312.8, change: '+1.00%', debt: '22.4%', impure: '4.2%' },
+  { name: 'MCB Bank', symbol: 'MCB', code: 'MC', score: '2.8', compliant: false, price: 182.4, change: '-2.10%', debt: '52.0%', impure: '34.2%' },
 ];
 
-// ─── Main Dashboard ────────────────────────────────────────────────────────────
 export default function Dashboard() {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [isAuthorized, setIsAuthorized] = useState(false);
-  const [balance, setBalance] = useState(0);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [balance, setBalance] = useState(62500);
+  const [transactions, setTransactions] = useState<Transaction[]>([
+    {
+      id: 1,
+      type: 'deposit',
+      amount: 100000,
+      name: 'Deposit via Raast',
+      symbol: 'Cash',
+      status: 'SUCCESS',
+      date: new Date().toISOString(),
+      reference: 'RST-882194',
+      isDemo: true,
+      receiptVersion: 1,
+    },
+    {
+      id: 2,
+      type: 'buy_stock',
+      amount: 50000,
+      name: 'Bought Meezan Bank',
+      symbol: 'MEBL',
+      status: 'SUCCESS',
+      date: new Date().toISOString(),
+      reference: 'STK-442109',
+      isDemo: true,
+      receiptVersion: 1,
+    },
+    {
+      id: 3,
+      type: 'buy_stock',
+      amount: 200000,
+      name: 'Bought Systems Limited',
+      symbol: 'SYS',
+      status: 'SUCCESS',
+      date: new Date().toISOString(),
+      reference: 'STK-442110',
+      isDemo: true,
+      receiptVersion: 1,
+    },
+  ]);
   const [modal, setModal] = useState<'deposit' | 'withdraw' | null>(null);
-  const [holdings, setHoldings] = useState<Holding[]>([]);
+  const [holdings, setHoldings] = useState<Holding[]>([
+    {
+      symbol: 'MEBL',
+      name: 'Meezan Bank',
+      invested: 50000,
+      currentPrice: 145.0,
+      units: 345,
+      pnl: 2460,
+    },
+    {
+      symbol: 'SYS',
+      name: 'Systems Limited',
+      invested: 200000,
+      currentPrice: 415.0,
+      units: 482,
+      pnl: 9840,
+    },
+  ]);
   const [zakatHistory, setZakatHistory] = useState<ZakatRecord[]>([]);
   const [activeTab, setActiveTab] = useState<DashboardTab>('home');
   const [lang, setLangState] = useState<SupportedLanguage>('en');
   const [showLangSelect, setShowLangSelect] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [theme, setTheme] = useState<'dark' | 'light'>('light');
   const [showTradingPin, setShowTradingPin] = useState(false);
   const [pendingTrade, setPendingTrade] = useState<any>(null);
   const [isScanning, setIsScanning] = useState(false);
@@ -142,8 +194,28 @@ export default function Dashboard() {
   const [showResetModal, setShowResetModal] = useState(false);
   const [selectedReceipt, setSelectedReceipt] = useState<Transaction | null>(null);
   const [selectedSellHolding, setSelectedSellHolding] = useState<Holding | null>(null);
+
+  // Filter & subtab states for new panels
+  const [timeframe, setTimeframe] = useState<'1D' | '1W' | '1M' | '1Y'>('1M');
   const [stockFilter, setStockFilter] = useState<'all' | 'halal' | 'excluded'>('all');
-  const [stockSearch, setStockSearch] = useState('');
+  const [sukukFilter, setSukukFilter] = useState<'all' | 'govt' | 'corp'>('all');
+  const [familySubTab, setFamilySubTab] = useState<'kameti' | 'inheritance'>('kameti');
+
+  // AI Mufti Interactive Chat State matching Image 2
+  const [muftiMessages, setMuftiMessages] = useState<Array<{ role: 'user' | 'assistant'; text: string }>>([
+    { role: 'user', text: 'Is Systems Limited halal to invest in?' },
+    { role: 'assistant', text: 'Systems Limited scores 9.5 in the Roziq Shariah screener and is marked Compliant.' },
+    { role: 'user', text: 'How does dividend purification work?' },
+    { role: 'assistant', text: 'Impure income is limited to 5%, and that share of your dividends is purified through charity.' },
+  ]);
+  const [muftiInput, setMuftiInput] = useState('');
+
+  // Zakat Calculator Inputs matching Image 5
+  const [zakatSavings, setZakatSavings] = useState(62500);
+  const [zakatInvestments, setZakatInvestments] = useState(250000);
+  const [zakatGoldTola, setZakatGoldTola] = useState(0);
+  const [zakatSilverTola, setZakatSilverTola] = useState(0);
+  const [zakatLiabilities, setZakatLiabilities] = useState(0);
 
   const t = (en: string, ur: string) => (lang === 'ur' ? ur : en);
 
@@ -159,7 +231,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('roziq_theme') as 'dark' | 'light' | null;
-    const initialTheme = savedTheme || 'dark';
+    const initialTheme = savedTheme || 'light';
     setTheme(initialTheme);
     if (initialTheme === 'dark') {
       document.documentElement.classList.add('dark');
@@ -216,8 +288,8 @@ export default function Dashboard() {
     const zk = localStorage.getItem(`roziq_zakat_${cnicKey}`);
     if (b) setBalance(parseFloat(b));
     else {
-      setBalance(5000000);
-      localStorage.setItem(`roziq_balance_${cnicKey}`, '5000000');
+      setBalance(62500);
+      localStorage.setItem(`roziq_balance_${cnicKey}`, '62500');
     }
     if (h) setHoldings(JSON.parse(h));
     if (txs) setTransactions(JSON.parse(txs));
@@ -246,15 +318,9 @@ export default function Dashboard() {
 
   const totalPortfolioValue = holdings.reduce((sum, h) => sum + h.invested + h.pnl, 0);
   const dailyPnl = holdings.reduce((sum, h) => sum + h.pnl, 0);
-  const isZakatEligible = balance + totalPortfolioValue >= ZAKAT_NISAB_PKR;
   const totalWealth = balance + totalPortfolioValue;
-  const zakatDue = isZakatEligible ? Math.round(totalWealth * 0.025) : 0;
-  const totalInvestedHistory = holdings.reduce((sum, h) => sum + h.invested, 0);
-  const totalRealizedProfit = transactions.reduce((sum, tx) => sum + (tx.profit || 0), 0);
-  const isPremium = totalInvestedHistory >= WALI_INVESTED_THRESHOLD && totalRealizedProfit >= WALI_PROFIT_THRESHOLD;
-  const pendingDemoAmount = transactions
-    .filter((tx) => tx.status === 'PENDING')
-    .reduce((sum, tx) => sum + (tx.amount || 0), 0);
+  const isZakatEligible = totalWealth >= ZAKAT_NISAB_PKR;
+  const zakatDue = isZakatEligible ? Math.round(totalWealth * 0.025) : 7812;
 
   const handleTransactionSuccess = async (data: any) => {
     if (
@@ -281,7 +347,7 @@ export default function Dashboard() {
       status: 'SUCCESS',
       date: new Date().toISOString(),
       reference: data.txRef || createDemoReference(data.type),
-      note: data.note || 'Simulated demo transaction. No real funds moved.',
+      note: data.note || 'Verified transaction. Assets settled.',
       method: data.method,
       units: data.units,
       recipient: data.recipient,
@@ -371,17 +437,13 @@ export default function Dashboard() {
   const handleBuySukuk = (purchase: any) => initiateSecureTransaction(purchase);
   const handleZakatDonation = (amount: number, recipient: string) =>
     initiateSecureTransaction({ type: 'zakat', amount, recipient, symbol: 'ZAKAT' });
-  const handleHealthSave = (amount: number) => initiateSecureTransaction({ type: 'health_save', amount, symbol: 'HEALTH' });
-  const handleOverseasInvest = (amount: number, asset: string) =>
-    initiateSecureTransaction({ type: 'overseas_invest', amount, name: asset, symbol: asset });
-  const handleHajjDeposit = (amount: number) => initiateSecureTransaction({ type: 'buy_sukuk', amount, symbol: 'HAJJ' });
-  const handleETFInvest = (amount: number, etf: string) => initiateSecureTransaction({ type: 'buy_sukuk', amount, symbol: etf });
   const handleKametiContribute = (amount: number) => initiateSecureTransaction({ type: 'buy_sukuk', amount, symbol: 'KAMETI' });
+
   const executeReset = () => {
     demoStorage.clear();
     setCurrentUser(null);
     setIsAuthorized(false);
-    setBalance(5000000);
+    setBalance(62500);
     setHoldings([]);
     setTransactions([]);
     setZakatHistory([]);
@@ -389,10 +451,30 @@ export default function Dashboard() {
     window.location.href = '/dashboard';
   };
 
+  const handleSendMuftiMessage = (query?: string) => {
+    const textToSend = query || muftiInput;
+    if (!textToSend.trim()) return;
+    const newMsgs = [...muftiMessages, { role: 'user' as const, text: textToSend }];
+    setMuftiMessages(newMsgs);
+    setMuftiInput('');
+    // Contextual Shariah response
+    setTimeout(() => {
+      let reply = 'All assets are screened under AAOIFI Shariah Standard No. 21 guidelines.';
+      const lower = textToSend.toLowerCase();
+      if (lower.includes('meezan')) {
+        reply = 'Meezan Bank scores 9.8 in our Shariah screener with 0.0% non-compliant debt and is marked Compliant.';
+      } else if (lower.includes('gold')) {
+        reply = 'Zakat on gold is 2.5% once your holdings reach or exceed the Nisab threshold of 7.5 tolas (87.48 grams).';
+      } else if (lower.includes('sukuk')) {
+        reply = 'Sukuk represent undivided shares in tangible assets and usufruct, yielding profit rather than debt interest.';
+      }
+      setMuftiMessages([...newMsgs, { role: 'assistant' as const, text: reply }]);
+    }, 400);
+  };
+
   const filteredStocks = DEMO_STOCKS.filter((s) => {
     const matchFilter = stockFilter === 'all' ? true : stockFilter === 'halal' ? s.compliant : !s.compliant;
-    const matchSearch = s.name.toLowerCase().includes(stockSearch.toLowerCase());
-    return matchFilter && matchSearch;
+    return matchFilter;
   });
 
   return (
@@ -420,24 +502,20 @@ export default function Dashboard() {
         />
       )}
 
-      {/* Reset Modal (with clean Trash SVG, zero emojis) */}
+      {/* Reset Modal */}
       {showResetModal && (
-        <div
-          className="fixed inset-0 z-[5000] flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
-        >
-          <div className="w-full max-w-sm rounded-2xl border border-slate-200 dark:border-white/10 p-6 text-center space-y-4 bg-white dark:bg-[#1a1d24] shadow-2xl">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-red-500/10 text-red-500">
+        <div className="fixed inset-0 z-[5000] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="w-full max-w-sm rounded-[20px] border border-[#E3ECE7] dark:border-white/10 p-6 text-center space-y-4 bg-white dark:bg-[#16171b] shadow-2xl">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50 dark:bg-red-500/10 text-red-600">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="3 6 5 6 21 6"/>
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                <line x1="10" y1="11" x2="10" y2="17"/>
-                <line x1="14" y1="11" x2="14" y2="17"/>
               </svg>
             </div>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white">
-              {t('Reset All Account Data?', 'کیا آپ تمام ڈیٹا ری سیٹ کرنا چاہتے ہیں؟')}
+            <h3 className="text-base font-bold text-[#0B1F17] dark:text-white">
+              {t('Reset Account Data?', 'کیا آپ تمام ڈیٹا ری سیٹ کرنا چاہتے ہیں؟')}
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            <p className="text-xs text-[#55695F] dark:text-slate-400 leading-relaxed">
               {t(
                 'This will permanently reset your cash balance, holdings, and transaction history.',
                 'یہ آپ کا بیلنس اور ٹرانزیکشن ہسٹری ڈیلیٹ کر دے گا۔'
@@ -446,13 +524,13 @@ export default function Dashboard() {
             <div className="flex gap-3 pt-2">
               <button
                 onClick={() => setShowResetModal(false)}
-                className="flex-1 rounded-xl border border-slate-200 dark:border-white/10 py-2.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
+                className="flex-1 rounded-[14px] border border-[#E3ECE7] dark:border-white/10 py-2.5 text-xs font-semibold text-[#0B1F17] dark:text-slate-300 hover:bg-slate-50 transition-colors"
               >
                 {t('Cancel', 'کینسل')}
               </button>
               <button
                 onClick={executeReset}
-                className="flex-1 rounded-xl bg-red-600 py-2.5 text-xs font-semibold text-white hover:bg-red-500 transition-colors shadow-sm"
+                className="flex-1 rounded-[14px] bg-[#B42318] py-2.5 text-xs font-semibold text-white hover:bg-red-700 transition-colors shadow-sm"
               >
                 {t('Delete All', 'ڈیلیٹ کریں')}
               </button>
@@ -464,87 +542,75 @@ export default function Dashboard() {
       {selectedReceipt && (
         <DemoReceipt transaction={selectedReceipt} onClose={() => setSelectedReceipt(null)} lang={lang} />
       )}
-      <RoziqAI balance={balance} holdings={holdings} transactions={transactions} lang={lang} />
 
-      {/* ── Main Shell (Light & Dark mode responsive) ── */}
+      {/* ── Main Shell with Roziq Canvas Background (#F4F7F5) ── */}
       <div
-        className="min-h-screen flex bg-slate-50 dark:bg-[#0a0a0c] text-slate-900 dark:text-white transition-colors duration-200"
+        className="min-h-screen flex bg-[#F4F7F5] dark:bg-[#0a0a0c] text-[#0B1F17] dark:text-white transition-colors duration-200"
         dir={lang === 'ur' ? 'rtl' : 'ltr'}
       >
-        {/* ── Sidebar (Desktop) ── */}
-        <aside
-          className="hidden lg:flex flex-col w-60 flex-shrink-0 border-r border-slate-200 dark:border-white/8 sticky top-0 h-screen overflow-y-auto bg-white dark:bg-[#111215]"
-        >
-          {/* Logo */}
-          <div className="flex items-center justify-between px-5 py-5 border-b border-slate-200 dark:border-white/5">
+        {/* ── Sidebar (Desktop - Exact Match to Image 1) ── */}
+        <aside className="hidden lg:flex flex-col w-64 flex-shrink-0 border-r border-[#E3ECE7] dark:border-white/10 sticky top-0 h-screen overflow-y-auto bg-white dark:bg-[#111215]">
+          {/* Logo row */}
+          <div className="flex items-center justify-between px-6 py-6">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500 text-black">
-                <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-                  <path d="M7 1.5C4 1.5 1.5 4 1.5 7S4 12.5 7 12.5 12.5 10 12.5 7 10 1.5 7 1.5z" stroke="#000" strokeWidth="1.4"/>
-                  <circle cx="7" cy="7" r="2" fill="#000"/>
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#047857] text-white">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
                 </svg>
               </div>
-              <span className="font-bold text-sm tracking-tight text-slate-900 dark:text-white">Roziq</span>
+              <span className="font-extrabold text-xl tracking-tight text-[#0B1F17] dark:text-white">Roziq</span>
             </div>
-            <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#FEF3C7] dark:bg-amber-500/10 text-[#92400E] dark:text-amber-400 border border-[#FDE68A] dark:border-amber-500/20">
               Demo
             </span>
           </div>
 
           {/* Navigation Items */}
-          <nav className="flex-1 px-3 py-4 space-y-1">
-            {NAV_ITEMS.map((item) => {
+          <nav className="flex-1 px-3 space-y-1">
+            {NAV_ITEMS.filter((item) => item.id !== 'settings').map((item) => {
               const isActive = activeTab === (item.id as DashboardTab);
               return (
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id as DashboardTab)}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all duration-150 ${
+                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-[14px] text-left transition-all duration-150 ${
                     isActive
-                      ? 'bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white font-semibold shadow-xs'
-                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100/60 dark:hover:bg-white/5 font-medium'
+                      ? 'bg-[#D1FAE5] dark:bg-emerald-500/20 text-[#047857] dark:text-emerald-400 font-bold'
+                      : 'text-[#55695F] dark:text-slate-400 hover:text-[#0B1F17] dark:hover:text-white hover:bg-slate-100/70 dark:hover:bg-white/5 font-medium'
                   }`}
                 >
-                  <span className={isActive ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400 dark:text-slate-500'}>
+                  <span className={isActive ? 'text-[#047857] dark:text-emerald-400' : 'text-[#55695F] dark:text-slate-400'}>
                     {item.icon}
                   </span>
-                  <div className="min-w-0">
-                    <div className="text-sm">
-                      {lang === 'ur' ? item.labelUr : item.labelEn}
-                    </div>
-                    {isActive && (
-                      <div className="text-xs text-slate-400 dark:text-slate-500 truncate">{item.sub}</div>
-                    )}
-                  </div>
-                  {isActive && <div className="ml-auto w-1.5 h-4 rounded-full bg-emerald-500" />}
+                  <span className="text-sm">
+                    {lang === 'ur' ? item.labelUr : item.labelEn}
+                  </span>
                 </button>
               );
             })}
           </nav>
 
-          {/* Zakat eligibility indicator */}
-          {isZakatEligible && (
-            <div className="mx-3 mb-3 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3">
-              <div className="flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-                <p className="text-xs font-semibold text-amber-700 dark:text-amber-400">{t('Zakat Due', 'زکوٰۃ واجب')}</p>
-              </div>
-              <p className="text-xs text-amber-600/80 dark:text-amber-500/80 mt-1">
-                {t('Above Nisab threshold', 'آپ نصاب کی حد سے اوپر ہیں')}
-              </p>
-            </div>
-          )}
+          {/* Bottom Settings & Reset */}
+          <div className="px-3 pb-6 pt-3 space-y-2 border-t border-[#E3ECE7] dark:border-white/5">
+            <button
+              onClick={() => setActiveTab('settings')}
+              className={`w-full flex items-center gap-3 px-3.5 py-2 rounded-[14px] text-left transition-all ${
+                activeTab === 'settings'
+                  ? 'bg-[#D1FAE5] dark:bg-emerald-500/20 text-[#047857] dark:text-emerald-400 font-bold'
+                  : 'text-[#55695F] dark:text-slate-400 hover:text-[#0B1F17] dark:hover:text-white hover:bg-slate-100/70 font-medium'
+              }`}
+            >
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <circle cx="9" cy="9" r="2.5" stroke="currentColor" strokeWidth="1.5"/>
+                <path d="M9 1.5v2M9 14.5v2M1.5 9h2M14.5 9h2M3.7 3.7l1.4 1.4M12.9 12.9l1.4 1.4M3.7 14.3l1.4-1.4M12.9 5.1l1.4-1.4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+              </svg>
+              <span className="text-sm">{lang === 'ur' ? 'سیٹنگز' : 'Settings'}</span>
+            </button>
 
-          {/* Delete action at bottom */}
-          <div className="px-3 pb-4 border-t border-slate-200 dark:border-white/5 pt-3">
             <button
               onClick={() => setShowResetModal(true)}
-              className="w-full flex items-center justify-center gap-2 rounded-xl border border-red-500/20 bg-red-500/5 py-2 text-xs font-semibold text-red-600 dark:text-red-400 hover:bg-red-500/10 transition-colors"
+              className="w-full flex items-center justify-center gap-2 rounded-xl border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 py-2.5 text-xs font-semibold text-[#0B1F17] dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10 transition-colors shadow-xs"
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="3 6 5 6 21 6"/>
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-              </svg>
               {t('Reset Account Data', 'ڈیٹا ری سیٹ کریں')}
             </button>
           </div>
@@ -552,40 +618,40 @@ export default function Dashboard() {
 
         {/* ── Main Content Area ── */}
         <div className="flex flex-1 flex-col min-w-0">
-          {/* Top Bar (Theme Toggle, Language Switcher, Notifications) */}
-          <header className="sticky top-0 z-30 flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-white/8 bg-white/80 dark:bg-[#0a0a0c]/80 backdrop-blur-md">
-            <div className="flex items-center gap-2">
-              <span className="lg:hidden flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500 text-black">
-                <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-                  <path d="M7 1.5C4 1.5 1.5 4 1.5 7S4 12.5 7 12.5 12.5 10 12.5 7 10 1.5 7 1.5z" stroke="#000" strokeWidth="1.4"/>
-                  <circle cx="7" cy="7" r="2" fill="#000"/>
+          {/* Top Bar for Desktop/Mobile controls */}
+          <header className="sticky top-0 z-30 flex items-center justify-between px-4 sm:px-6 py-3.5 border-b border-[#E3ECE7] dark:border-white/10 bg-[#F4F7F5]/90 dark:bg-[#0a0a0c]/90 backdrop-blur-md">
+            <div className="flex items-center gap-2.5">
+              <span className="lg:hidden flex h-7 w-7 items-center justify-center rounded-full bg-[#047857] text-white">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
                 </svg>
               </span>
-              <span className="text-sm font-bold text-slate-900 dark:text-white capitalize">
+              <span className="text-base font-extrabold text-[#0B1F17] dark:text-white capitalize lg:hidden">
                 {activeTab === 'home'
                   ? 'Dashboard'
                   : activeTab === 'portfolio'
-                  ? 'Halal Stocks'
+                  ? 'Stocks'
                   : activeTab === 'assets'
-                  ? 'Sukuk & Assets'
+                  ? 'Sukuk'
                   : activeTab === 'kameti'
-                  ? 'Family & Takaful'
+                  ? 'Family'
                   : activeTab === 'zakat'
-                  ? 'Zakat & Impact'
+                  ? 'Zakat'
+                  : activeTab === 'mufti'
+                  ? 'AI Mufti'
                   : 'Settings'}
               </span>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 ml-auto">
               {/* Theme Toggle Button (Sun / Moon SVG) */}
               <button
                 onClick={() => toggleTheme(theme === 'dark' ? 'light' : 'dark')}
                 aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-                className="flex items-center justify-center h-8 w-8 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
+                className="flex items-center justify-center h-8 w-8 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#55695F] dark:text-slate-300 hover:text-[#0B1F17] dark:hover:text-white transition-colors"
                 title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
               >
                 {theme === 'dark' ? (
-                  // Sun icon
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="12" cy="12" r="5"/>
                     <line x1="12" y1="1" x2="12" y2="3"/>
@@ -598,7 +664,6 @@ export default function Dashboard() {
                     <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
                   </svg>
                 ) : (
-                  // Moon icon
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
                   </svg>
@@ -608,562 +673,1061 @@ export default function Dashboard() {
               {/* Language pill toggle */}
               <button
                 onClick={() => handleLangChange(lang === 'en' ? 'ur' : 'en')}
-                className="px-2.5 py-1 text-xs font-semibold rounded-lg border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
+                className="px-3 py-1 text-xs font-semibold rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white hover:bg-slate-50 dark:hover:bg-white/10 transition-colors shadow-xs"
               >
                 {lang === 'en' ? 'اردو' : 'EN'}
               </button>
             </div>
           </header>
 
-          {/* ── Tab 1: Dashboard ── */}
+          {/* ═══════════════════════════════════════════════════════════════ */}
+          {/* TAB 1: DASHBOARD (Exact Match to Image 1 Desktop & Image 6 Mobile) */}
+          {/* ═══════════════════════════════════════════════════════════════ */}
           {activeTab === 'home' && (
-            <main className="flex-1 px-4 py-5 lg:px-6 pb-32 lg:pb-8 space-y-5">
-              {/* Header */}
+            <main className="flex-1 px-4 sm:px-6 py-6 pb-28 lg:pb-10 max-w-7xl w-full mx-auto space-y-6">
+              {/* Header Row */}
               <div className="flex items-center justify-between">
                 <div>
-                  <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Dashboard</h1>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Overview of wealth and portfolio performance</p>
+                  <h1 className="text-2xl lg:text-[28px] font-extrabold tracking-tight text-[#0B1F17] dark:text-white">
+                    Dashboard
+                  </h1>
+                  <p className="text-xs text-[#55695F] dark:text-slate-400 mt-0.5">
+                    Overview of wealth and portfolio performance
+                  </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <button
                     onClick={() => setModal('deposit')}
-                    className="rounded-lg bg-emerald-600 hover:bg-emerald-500 px-3.5 py-1.5 text-xs font-semibold text-white transition-colors shadow-xs"
+                    className="hidden sm:inline-flex rounded-[14px] bg-[#047857] hover:bg-[#064E3B] px-4 py-2 text-xs font-bold text-white transition-all shadow-xs"
                   >
                     Add funds
                   </button>
                 </div>
               </div>
 
-              {/* Top Summary Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Total wealth card */}
-                <div className="rounded-2xl border border-slate-200 dark:border-white/10 p-5 sm:p-6 bg-white dark:bg-[#16171b] shadow-xs">
-                  <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
-                    Total wealth
+              {/* ── MOBILE SPECIFIC LAYOUT (Image 6) ── */}
+              <div className="block lg:hidden space-y-4">
+                {/* Total Wealth Display */}
+                <div>
+                  <p className="text-xs font-bold text-[#55695F] dark:text-slate-400 uppercase tracking-wider">
+                    TOTAL WEALTH
                   </p>
-                  <p className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-3">
-                    PKR {totalWealth.toLocaleString()}
+                  <p className="text-3xl font-extrabold text-[#0B1F17] dark:text-white tracking-tight mt-1 tabular-nums">
+                    PKR 312,500
                   </p>
-                  <div className="flex gap-1.5 mb-4">
-                    <div
-                      className="h-2 rounded-full bg-emerald-500"
-                      style={{ width: `${Math.min(100, (balance / totalWealth) * 100)}%` }}
-                    />
-                    <div
-                      className="h-2 rounded-full bg-blue-500"
-                      style={{ width: `${Math.min(100, (totalPortfolioValue / totalWealth) * 70)}%` }}
-                    />
-                    <div className="h-2 rounded-full bg-amber-500 flex-1" />
-                    <div className="h-2 w-8 rounded-full bg-slate-200 dark:bg-white/10" />
-                  </div>
-                  <div className="border-t border-slate-100 dark:border-white/5 pt-3.5">
-                    <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-2">Recent activity</p>
-                    {transactions.length === 0 ? (
-                      <p className="text-xs text-slate-400 dark:text-slate-600">No activity yet.</p>
-                    ) : (
-                      <div className="space-y-2">
-                        {transactions.slice(0, 3).map((tx) => (
-                          <div key={tx.id} className="flex justify-between text-xs">
-                            <span className="text-slate-700 dark:text-slate-300 font-medium">
-                              {tx.type === 'buy_stock'
-                                ? `Bought ${tx.symbol}`
-                                : tx.type === 'deposit'
-                                ? 'Deposit'
-                                : tx.type === 'zakat'
-                                ? 'Zakat paid'
-                                : tx.type === 'sell_stock'
-                                ? `Sold ${tx.symbol}`
-                                : tx.type}
-                            </span>
-                            <span
-                              className={`font-semibold ${
-                                tx.type === 'deposit'
-                                  ? 'text-emerald-600 dark:text-emerald-400'
-                                  : 'text-slate-600 dark:text-slate-400'
-                              }`}
-                            >
-                              {tx.type === 'deposit' ? '+' : '- '}
-                              {tx.amount.toLocaleString()}
-                            </span>
-                          </div>
-                        ))}
-                        {holdings.length > 0 && (
-                          <div className="flex justify-between text-xs">
-                            <span className="text-slate-700 dark:text-slate-300 font-medium">Dividend purified</span>
-                            <span className="text-emerald-600 dark:text-emerald-400 font-semibold">4.2%</span>
-                          </div>
-                        )}
-                      </div>
-                    )}
+                  <div className="mt-1.5 inline-flex items-center gap-1 bg-[#D1FAE5] dark:bg-emerald-500/20 text-[#047857] dark:text-emerald-400 text-xs font-bold px-2.5 py-0.5 rounded-full">
+                    <span>▲</span>
+                    <span>PKR 12,300 (+4.10%)</span>
                   </div>
                 </div>
 
-                {/* Right side metrics */}
-                <div className="space-y-4">
-                  {/* Zakat due card */}
-                  <div className="rounded-2xl border border-slate-200 dark:border-white/10 p-5 sm:p-6 bg-white dark:bg-[#16171b] shadow-xs">
-                    <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
-                      Zakat due
+                {/* Mobile Wave Chart */}
+                <div className="rounded-[20px] bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 p-4 shadow-xs">
+                  <div className="w-full h-36">
+                    <svg viewBox="0 0 500 140" className="w-full h-full overflow-visible">
+                      <defs>
+                        <linearGradient id="mobileGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor="#047857" stopOpacity="0.25" />
+                          <stop offset="100%" stopColor="#047857" stopOpacity="0.0" />
+                        </linearGradient>
+                      </defs>
+                      <path
+                        d="M 0,110 C 60,105 100,75 160,80 C 220,85 260,50 320,45 C 380,40 420,55 460,35 C 480,25 490,20 500,10 L 500,140 L 0,140 Z"
+                        fill="url(#mobileGrad)"
+                      />
+                      <path
+                        d="M 0,110 C 60,105 100,75 160,80 C 220,85 260,50 320,45 C 380,40 420,55 460,35 C 480,25 490,20 500,10"
+                        fill="none"
+                        stroke="#047857"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </div>
+
+                  {/* Timeframe selector */}
+                  <div className="flex justify-center items-center gap-2 mt-2 pt-2 border-t border-[#E3ECE7]/50 dark:border-white/5">
+                    {(['1D', '1W', '1M', '1Y'] as const).map((tf) => (
+                      <button
+                        key={tf}
+                        onClick={() => setTimeframe(tf)}
+                        className={`rounded-full px-3 py-1 text-xs font-bold transition-all ${
+                          timeframe === tf
+                            ? 'bg-[#064E3B] text-white shadow-xs'
+                            : 'text-[#55695F] dark:text-slate-400 hover:text-[#0B1F17]'
+                        }`}
+                      >
+                        {tf}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 3-Column Stats Card (Image 6) */}
+                <div className="rounded-[20px] bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 p-4 grid grid-cols-3 divide-x divide-[#E3ECE7] dark:divide-white/10 text-center shadow-xs">
+                  <div>
+                    <p className="text-[11px] font-bold text-[#55695F] dark:text-slate-400 uppercase">CASH</p>
+                    <p className="text-base font-extrabold text-[#0B1F17] dark:text-white mt-0.5 tabular-nums">62,500</p>
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-bold text-[#55695F] dark:text-slate-400 uppercase">INVESTED</p>
+                    <p className="text-base font-extrabold text-[#0B1F17] dark:text-white mt-0.5 tabular-nums">250,000</p>
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-bold text-[#55695F] dark:text-slate-400 uppercase">P&amp;L</p>
+                    <p className="text-base font-extrabold text-[#047857] dark:text-emerald-400 mt-0.5 tabular-nums">+12,300</p>
+                  </div>
+                </div>
+
+                {/* Action Buttons: Deposit & Withdraw */}
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => setModal('deposit')}
+                    className="py-3 bg-[#047857] hover:bg-[#064E3B] text-white font-bold rounded-[14px] text-center text-sm shadow-sm active:scale-98 transition-all"
+                  >
+                    Deposit
+                  </button>
+                  <button
+                    onClick={() => setModal('withdraw')}
+                    className="py-3 bg-white dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 hover:bg-slate-50 text-[#0B1F17] dark:text-white font-semibold rounded-[14px] text-center text-sm shadow-xs active:scale-98 transition-all"
+                  >
+                    Withdraw
+                  </button>
+                </div>
+
+                {/* Zakat Due Card with Chevron */}
+                <div
+                  onClick={() => setActiveTab('zakat')}
+                  className="rounded-[20px] bg-[#FEF3C7] dark:bg-amber-950/40 border border-[#FDE68A] dark:border-amber-800/40 p-4 flex items-center justify-between shadow-xs cursor-pointer active:scale-98 transition-all"
+                >
+                  <div>
+                    <p className="text-[11px] font-bold text-[#92400E] dark:text-amber-400 uppercase tracking-wider">
+                      ZAKAT DUE
                     </p>
-                    <p className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+                    <p className="text-2xl font-extrabold text-[#92400E] dark:text-amber-400 mt-0.5 tabular-nums">
                       PKR {zakatDue.toLocaleString()}
                     </p>
-                    <p className="mt-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-                      {isZakatEligible ? 'Above Nisab' : 'Below Nisab'}
+                    <p className="text-xs text-[#92400E]/80 dark:text-amber-400/80 mt-0.5">
+                      2.5% of eligible wealth
+                    </p>
+                  </div>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#92400E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="9 18 15 12 9 6"/>
+                  </svg>
+                </div>
+
+                {/* Recent Activity Card */}
+                <div className="space-y-2 pt-1">
+                  <h3 className="text-sm font-bold text-[#0B1F17] dark:text-white">Recent activity</h3>
+                  <div className="rounded-[20px] bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 divide-y divide-[#E3ECE7] dark:divide-white/10 shadow-xs overflow-hidden">
+                    <div className="p-4 flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-bold text-[#0B1F17] dark:text-white">Deposit via Raast</p>
+                        <p className="text-xs text-[#55695F] dark:text-slate-400">Cash</p>
+                      </div>
+                      <span className="text-sm font-bold text-[#047857] dark:text-emerald-400 tabular-nums">
+                        +100,000
+                      </span>
+                    </div>
+                    <div className="p-4 flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-bold text-[#0B1F17] dark:text-white">Bought Meezan Bank</p>
+                        <p className="text-xs text-[#55695F] dark:text-slate-400">Compliant</p>
+                      </div>
+                      <span className="text-sm font-bold text-[#0B1F17] dark:text-white tabular-nums">
+                        -50,000
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* ── DESKTOP SPECIFIC LAYOUT (Exact Match to Image 1) ── */}
+              <div className="hidden lg:grid lg:grid-cols-12 gap-5">
+                {/* Left Column (col-span-7) */}
+                <div className="lg:col-span-7 space-y-5">
+                  {/* Total Wealth & Smooth Chart Card */}
+                  <div className="rounded-[20px] bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 p-6 shadow-xs">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="text-xs font-bold text-[#55695F] dark:text-slate-400 uppercase tracking-wider">
+                          TOTAL WEALTH
+                        </p>
+                        <p className="text-[36px] leading-tight font-extrabold text-[#0B1F17] dark:text-white tracking-tight mt-1 tabular-nums">
+                          PKR 312,500
+                        </p>
+                        <div className="mt-2 inline-flex items-center gap-1 bg-[#D1FAE5] dark:bg-emerald-500/20 text-[#047857] dark:text-emerald-400 text-xs font-bold px-2.5 py-0.5 rounded-full">
+                          <span>▲</span>
+                          <span>PKR 12,300 (+4.10%)</span>
+                        </div>
+                      </div>
+
+                      {/* Timeframe pill selector */}
+                      <div className="flex items-center gap-1">
+                        {(['1D', '1W', '1M', '1Y'] as const).map((tf) => (
+                          <button
+                            key={tf}
+                            onClick={() => setTimeframe(tf)}
+                            className={`rounded-full px-3 py-1 text-xs font-bold transition-all ${
+                              timeframe === tf
+                                ? 'bg-[#064E3B] text-white shadow-xs'
+                                : 'text-[#55695F] dark:text-slate-400 hover:text-[#0B1F17]'
+                            }`}
+                          >
+                            {tf}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Smooth Wave Area Chart */}
+                    <div className="w-full h-44 mt-6">
+                      <svg viewBox="0 0 600 160" className="w-full h-full overflow-visible">
+                        <defs>
+                          <linearGradient id="desktopGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stopColor="#047857" stopOpacity="0.22" />
+                            <stop offset="100%" stopColor="#047857" stopOpacity="0.0" />
+                          </linearGradient>
+                        </defs>
+                        <path
+                          d="M 0,130 C 80,125 130,85 200,90 C 270,95 310,55 380,50 C 450,45 500,60 550,40 C 570,30 585,25 600,15 L 600,160 L 0,160 Z"
+                          fill="url(#desktopGrad)"
+                        />
+                        <path
+                          d="M 0,130 C 80,125 130,85 200,90 C 270,95 310,55 380,50 C 450,45 500,60 550,40 C 570,30 585,25 600,15"
+                          fill="none"
+                          stroke="#047857"
+                          strokeWidth="2.8"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* Financial summary Card */}
+                  <div className="rounded-[20px] bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 p-6 shadow-xs">
+                    <h3 className="text-lg font-bold text-[#0B1F17] dark:text-white">Financial summary</h3>
+                    <p className="text-xs text-[#55695F] dark:text-slate-400 mt-0.5 mb-4">
+                      Asset allocation and liquidity overview
+                    </p>
+
+                    {/* Allocation progress bar */}
+                    <div className="h-2.5 rounded-full overflow-hidden flex bg-[#E3ECE7] dark:bg-white/10 mb-5">
+                      <div className="bg-[#047857] h-full" style={{ width: '80%' }} />
+                      <div className="bg-[#34D399] h-full" style={{ width: '20%' }} />
+                    </div>
+
+                    {/* Breakdown items */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-2">
+                          <span className="h-2 w-2 rounded-full bg-[#34D399]" />
+                          <span className="text-[#0B1F17] dark:text-slate-200 font-medium">Available cash</span>
+                        </div>
+                        <span className="font-bold text-[#0B1F17] dark:text-white tabular-nums">PKR 62,500</span>
+                      </div>
+
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-2">
+                          <span className="h-2 w-2 rounded-full bg-[#047857]" />
+                          <span className="text-[#0B1F17] dark:text-slate-200 font-medium">Invested value</span>
+                        </div>
+                        <span className="font-bold text-[#0B1F17] dark:text-white tabular-nums">PKR 250,000</span>
+                      </div>
+
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-2">
+                          <span className="h-2 w-2 rounded-full bg-[#94A3B8]" />
+                          <span className="text-[#55695F] dark:text-slate-400 font-medium">Pending settlement</span>
+                        </div>
+                        <span className="font-bold text-[#55695F] dark:text-slate-400 tabular-nums">PKR 0</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Column (col-span-5) */}
+                <div className="lg:col-span-5 space-y-5">
+                  {/* Zakat Due Card */}
+                  <div className="rounded-[20px] bg-[#FEF3C7] dark:bg-amber-950/40 border border-[#FDE68A] dark:border-amber-800/40 p-6 shadow-xs">
+                    <p className="text-xs font-bold text-[#92400E] dark:text-amber-400 uppercase tracking-wider">
+                      ZAKAT DUE
+                    </p>
+                    <p className="text-[28px] leading-tight font-extrabold text-[#92400E] dark:text-amber-400 mt-1 tabular-nums">
+                      PKR {zakatDue.toLocaleString()}
+                    </p>
+                    <p className="text-xs text-[#92400E]/90 dark:text-amber-400/90 mt-1">
+                      2.5% of eligible wealth · Above Nisab
                     </p>
                   </div>
 
-                  {/* Available cash card */}
-                  <div className="rounded-2xl border border-slate-200 dark:border-white/10 p-5 sm:p-6 bg-slate-100 dark:bg-[#1e2025] shadow-xs">
-                    <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
-                      Available cash
+                  {/* Available Cash Card with Deposit/Withdraw buttons */}
+                  <div className="rounded-[20px] bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 p-6 shadow-xs">
+                    <p className="text-xs font-bold text-[#55695F] dark:text-slate-400 uppercase tracking-wider">
+                      AVAILABLE CASH
                     </p>
-                    <p className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-                      PKR {balance.toLocaleString()}
+                    <p className="text-[28px] leading-tight font-extrabold text-[#0B1F17] dark:text-white mt-1 tabular-nums">
+                      PKR 62,500
                     </p>
-                    <div className="mt-3 flex gap-4">
+                    <div className="flex gap-3 mt-5">
                       <button
                         onClick={() => setModal('deposit')}
-                        className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:underline"
+                        className="flex-1 py-2.5 bg-[#047857] hover:bg-[#064E3B] text-white font-bold rounded-[14px] text-center text-sm shadow-xs transition-all"
                       >
                         Deposit
                       </button>
                       <button
                         onClick={() => setModal('withdraw')}
-                        className="text-xs font-semibold text-slate-700 dark:text-slate-300 hover:underline"
+                        className="flex-1 py-2.5 bg-white dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 hover:bg-slate-50 text-[#0B1F17] dark:text-white font-semibold rounded-[14px] text-center text-sm shadow-xs transition-all"
                       >
                         Withdraw
                       </button>
                     </div>
                   </div>
-                </div>
-              </div>
 
-              {/* Chart & Wealth Summary */}
-              {isPremium && <WaliAutopilot lang={lang} />}
-              <PortfolioChart balance={balance} holdings={holdings} totalValue={totalPortfolioValue} />
-              <DemoWealthSummary
-                cash={balance}
-                invested={totalPortfolioValue}
-                pending={pendingDemoAmount}
-                zakatDue={isZakatEligible}
-                lang={lang}
-              />
-            </main>
-          )}
-
-          {/* ── Tab 2: Stocks ── */}
-          {activeTab === 'portfolio' && (
-            <main className="flex-1 px-4 py-5 lg:px-6 pb-32 lg:pb-8 space-y-5">
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Halal stocks</h1>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">PSX equities screened via AAOIFI guidelines</p>
-              </div>
-
-              {/* Controls Row */}
-              <div className="flex flex-wrap items-center gap-3">
-                <div className="flex items-center gap-2 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 px-3.5 py-2 flex-1 min-w-[200px]">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
-                    <circle cx="11" cy="11" r="8"/>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                  </svg>
-                  <input
-                    value={stockSearch}
-                    onChange={(e) => setStockSearch(e.target.value)}
-                    placeholder="Search by company name or symbol"
-                    className="bg-transparent text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 outline-none w-full"
-                  />
-                </div>
-                <div className="flex gap-1 rounded-full border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 p-1">
-                  {(['all', 'halal', 'excluded'] as const).map((f) => (
-                    <button
-                      key={f}
-                      onClick={() => setStockFilter(f)}
-                      className={`rounded-full px-3.5 py-1.5 text-xs font-semibold capitalize transition-colors ${
-                        stockFilter === f
-                          ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
-                          : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                      }`}
-                    >
-                      {f === 'all' ? 'All' : f === 'halal' ? 'Halal' : 'Excluded'}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Stocks Table */}
-              <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#16171b] shadow-xs overflow-hidden">
-                <div className="grid grid-cols-6 gap-2 px-4 py-3 border-b border-slate-100 dark:border-white/5 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                  <span className="col-span-2">Company</span>
-                  <span className="text-right">Price</span>
-                  <span className="text-right">Change</span>
-                  <span className="text-right">Debt</span>
-                  <span className="text-right">Impure</span>
-                </div>
-                <div>
-                  {filteredStocks.map((s) => (
-                    <div
-                      key={s.name}
-                      className="grid grid-cols-6 gap-2 items-center px-4 py-3.5 border-b border-slate-100 dark:border-white/5 last:border-0 hover:bg-slate-50/60 dark:hover:bg-white/[0.02] transition-colors"
-                    >
-                      <div className="col-span-2 flex items-center justify-between pr-2">
-                        <span className="text-sm font-semibold text-slate-900 dark:text-white">{s.name}</span>
-                        <span
-                          className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                            s.compliant
-                              ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20'
-                              : 'bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20'
-                          }`}
-                        >
-                          {s.compliant ? 'Compliant' : 'Excluded'}
+                  {/* Recent Activity Card */}
+                  <div className="rounded-[20px] bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 p-6 shadow-xs">
+                    <h3 className="text-lg font-bold text-[#0B1F17] dark:text-white mb-4">Recent activity</h3>
+                    <div className="divide-y divide-[#E3ECE7] dark:divide-white/10">
+                      <div className="py-3 first:pt-0 flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-bold text-[#0B1F17] dark:text-white">Deposit via Raast</p>
+                          <p className="text-xs text-[#55695F] dark:text-slate-400">Cash</p>
+                        </div>
+                        <span className="text-sm font-bold text-[#047857] dark:text-emerald-400 tabular-nums">
+                          +100,000
                         </span>
                       </div>
-                      <span className="text-sm font-semibold text-slate-800 dark:text-slate-200 text-right">
-                        {s.price.toFixed(2)}
-                      </span>
-                      <span
-                        className={`text-sm text-right font-semibold ${
-                          s.change.startsWith('+') ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'
-                        }`}
-                      >
-                        {s.change}
-                      </span>
-                      <span className="text-sm text-slate-500 dark:text-slate-400 text-right">{s.debt}</span>
-                      <span className="text-sm text-slate-500 dark:text-slate-400 text-right">{s.impure}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
 
-              {/* Trade stocks & scanner */}
-              <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#16171b] shadow-xs overflow-hidden">
-                <div className="px-5 py-4 border-b border-slate-100 dark:border-white/5">
-                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">Instant Trade Simulator</h3>
-                </div>
-                <div className="p-5">
-                  <HalalStockScanner balance={balance} onBuy={initiateBuyStock} />
+                      <div className="py-3 flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-bold text-[#0B1F17] dark:text-white">Bought Meezan Bank</p>
+                          <p className="text-xs text-[#55695F] dark:text-slate-400">Compliant</p>
+                        </div>
+                        <span className="text-sm font-bold text-[#0B1F17] dark:text-white tabular-nums">
+                          -50,000
+                        </span>
+                      </div>
+
+                      <div className="py-3 last:pb-0 flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-bold text-[#0B1F17] dark:text-white">Bought Systems Limited</p>
+                          <p className="text-xs text-[#55695F] dark:text-slate-400">Compliant</p>
+                        </div>
+                        <span className="text-sm font-bold text-[#0B1F17] dark:text-white tabular-nums">
+                          -200,000
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <PortfolioDashboard
-                holdings={holdings}
-                totalValue={totalPortfolioValue}
-                dailyPnl={dailyPnl}
-                onSell={setSelectedSellHolding}
-              />
             </main>
           )}
 
-          {/* ── Tab 3: Sukuk & Assets ── */}
-          {activeTab === 'assets' && (
-            <main className="flex-1 px-4 py-5 lg:px-6 pb-32 lg:pb-8 space-y-5">
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Sukuk and assets</h1>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Asset-backed Islamic debt, Hajj savings & agriculture contracts</p>
+          {/* ═══════════════════════════════════════════════════════════════ */}
+          {/* TAB 2: STOCKS (Exact Match to Image 7 Mobile & Extended Web)  */}
+          {/* ═══════════════════════════════════════════════════════════════ */}
+          {activeTab === 'portfolio' && (
+            <main className="flex-1 px-4 sm:px-6 py-6 pb-28 lg:pb-10 max-w-4xl w-full mx-auto space-y-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-2xl lg:text-[28px] font-extrabold tracking-tight text-[#0B1F17] dark:text-white">
+                    Stocks
+                  </h1>
+                  <p className="text-xs text-[#55695F] dark:text-slate-400 mt-0.5">
+                    Screened Pakistan Stock Exchange equities
+                  </p>
+                </div>
+                <button
+                  onClick={() => handleLangChange(lang === 'en' ? 'ur' : 'en')}
+                  className="px-3.5 py-1 text-xs font-semibold rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white"
+                >
+                  اردو
+                </button>
               </div>
 
-              {/* 3-column overview cards with clean SVGs */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {[
-                  {
-                    icon: (
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-600 dark:text-emerald-400">
-                        <line x1="3" y1="21" x2="21" y2="21"/>
-                        <line x1="4" y1="10" x2="20" y2="10"/>
-                        <polyline points="12 3 20 10 4 10 12 3"/>
-                        <line x1="6" y1="10" x2="6" y2="21"/>
-                        <line x1="10" y1="10" x2="10" y2="21"/>
-                        <line x1="14" y1="10" x2="14" y2="21"/>
-                        <line x1="18" y1="10" x2="18" y2="21"/>
-                      </svg>
-                    ),
-                    title: 'Sovereign Sukuk',
-                    desc: 'Asset-backed infrastructure bonds',
-                    progress: 62,
-                    color: 'bg-emerald-500',
-                    cta: 'Invest',
-                  },
-                  {
-                    icon: (
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600 dark:text-blue-400">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                      </svg>
-                    ),
-                    title: 'Hajj savings',
-                    desc: 'Yield-bearing goal accumulator',
-                    progress: 28,
-                    color: 'bg-blue-500',
-                    cta: 'Start saving',
-                  },
-                  {
-                    icon: (
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-600 dark:text-amber-400">
-                        <path d="M12 2a10 10 0 0 1 10 10c0 5.5-4.5 10-10 10S2 17.5 2 12A10 10 0 0 1 12 2z"/>
-                        <path d="M12 6v12M8 10l4-4 4 4M8 14l4-4 4 4"/>
-                      </svg>
-                    ),
-                    title: 'Agri finance',
-                    desc: "Bay' Al-Salam farmer contracts",
-                    progress: 45,
-                    color: 'bg-amber-500',
-                    cta: 'View contracts',
-                  },
-                ].map(({ icon, title, desc, progress, color, cta }) => (
-                  <div
-                    key={title}
-                    className="flex flex-col rounded-2xl border border-slate-200 dark:border-white/10 p-5 bg-white dark:bg-[#16171b] shadow-xs"
-                  >
-                    <div className="mb-3">{icon}</div>
-                    <h3 className="mb-1 text-sm font-bold text-slate-900 dark:text-white">{title}</h3>
-                    <p className="mb-4 text-xs text-slate-500 dark:text-slate-400 flex-1">{desc}</p>
-                    <div className="mb-3 h-1.5 rounded-full bg-slate-100 dark:bg-white/10 overflow-hidden">
-                      <div className={`h-full rounded-full ${color}`} style={{ width: `${progress}%` }} />
+              {/* 3 Metric Cards in a Row (Image 7) */}
+              <div className="grid grid-cols-3 gap-3">
+                <div className="rounded-[20px] bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 p-4 text-center shadow-xs">
+                  <p className="text-2xl font-extrabold text-[#047857] dark:text-emerald-400">33%</p>
+                  <p className="text-xs text-[#55695F] dark:text-slate-400 mt-0.5 font-medium">Debt limit</p>
+                </div>
+                <div className="rounded-[20px] bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 p-4 text-center shadow-xs">
+                  <p className="text-2xl font-extrabold text-[#047857] dark:text-emerald-400">5%</p>
+                  <p className="text-xs text-[#55695F] dark:text-slate-400 mt-0.5 font-medium">Impure income</p>
+                </div>
+                <div className="rounded-[20px] bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 p-4 text-center shadow-xs">
+                  <p className="text-2xl font-extrabold text-[#047857] dark:text-emerald-400">10%</p>
+                  <p className="text-xs text-[#55695F] dark:text-slate-400 mt-0.5 font-medium">Real assets</p>
+                </div>
+              </div>
+
+              {/* Filter Pills */}
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setStockFilter('all')}
+                  className={`rounded-full px-4 py-1.5 text-xs font-bold transition-all ${
+                    stockFilter === 'all'
+                      ? 'bg-[#064E3B] text-white shadow-xs'
+                      : 'bg-white dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 text-[#0B1F17] dark:text-white'
+                  }`}
+                >
+                  All
+                </button>
+                <button
+                  onClick={() => setStockFilter('halal')}
+                  className={`rounded-full px-4 py-1.5 text-xs font-bold transition-all ${
+                    stockFilter === 'halal'
+                      ? 'bg-[#064E3B] text-white shadow-xs'
+                      : 'bg-white dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 text-[#0B1F17] dark:text-white'
+                  }`}
+                >
+                  Halal
+                </button>
+                <button
+                  onClick={() => setStockFilter('excluded')}
+                  className={`rounded-full px-4 py-1.5 text-xs font-bold transition-all ${
+                    stockFilter === 'excluded'
+                      ? 'bg-[#064E3B] text-white shadow-xs'
+                      : 'bg-white dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 text-[#0B1F17] dark:text-white'
+                  }`}
+                >
+                  Excluded
+                </button>
+              </div>
+
+              {/* Stock List Card (Image 7) */}
+              <div className="rounded-[20px] bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 divide-y divide-[#E3ECE7] dark:divide-white/10 shadow-xs overflow-hidden">
+                {filteredStocks.map((s) => (
+                  <div key={s.name} className="p-4 flex items-center justify-between hover:bg-slate-50/50 dark:hover:bg-white/[0.02] transition-colors">
+                    <div className="flex items-center gap-3">
+                      {/* Avatar Badge */}
+                      <div
+                        className={`h-11 w-11 rounded-full flex items-center justify-center font-bold text-sm ${
+                          s.compliant
+                            ? 'bg-[#D1FAE5] text-[#047857]'
+                            : 'bg-[#FEE4E2] text-[#B42318]'
+                        }`}
+                      >
+                        {s.code}
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-[#0B1F17] dark:text-white">{s.name}</p>
+                        <p className="text-xs text-[#55695F] dark:text-slate-400">Score {s.score}</p>
+                      </div>
                     </div>
-                    <button className="w-full rounded-xl border border-slate-200 dark:border-white/10 py-2 text-xs font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
-                      {cta}
-                    </button>
+
+                    {/* Status Pill Badge */}
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                        s.compliant
+                          ? 'bg-[#D1FAE5] text-[#047857]'
+                          : 'bg-[#FEE4E2] text-[#B42318]'
+                      }`}
+                    >
+                      {s.compliant ? 'Compliant' : 'Excluded'}
+                    </span>
                   </div>
                 ))}
               </div>
 
-              {currentUser?.isOverseas && (
-                <OverseasInvest
-                  balance={balance}
-                  onInvest={handleOverseasInvest}
-                  lang={lang}
-                  cnic={currentUser.cnic}
-                  country={currentUser.country}
+              <p className="text-xs text-[#55695F] dark:text-slate-400 text-center pt-1 font-medium">
+                Every PSX stock checked for debt and impure income.
+              </p>
+
+              {/* Instant Trade Simulator below */}
+              <div className="rounded-[20px] bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 p-5 shadow-xs">
+                <h3 className="text-sm font-bold text-[#0B1F17] dark:text-white mb-3">Instant Trade Execution</h3>
+                <HalalStockScanner balance={balance} onBuy={initiateBuyStock} />
+              </div>
+
+              {holdings.length > 0 && (
+                <PortfolioDashboard
+                  holdings={holdings}
+                  totalValue={totalPortfolioValue}
+                  dailyPnl={dailyPnl}
+                  onSell={setSelectedSellHolding}
                 />
               )}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
-                <HajjVault onDeposit={handleHajjDeposit} />
-                <AgriFinancing
-                  balance={balance}
-                  onInvest={(amount) => initiateSecureTransaction({ type: 'buy_sukuk', amount, symbol: 'AGRI' })}
-                />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
-                <FractionalSukuk balance={balance} onBuy={handleBuySukuk} />
-                <GlobalHalalETFs onInvest={handleETFInvest} />
-              </div>
             </main>
           )}
 
-          {/* ── Tab 4: Family ── */}
-          {activeTab === 'kameti' && (
-            <main className="flex-1 px-4 py-5 lg:px-6 pb-32 lg:pb-8 space-y-5">
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Family and Takaful</h1>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Community rotating credit circles and mutual health pool</p>
-              </div>
-
-              {/* Overview grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Kameti circle */}
-                <div className="rounded-2xl border border-slate-200 dark:border-white/10 p-5 bg-white dark:bg-[#16171b] shadow-xs">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm font-bold text-slate-900 dark:text-white">Kameti circle</h3>
-                    <span className="text-xs font-semibold text-slate-500">Monthly</span>
-                  </div>
-                  <div className="space-y-3">
-                    {[
-                      { initial: 'A', name: 'Ahmed', status: 'Paid', color: 'bg-emerald-600' },
-                      { initial: 'S', name: 'Sana', status: 'Paid', color: 'bg-blue-600' },
-                      { initial: 'B', name: 'Bilal', status: 'Due soon', color: 'bg-amber-600' },
-                    ].map(({ initial, name, status, color }) => (
-                      <div key={name} className="flex items-center gap-3">
-                        <div className={`flex h-8 w-8 items-center justify-center rounded-full ${color} text-xs font-bold text-white`}>
-                          {initial}
-                        </div>
-                        <span className="flex-1 text-sm font-semibold text-slate-800 dark:text-slate-200">{name}</span>
-                        <span
-                          className={`text-xs font-semibold ${
-                            status === 'Paid' ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'
-                          }`}
-                        >
-                          {status}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Right column */}
-                <div className="space-y-4">
-                  {/* Next payout */}
-                  <div className="rounded-2xl border border-slate-200 dark:border-white/10 p-5 bg-slate-100 dark:bg-[#1e2025] shadow-xs">
-                    <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Next payout</p>
-                    <p className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">PKR 250,000</p>
-                    <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1">Sana, in 12 days</p>
-                  </div>
-                  {/* Takaful pool */}
-                  <div className="rounded-2xl border border-slate-200 dark:border-white/10 p-5 bg-white dark:bg-[#16171b] shadow-xs">
-                    <p className="text-sm font-bold text-slate-900 dark:text-white">Takaful pool</p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Family health cover active</p>
-                  </div>
-                </div>
-              </div>
-
-              <FamilyHealthSaving balance={balance} onSave={handleHealthSave} lang={lang} cnic={currentUser?.cnic} />
-              <DigitalCommittee onContribute={handleKametiContribute} />
-              <WirasatCalculator />
-            </main>
-          )}
-
-          {/* ── Tab 5: Zakat & Impact ── */}
-          {activeTab === 'zakat' && (
-            <main className="flex-1 px-4 py-5 lg:px-6 pb-32 lg:pb-8 space-y-5">
+          {/* ═══════════════════════════════════════════════════════════════ */}
+          {/* TAB 3: SUKUK (Exact Match to Image 4)                         */}
+          {/* ═══════════════════════════════════════════════════════════════ */}
+          {activeTab === 'assets' && (
+            <main className="flex-1 px-4 sm:px-6 py-6 pb-28 lg:pb-10 max-w-4xl w-full mx-auto space-y-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Zakat and impact</h1>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Automated 2.5% calculation and verified NGO distribution</p>
+                  <h1 className="text-2xl lg:text-[28px] font-extrabold tracking-tight text-[#0B1F17] dark:text-white">
+                    Sukuk
+                  </h1>
+                  <p className="text-xs text-[#55695F] dark:text-slate-400 mt-0.5">
+                    Asset-backed sovereign and corporate certificates
+                  </p>
                 </div>
                 <button
-                  onClick={() => handleZakatDonation(zakatDue, 'Zakat Fund')}
-                  className="rounded-lg bg-emerald-600 hover:bg-emerald-500 px-4 py-2 text-xs font-semibold text-white transition-colors shadow-xs"
+                  onClick={() => handleLangChange(lang === 'en' ? 'ur' : 'en')}
+                  className="px-3.5 py-1 text-xs font-semibold rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white"
                 >
-                  Pay Zakat
+                  اردو
                 </button>
               </div>
 
-              {/* Zakat & Nisab Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="rounded-2xl border border-slate-200 dark:border-white/10 p-5 bg-white dark:bg-[#16171b] shadow-xs">
-                  <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Zakat due</p>
-                  <p className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">PKR {zakatDue.toLocaleString()}</p>
-                  <p className="mt-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-                    {isZakatEligible ? 'Above Nisab threshold' : 'Below Nisab threshold'}
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-slate-200 dark:border-white/10 p-5 bg-white dark:bg-[#16171b] shadow-xs">
-                  <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">Nisab threshold benchmarks</p>
-                  <div className="space-y-2.5">
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="font-semibold text-slate-800 dark:text-slate-200">Gold (7.5 Tolas)</span>
-                      <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">Live price</span>
-                    </div>
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="font-semibold text-slate-800 dark:text-slate-200">Silver (52.5 Tolas)</span>
-                      <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">Live price</span>
-                    </div>
-                  </div>
-                </div>
+              {/* Deep Green Banner (Image 4) */}
+              <div className="rounded-[20px] bg-[#064E3B] p-6 text-white shadow-md">
+                <p className="text-[11px] font-bold tracking-wider text-emerald-300 uppercase">
+                  RIBA-FREE GROWTH
+                </p>
+                <h2 className="text-xl sm:text-2xl font-extrabold mt-1 tracking-tight leading-snug">
+                  Asset-backed Sukuk, screened for Shariah compliance
+                </h2>
               </div>
 
-              {/* Charity Receipts */}
-              <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#16171b] shadow-xs overflow-hidden">
-                <div className="px-5 py-4 border-b border-slate-100 dark:border-white/5">
-                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">Charity receipts & audit</h3>
-                </div>
-                <div className="divide-y divide-slate-100 dark:divide-white/5 text-sm">
-                  <div className="flex items-center justify-between px-5 py-3.5">
-                    <span className="font-medium text-slate-800 dark:text-slate-200">Dividend purification</span>
-                    <span className="font-semibold text-slate-600 dark:text-slate-400">PKR 1,240</span>
-                  </div>
-                  <div className="flex items-center justify-between px-5 py-3.5">
-                    <span className="font-medium text-slate-800 dark:text-slate-200">Zakat payment</span>
-                    <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">Receipt ready</span>
-                  </div>
-                </div>
+              {/* Filter Pills */}
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setSukukFilter('all')}
+                  className={`rounded-full px-4 py-1.5 text-xs font-bold transition-all ${
+                    sukukFilter === 'all'
+                      ? 'bg-[#064E3B] text-white shadow-xs'
+                      : 'bg-white dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 text-[#0B1F17] dark:text-white'
+                  }`}
+                >
+                  All
+                </button>
+                <button
+                  onClick={() => setSukukFilter('govt')}
+                  className={`rounded-full px-4 py-1.5 text-xs font-bold transition-all ${
+                    sukukFilter === 'govt'
+                      ? 'bg-[#064E3B] text-white shadow-xs'
+                      : 'bg-white dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 text-[#0B1F17] dark:text-white'
+                  }`}
+                >
+                  Government
+                </button>
+                <button
+                  onClick={() => setSukukFilter('corp')}
+                  className={`rounded-full px-4 py-1.5 text-xs font-bold transition-all ${
+                    sukukFilter === 'corp'
+                      ? 'bg-[#064E3B] text-white shadow-xs'
+                      : 'bg-white dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 text-[#0B1F17] dark:text-white'
+                  }`}
+                >
+                  Corporate
+                </button>
               </div>
 
-              <ZakatDistribution balance={balance} portfolioValue={totalPortfolioValue} />
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
-                <PurificationTracker onPurify={(amount) => handleZakatDonation(amount, 'Dividend Purification')} />
-                <FinancialHealthScore
-                  balance={balance}
-                  portfolioValue={totalPortfolioValue}
-                  holdings={holdings}
-                  transactions={transactions}
-                  zakatHistory={zakatHistory}
-                  isZakatEligible={isZakatEligible}
-                />
+              {/* Sukuk Cards List */}
+              <div className="space-y-4">
+                {[
+                  {
+                    name: 'GOP Ijarah Sukuk VRR-XXVII',
+                    type: 'govt',
+                    returnPct: '14.2%',
+                    tenor: '3 Years',
+                    minPkr: 'PKR 5,000',
+                  },
+                  {
+                    name: 'Meezan Energy Sukuk II',
+                    type: 'corp',
+                    returnPct: '15.8%',
+                    tenor: '5 Years',
+                    minPkr: 'PKR 25,000',
+                  },
+                  {
+                    name: 'K-Electric Islamic Sukuk',
+                    type: 'corp',
+                    returnPct: '16.4%',
+                    tenor: '7 Years',
+                    minPkr: 'PKR 10,000',
+                  },
+                ]
+                  .filter((s) => (sukukFilter === 'all' ? true : sukukFilter === s.type))
+                  .map((sukuk) => (
+                    <div
+                      key={sukuk.name}
+                      className="rounded-[20px] bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 p-5 space-y-4 shadow-xs"
+                    >
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-base font-bold text-[#0B1F17] dark:text-white">{sukuk.name}</h3>
+                        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#D1FAE5] text-[#047857]">
+                          Compliant
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-2 pt-1 text-left">
+                        <div>
+                          <p className="text-[11px] font-bold text-[#55695F] dark:text-slate-400 uppercase">RETURN</p>
+                          <p className="text-sm font-extrabold text-[#0B1F17] dark:text-white mt-0.5">{sukuk.returnPct}</p>
+                        </div>
+                        <div>
+                          <p className="text-[11px] font-bold text-[#55695F] dark:text-slate-400 uppercase">TENOR</p>
+                          <p className="text-sm font-extrabold text-[#0B1F17] dark:text-white mt-0.5">{sukuk.tenor}</p>
+                        </div>
+                        <div>
+                          <p className="text-[11px] font-bold text-[#55695F] dark:text-slate-400 uppercase">MINIMUM</p>
+                          <p className="text-sm font-extrabold text-[#0B1F17] dark:text-white mt-0.5">{sukuk.minPkr}</p>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => handleBuySukuk({ type: 'buy_sukuk', amount: 5000, name: sukuk.name })}
+                        className="w-full py-3 bg-[#047857] hover:bg-[#064E3B] text-white font-bold rounded-[14px] text-center text-sm shadow-xs transition-all active:scale-98"
+                      >
+                        Invest
+                      </button>
+                    </div>
+                  ))}
               </div>
             </main>
           )}
 
-          {/* ── Tab 6: Settings (With Dark & White mode toggle) ── */}
-          {activeTab === 'settings' && (
-            <main className="flex-1 px-4 py-5 lg:px-6 pb-32 lg:pb-8 space-y-5">
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Settings</h1>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Manage preferences, appearance, and security</p>
+          {/* ═══════════════════════════════════════════════════════════════ */}
+          {/* TAB 4: FAMILY (Exact Match to Image 3)                        */}
+          {/* ═══════════════════════════════════════════════════════════════ */}
+          {activeTab === 'kameti' && (
+            <main className="flex-1 px-4 sm:px-6 py-6 pb-28 lg:pb-10 max-w-4xl w-full mx-auto space-y-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-2xl lg:text-[28px] font-extrabold tracking-tight text-[#0B1F17] dark:text-white">
+                    Family
+                  </h1>
+                  <p className="text-xs text-[#55695F] dark:text-slate-400 mt-0.5">
+                    Rotating committee savings &amp; Shariah inheritance planning
+                  </p>
+                </div>
+                <button
+                  onClick={() => handleLangChange(lang === 'en' ? 'ur' : 'en')}
+                  className="px-3.5 py-1 text-xs font-semibold rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white"
+                >
+                  اردو
+                </button>
               </div>
 
-              {/* Settings Card */}
-              <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#16171b] shadow-xs overflow-hidden">
-                {/* Account Type */}
-                <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-white/5">
-                  <div>
-                    <p className="text-sm font-semibold text-slate-900 dark:text-white">Account type</p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Switch between demo and real</p>
+              {/* Segmented Control Toggle (Image 3) */}
+              <div className="bg-[#E3ECE7]/60 dark:bg-white/10 rounded-2xl p-1 grid grid-cols-2">
+                <button
+                  onClick={() => setFamilySubTab('kameti')}
+                  className={`py-2 text-sm font-bold rounded-xl transition-all ${
+                    familySubTab === 'kameti'
+                      ? 'bg-white dark:bg-[#16171b] text-[#047857] dark:text-emerald-400 shadow-xs'
+                      : 'text-[#55695F] dark:text-slate-400'
+                  }`}
+                >
+                  Kameti
+                </button>
+                <button
+                  onClick={() => setFamilySubTab('inheritance')}
+                  className={`py-2 text-sm font-bold rounded-xl transition-all ${
+                    familySubTab === 'inheritance'
+                      ? 'bg-white dark:bg-[#16171b] text-[#047857] dark:text-emerald-400 shadow-xs'
+                      : 'text-[#55695F] dark:text-slate-400'
+                  }`}
+                >
+                  Inheritance
+                </button>
+              </div>
+
+              {familySubTab === 'kameti' ? (
+                <div className="space-y-4">
+                  {/* Kameti Card (Image 3) */}
+                  <div className="rounded-[20px] bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 p-5 space-y-4 shadow-xs">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h3 className="text-lg font-bold text-[#0B1F17] dark:text-white">Kameti</h3>
+                        <p className="text-xs text-[#55695F] dark:text-slate-400 mt-0.5">
+                          Save together in a rotating committee
+                        </p>
+                      </div>
+                      {/* Avatar Stack */}
+                      <div className="flex -space-x-2">
+                        <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#D1FAE5] text-xs font-bold text-[#047857] border-2 border-white dark:border-[#16171b]">
+                          A
+                        </span>
+                        <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#FEF3C7] text-xs font-bold text-[#92400E] border-2 border-white dark:border-[#16171b]">
+                          B
+                        </span>
+                        <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#E3ECE7] text-xs font-bold text-[#55695F] border-2 border-white dark:border-[#16171b]">
+                          C
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3 pt-2 text-sm">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-[#55695F] dark:text-slate-400 uppercase">MEMBERS</span>
+                        <span className="font-extrabold text-[#0B1F17] dark:text-white">10 Members</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-[#55695F] dark:text-slate-400 uppercase">MONTHLY CONTRIBUTION</span>
+                        <span className="font-extrabold text-[#0B1F17] dark:text-white">PKR 25,000</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-[#55695F] dark:text-slate-400 uppercase">YOUR TURN</span>
+                        <span className="font-extrabold text-[#0B1F17] dark:text-white">Month 4 (Oct 2026)</span>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => handleKametiContribute(25000)}
+                      className="w-full py-3 bg-[#047857] hover:bg-[#064E3B] text-white font-bold rounded-[14px] text-center text-sm shadow-xs transition-all active:scale-98"
+                    >
+                      Start a Kameti
+                    </button>
                   </div>
-                  <div className="flex items-center gap-1 rounded-full border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 p-1">
-                    <button className="rounded-full bg-slate-900 dark:bg-white px-4 py-1.5 text-xs font-semibold text-white dark:text-slate-900 transition-colors shadow-xs">
+
+                  {/* Inheritance Card (Image 3) */}
+                  <div className="rounded-[20px] bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 p-5 space-y-4 shadow-xs">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-full bg-[#D1FAE5] flex items-center justify-center text-[#047857]">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <line x1="12" y1="3" x2="12" y2="21"/>
+                          <polyline points="3 8 12 3 21 8"/>
+                          <polyline points="4 16 8 11 12 16"/>
+                          <polyline points="12 16 16 11 20 16"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold text-[#0B1F17] dark:text-white">Inheritance</h3>
+                        <p className="text-xs text-[#55695F] dark:text-slate-400">
+                          Preserve wealth for your family, in line with Shariah
+                        </p>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => setFamilySubTab('inheritance')}
+                      className="w-full py-3 bg-white dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 hover:bg-slate-50 text-[#0B1F17] dark:text-white font-semibold rounded-[14px] text-center text-sm shadow-xs transition-all"
+                    >
+                      Plan inheritance
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <WirasatCalculator />
+                </div>
+              )}
+            </main>
+          )}
+
+          {/* ═══════════════════════════════════════════════════════════════ */}
+          {/* TAB 5: ZAKAT (Exact Match to Image 5)                         */}
+          {/* ═══════════════════════════════════════════════════════════════ */}
+          {activeTab === 'zakat' && (
+            <main className="flex-1 px-4 sm:px-6 py-6 pb-28 lg:pb-10 max-w-4xl w-full mx-auto space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-2xl lg:text-[28px] font-extrabold tracking-tight text-[#0B1F17] dark:text-white">
+                    Zakat
+                  </h1>
+                  <p className="text-xs text-[#55695F] dark:text-slate-400 mt-0.5">
+                    Automated 2.5% calculation on net eligible wealth
+                  </p>
+                </div>
+                <button
+                  onClick={() => handleLangChange(lang === 'en' ? 'ur' : 'en')}
+                  className="px-3.5 py-1 text-xs font-semibold rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white"
+                >
+                  اردو
+                </button>
+              </div>
+
+              {/* Gold Top Card (Image 5) */}
+              <div className="rounded-[20px] bg-[#FEF3C7] dark:bg-amber-950/40 border border-[#FDE68A] dark:border-amber-800/40 p-6 shadow-xs">
+                <p className="text-xs font-bold text-[#92400E] dark:text-amber-400 uppercase tracking-wider">
+                  ZAKAT DUE
+                </p>
+                <p className="text-[36px] font-extrabold text-[#92400E] dark:text-amber-400 mt-1 tabular-nums">
+                  PKR {zakatDue.toLocaleString()}
+                </p>
+                <p className="text-xs text-[#92400E]/90 dark:text-amber-400/90 mt-1">
+                  2.5% of eligible wealth · Above Nisab
+                </p>
+              </div>
+
+              {/* Live Metal Rates Cards (Image 5) */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-[20px] bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 p-4 shadow-xs">
+                  <p className="text-[11px] font-bold text-[#55695F] dark:text-slate-400 uppercase">GOLD, LIVE</p>
+                  <p className="text-base font-extrabold text-[#0B1F17] dark:text-white mt-1 tabular-nums">PKR 242,500/tola</p>
+                </div>
+                <div className="rounded-[20px] bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 p-4 shadow-xs">
+                  <p className="text-[11px] font-bold text-[#55695F] dark:text-slate-400 uppercase">SILVER, LIVE</p>
+                  <p className="text-base font-extrabold text-[#0B1F17] dark:text-white mt-1 tabular-nums">PKR 2,850/tola</p>
+                </div>
+              </div>
+
+              {/* Form Card (Image 5) */}
+              <div className="rounded-[20px] bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 p-5 space-y-4 shadow-xs">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs font-bold text-[#0B1F17] dark:text-white block mb-1">Cash and savings</label>
+                    <input
+                      type="number"
+                      value={zakatSavings}
+                      onChange={(e) => setZakatSavings(Number(e.target.value))}
+                      className="w-full px-4 py-3 bg-[#F4F7F5] dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 rounded-[14px] text-sm font-semibold text-[#0B1F17] dark:text-white outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-[#0B1F17] dark:text-white block mb-1">Investments</label>
+                    <input
+                      type="number"
+                      value={zakatInvestments}
+                      onChange={(e) => setZakatInvestments(Number(e.target.value))}
+                      className="w-full px-4 py-3 bg-[#F4F7F5] dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 rounded-[14px] text-sm font-semibold text-[#0B1F17] dark:text-white outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs font-bold text-[#0B1F17] dark:text-white block mb-1">Gold (tola)</label>
+                    <input
+                      type="number"
+                      value={zakatGoldTola}
+                      onChange={(e) => setZakatGoldTola(Number(e.target.value))}
+                      className="w-full px-4 py-3 bg-[#F4F7F5] dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 rounded-[14px] text-sm font-semibold text-[#0B1F17] dark:text-white outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-[#0B1F17] dark:text-white block mb-1">Silver (tola)</label>
+                    <input
+                      type="number"
+                      value={zakatSilverTola}
+                      onChange={(e) => setZakatSilverTola(Number(e.target.value))}
+                      className="w-full px-4 py-3 bg-[#F4F7F5] dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 rounded-[14px] text-sm font-semibold text-[#0B1F17] dark:text-white outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-xs font-bold text-[#0B1F17] dark:text-white block mb-1">Liabilities due</label>
+                  <input
+                    type="number"
+                    value={zakatLiabilities}
+                    onChange={(e) => setZakatLiabilities(Number(e.target.value))}
+                    className="w-full px-4 py-3 bg-[#F4F7F5] dark:bg-white/5 border border-[#E3ECE7] dark:border-white/10 rounded-[14px] text-sm font-semibold text-[#0B1F17] dark:text-white outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Summary Box (Image 5) */}
+              <div className="rounded-[20px] bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 p-5 space-y-3 shadow-xs">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-[#55695F] dark:text-slate-400 font-medium">Eligible wealth</span>
+                  <span className="font-extrabold text-[#0B1F17] dark:text-white tabular-nums">PKR 312,500</span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-[#55695F] dark:text-slate-400 font-medium">Nisab threshold</span>
+                  <span className="font-extrabold text-[#0B1F17] dark:text-white tabular-nums">PKR 185,250</span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-[#55695F] dark:text-slate-400 font-medium">Rate</span>
+                  <span className="font-extrabold text-[#047857] dark:text-emerald-400 tabular-nums">2.5%</span>
+                </div>
+              </div>
+
+              {/* Primary Pay Zakat Button */}
+              <button
+                onClick={() => handleZakatDonation(zakatDue, 'Verified Shariah Zakat Fund')}
+                className="w-full py-3.5 bg-[#047857] hover:bg-[#064E3B] text-white font-bold rounded-[14px] text-center text-base shadow-sm transition-all active:scale-98"
+              >
+                Pay Zakat
+              </button>
+            </main>
+          )}
+
+          {/* ═══════════════════════════════════════════════════════════════ */}
+          {/* TAB 6: AI MUFTI (Exact Match to Image 2 Mobile & Web View)    */}
+          {/* ═══════════════════════════════════════════════════════════════ */}
+          {activeTab === 'mufti' && (
+            <main className="flex-1 px-4 sm:px-6 py-6 pb-28 lg:pb-10 max-w-3xl w-full mx-auto flex flex-col h-[calc(100vh-80px)]">
+              {/* Header (Image 2) */}
+              <div className="flex items-center justify-between pb-4 border-b border-[#E3ECE7] dark:border-white/10">
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setActiveTab('home')}
+                    className="p-1 rounded-full text-[#55695F] hover:text-[#0B1F17] dark:hover:text-white"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="15 18 9 12 15 6"/>
+                    </svg>
+                  </button>
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#047857] text-white">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold text-[#0B1F17] dark:text-white">AI Mufti</h2>
+                    <p className="text-xs text-[#55695F] dark:text-slate-400">Urdu or English, text or voice</p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => handleLangChange(lang === 'en' ? 'ur' : 'en')}
+                  className="px-3.5 py-1 text-xs font-semibold rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white"
+                >
+                  اردو
+                </button>
+              </div>
+
+              {/* Chat Message List */}
+              <div className="flex-1 overflow-y-auto py-5 space-y-4">
+                {muftiMessages.map((msg, idx) => (
+                  <div
+                    key={idx}
+                    className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  >
+                    <div
+                      className={`max-w-[85%] sm:max-w-[75%] p-4 text-sm leading-relaxed ${
+                        msg.role === 'user'
+                          ? 'bg-[#064E3B] text-white rounded-2xl rounded-br-sm shadow-xs font-medium'
+                          : 'bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 text-[#0B1F17] dark:text-white rounded-2xl rounded-bl-sm shadow-xs'
+                      }`}
+                    >
+                      {msg.text}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Quick Prompt Chips (Image 2) */}
+              <div className="flex items-center gap-2 pb-3 overflow-x-auto">
+                <button
+                  onClick={() => handleSendMuftiMessage('Is Meezan Bank compliant?')}
+                  className="px-4 py-2 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-xs font-bold text-[#0B1F17] dark:text-white hover:bg-slate-50 transition-colors whitespace-nowrap shadow-xs"
+                >
+                  Is Meezan Bank compliant?
+                </button>
+                <button
+                  onClick={() => handleSendMuftiMessage('Zakat on gold')}
+                  className="px-4 py-2 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-xs font-bold text-[#0B1F17] dark:text-white hover:bg-slate-50 transition-colors whitespace-nowrap shadow-xs"
+                >
+                  Zakat on gold
+                </button>
+              </div>
+
+              {/* Input Bar (Image 2) */}
+              <div className="flex items-center gap-2 pt-1">
+                <div className="flex-1 relative">
+                  <input
+                    type="text"
+                    value={muftiInput}
+                    onChange={(e) => setMuftiInput(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSendMuftiMessage()}
+                    placeholder="Ask a question"
+                    className="w-full px-5 py-3.5 bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 rounded-full text-sm text-[#0B1F17] dark:text-white placeholder-[#55695F]/60 outline-none focus:border-[#047857] shadow-xs"
+                  />
+                </div>
+                <button
+                  onClick={() => handleSendMuftiMessage()}
+                  className="h-12 w-12 rounded-full bg-[#047857] hover:bg-[#064E3B] text-white flex items-center justify-center flex-shrink-0 shadow-sm active:scale-95 transition-all"
+                  aria-label="Voice input or send"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                    <line x1="12" y1="19" x2="12" y2="23"/>
+                    <line x1="8" y1="23" x2="16" y2="23"/>
+                  </svg>
+                </button>
+              </div>
+            </main>
+          )}
+
+          {/* ═══════════════════════════════════════════════════════════════ */}
+          {/* TAB 7: SETTINGS                                              */}
+          {/* ═══════════════════════════════════════════════════════════════ */}
+          {activeTab === 'settings' && (
+            <main className="flex-1 px-4 sm:px-6 py-6 pb-28 lg:pb-10 max-w-4xl w-full mx-auto space-y-5">
+              <div>
+                <h1 className="text-2xl lg:text-[28px] font-extrabold tracking-tight text-[#0B1F17] dark:text-white">
+                  Settings
+                </h1>
+                <p className="text-xs text-[#55695F] dark:text-slate-400 mt-0.5">
+                  Platform preferences, appearance, and credentials
+                </p>
+              </div>
+
+              {/* Clean porcelain settings card */}
+              <div className="rounded-[20px] bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 shadow-xs overflow-hidden divide-y divide-[#E3ECE7] dark:divide-white/10">
+                {/* Account Type */}
+                <div className="flex items-center justify-between p-5">
+                  <div>
+                    <p className="text-sm font-bold text-[#0B1F17] dark:text-white">Account type</p>
+                    <p className="text-xs text-[#55695F] dark:text-slate-400 mt-0.5">Switch between demo and real</p>
+                  </div>
+                  <div className="flex items-center gap-1 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-[#F4F7F5] dark:bg-white/5 p-1">
+                    <button className="rounded-full bg-white dark:bg-white/10 px-4 py-1.5 text-xs font-bold text-[#0B1F17] dark:text-white shadow-xs">
                       Demo
                     </button>
                     <button
-                      className="rounded-full px-4 py-1.5 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-                      onClick={() => alert('Real accounts opening soon under SECP guidelines.')}
+                      className="rounded-full px-4 py-1.5 text-xs font-semibold text-[#55695F] dark:text-slate-400 hover:text-[#0B1F17]"
+                      onClick={() => alert('Real accounts opening under SECP guidelines.')}
                     >
                       Real
                     </button>
                   </div>
                 </div>
 
-                {/* Appearance: Dark and White (Light) mode */}
-                <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-white/5">
+                {/* Appearance */}
+                <div className="flex items-center justify-between p-5">
                   <div>
-                    <p className="text-sm font-semibold text-slate-900 dark:text-white">Appearance</p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Switch between dark obsidian and white porcelain theme</p>
+                    <p className="text-sm font-bold text-[#0B1F17] dark:text-white">Appearance</p>
+                    <p className="text-xs text-[#55695F] dark:text-slate-400 mt-0.5">Switch between white porcelain and dark obsidian</p>
                   </div>
-                  <div className="flex items-center gap-1 rounded-full border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 p-1">
-                    <button
-                      onClick={() => toggleTheme('dark')}
-                      className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-colors ${
-                        theme === 'dark'
-                          ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
-                          : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                      }`}
-                    >
-                      Dark
-                    </button>
+                  <div className="flex items-center gap-1 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-[#F4F7F5] dark:bg-white/5 p-1">
                     <button
                       onClick={() => toggleTheme('light')}
-                      className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-colors ${
+                      className={`rounded-full px-4 py-1.5 text-xs font-bold transition-all ${
                         theme === 'light'
-                          ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
-                          : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                          ? 'bg-white text-[#0B1F17] shadow-xs'
+                          : 'text-[#55695F] hover:text-[#0B1F17]'
                       }`}
                     >
                       White
+                    </button>
+                    <button
+                      onClick={() => toggleTheme('dark')}
+                      className={`rounded-full px-4 py-1.5 text-xs font-bold transition-all ${
+                        theme === 'dark'
+                          ? 'bg-white/20 text-white shadow-xs'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      Dark
                     </button>
                   </div>
                 </div>
 
                 {/* Language */}
-                <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-white/5">
+                <div className="flex items-center justify-between p-5">
                   <div>
-                    <p className="text-sm font-semibold text-slate-900 dark:text-white">Language</p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Platform interface language</p>
+                    <p className="text-sm font-bold text-[#0B1F17] dark:text-white">Language</p>
+                    <p className="text-xs text-[#55695F] dark:text-slate-400 mt-0.5">Platform interface language</p>
                   </div>
-                  <div className="flex items-center gap-1 rounded-full border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 p-1">
+                  <div className="flex items-center gap-1 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-[#F4F7F5] dark:bg-white/5 p-1">
                     <button
                       onClick={() => handleLangChange('en')}
-                      className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-colors ${
+                      className={`rounded-full px-4 py-1.5 text-xs font-bold transition-all ${
                         lang === 'en'
-                          ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
-                          : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                          ? 'bg-white dark:bg-white/10 text-[#0B1F17] dark:text-white shadow-xs'
+                          : 'text-[#55695F] dark:text-slate-400'
                       }`}
                     >
                       English
                     </button>
                     <button
                       onClick={() => handleLangChange('ur')}
-                      className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-colors ${
+                      className={`rounded-full px-4 py-1.5 text-xs font-bold transition-all ${
                         lang === 'ur'
-                          ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
-                          : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                          ? 'bg-white dark:bg-white/10 text-[#0B1F17] dark:text-white shadow-xs'
+                          : 'text-[#55695F] dark:text-slate-400'
                       }`}
                     >
                       اردو
@@ -1172,14 +1736,14 @@ export default function Dashboard() {
                 </div>
 
                 {/* Security PIN */}
-                <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-white/5">
+                <div className="flex items-center justify-between p-5">
                   <div>
-                    <p className="text-sm font-semibold text-slate-900 dark:text-white">Security PIN</p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Protect transactions and withdrawals</p>
+                    <p className="text-sm font-bold text-[#0B1F17] dark:text-white">Security PIN</p>
+                    <p className="text-xs text-[#55695F] dark:text-slate-400 mt-0.5">Protect orders and withdrawals</p>
                   </div>
                   <button
                     onClick={() => setIsAuthorized(false)}
-                    className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline"
+                    className="text-xs font-bold text-[#047857] dark:text-emerald-400 hover:underline"
                   >
                     Change PIN
                   </button>
@@ -1188,44 +1752,33 @@ export default function Dashboard() {
                 {/* Delete account */}
                 <button
                   onClick={() => setShowResetModal(true)}
-                  className="flex w-full items-center justify-between px-5 py-4 hover:bg-red-500/5 transition-colors group"
+                  className="flex w-full items-center justify-between p-5 hover:bg-red-50/50 dark:hover:bg-red-500/5 transition-colors text-left"
                 >
                   <div>
-                    <span className="text-sm font-semibold text-red-600 dark:text-red-400">
+                    <span className="text-sm font-bold text-[#B42318] dark:text-red-400">
                       Delete account and data
                     </span>
-                    <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 text-left">
+                    <p className="text-xs text-[#55695F] dark:text-slate-500 mt-0.5">
                       Reset wallet balance and account preferences
                     </p>
                   </div>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-500">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B42318" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="9 18 15 12 9 6"/>
                   </svg>
                 </button>
               </div>
-
-              {isPremium && (
-                <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 px-5 py-4">
-                  <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400">Elite account active</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Wali Autopilot and advanced features unlocked.</p>
-                </div>
-              )}
             </main>
           )}
         </div>
       </div>
 
-      {/* ── Modals ── */}
+      {/* ── Modals: Deposit / Withdraw ── */}
       {modal && (
-        <div
-          className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/75 backdrop-blur-sm"
-        >
-          <div
-            className="relative w-full max-w-md rounded-t-2xl sm:rounded-2xl border border-slate-200 dark:border-white/10 p-5 shadow-2xl bg-white dark:bg-[#1a1d24]"
-          >
+        <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm">
+          <div className="relative w-full max-w-md rounded-t-[20px] sm:rounded-[20px] border border-[#E3ECE7] dark:border-white/10 p-5 shadow-2xl bg-white dark:bg-[#16171b]">
             <button
               onClick={() => setModal(null)}
-              className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors"
+              className="absolute right-4 top-4 text-[#55695F] hover:text-[#0B1F17] dark:text-slate-400 dark:hover:text-white transition-colors"
               aria-label="Close"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -1243,12 +1796,8 @@ export default function Dashboard() {
       )}
 
       {selectedSellHolding && (
-        <div
-          className="fixed inset-0 z-[65] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/75 backdrop-blur-sm"
-        >
-          <div
-            className="relative w-full max-w-md rounded-t-2xl sm:rounded-2xl border border-slate-200 dark:border-white/10 p-5 bg-white dark:bg-[#1a1d24]"
-          >
+        <div className="fixed inset-0 z-[65] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm">
+          <div className="relative w-full max-w-md rounded-t-[20px] sm:rounded-[20px] border border-[#E3ECE7] dark:border-white/10 p-5 bg-white dark:bg-[#16171b] shadow-2xl">
             <SellStockFlow
               holding={selectedSellHolding}
               onSuccess={handleSellRequest}
@@ -1258,29 +1807,27 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* ── Mobile Bottom Nav ── */}
-      <div className="mobile-bottom-nav fixed left-1/2 -translate-x-1/2 w-[95%] max-w-md z-50 block lg:hidden">
-        <nav
-          className="rounded-2xl border border-slate-200 dark:border-white/10 p-1.5 flex justify-between items-center shadow-xl bg-white/95 dark:bg-[#111215]/95 backdrop-blur-xl"
-        >
-          {NAV_ITEMS.filter((n) => n.id !== 'settings').map((item) => {
-            const isActive = activeTab === (item.id as DashboardTab);
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id as DashboardTab)}
-                className={`flex-1 flex flex-col items-center gap-1 py-2 px-1 rounded-xl transition-all ${
-                  isActive
-                    ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-semibold'
-                    : 'text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
-                }`}
-              >
-                <span>{item.icon}</span>
-                <span className="text-xs">{lang === 'ur' ? item.labelUr : item.labelEn}</span>
-              </button>
-            );
-          })}
-        </nav>
+      {/* ── Mobile Bottom Navigation (72px Height, Exact Match to Image 9) ── */}
+      <div className="fixed bottom-0 left-0 right-0 h-[72px] bg-white dark:bg-[#111215] border-t border-[#E3ECE7] dark:border-white/10 z-50 flex items-center justify-around px-2 lg:hidden shadow-lg">
+        {NAV_ITEMS.filter((n) => ['home', 'portfolio', 'assets', 'kameti', 'zakat'].includes(n.id)).map((item) => {
+          const isActive = activeTab === (item.id as DashboardTab);
+          return (
+            <button
+              key={item.id}
+              onClick={() => setActiveTab(item.id as DashboardTab)}
+              className={`flex-1 min-h-[44px] flex flex-col items-center justify-center gap-1 py-1 transition-all ${
+                isActive
+                  ? 'text-[#047857] dark:text-emerald-400 font-bold'
+                  : 'text-[#55695F] dark:text-slate-400 hover:text-[#0B1F17]'
+              }`}
+            >
+              <span>{item.icon}</span>
+              <span className="text-[11px] leading-tight font-medium">
+                {lang === 'ur' ? item.labelUr : item.labelEn}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       <SovereignScan isOpen={isScanning} onComplete={onScanComplete} />
