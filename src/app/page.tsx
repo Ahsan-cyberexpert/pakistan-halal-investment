@@ -141,12 +141,39 @@ export default function Home() {
         .fg a{display:block;padding:5px 0}.fg a:hover{color:var(--ink)}
         .fg p{max-width:26em;margin-top:14px}
         .legal{margin-top:48px;padding-top:24px;border-top:1px solid var(--ln);font-size:13px;line-height:1.7}
+        /* Fluid auto-fit guarantees */
+        html,body{width:100%;max-width:100vw;overflow-x:hidden}
+        .wrap{width:100%;max-width:1120px;margin:0 auto;padding:0 24px}
+        .tabs{max-width:100%;overflow-x:auto;scrollbar-width:none}
+        .tabs::-webkit-scrollbar{display:none}
+
         @media (max-width:900px){
           .lk,.end .btn.g{display:none}.menu{display:grid;place-items:center}
-          .hero{padding:48px 0 64px}.hero .wrap,.split{grid-template-columns:1fr;gap:48px}
-          section{padding:68px 0}
-          .infra .wrap,.stats,.feats,.path,.fg{grid-template-columns:1fr}.feats{gap:32px}.path::before{display:none}
+          .hero{padding:48px 0 64px}.hero .wrap,.split{grid-template-columns:1fr;gap:40px}
+          section{padding:60px 0}
+          .infra .wrap,.stats,.feats,.path,.fg{grid-template-columns:1fr}.feats{gap:28px}.path::before{display:none}
           .stat+.stat{border-left:0;border-top:1px solid var(--ln)}
+        }
+        @media (max-width:640px){
+          .wrap{padding:0 16px}
+          .hero{padding:28px 0 40px}
+          h1{font-size:clamp(30px,8vw,42px);line-height:1.1}
+          h2{font-size:clamp(24px,6.5vw,34px);line-height:1.15}
+          .lead{font-size:16px;margin:16px 0 28px}
+          .cta{flex-direction:column;width:100%}
+          .cta .btn{width:100%;justify-content:center}
+          .trust{margin-top:28px;gap:14px;font-size:13px}
+          .scr{padding:18px 14px}
+          .row{grid-template-columns:1fr auto auto;gap:8px;font-size:14px}
+          .calc{padding:20px 14px}
+          .in input{font-size:18px;padding:12px 10px}
+          .res{flex-direction:column;align-items:flex-start;gap:4px}
+          .res b{font-size:32px}
+          .final{padding:40px 18px;border-radius:16px}
+          .final p{font-size:16px;margin:12px 0 24px}
+          .final .btn{width:100%}
+          .stat{padding:24px 18px}
+          .num{font-size:48px}
         }
         @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
       ` }} />
