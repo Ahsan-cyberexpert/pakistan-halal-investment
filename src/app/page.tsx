@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Logo from '@/components/Logo';
 
 // ─── Stock data for Shariah screener ──────────────────────────────────────────
 const STOCKS = [
@@ -717,7 +718,7 @@ export default function Home() {
         }
       ` }} />
 
-      {/* ── SVG Symbol Definitions ── */}
+      {/* ── SVG Symbol Definitions (utility icons only) ── */}
       <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">
         <defs>
           <symbol id="i-check" viewBox="0 0 24 24">
@@ -747,11 +748,6 @@ export default function Home() {
             <circle cx="9" cy="8" r="3" />
             <path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5.5a3 3 0 010 5.5M18 14.5c2 .7 3 2.8 3 5.5" />
           </symbol>
-          <symbol id="i-mark" viewBox="0 0 32 32">
-            <rect width="32" height="32" rx="9" fill="var(--br)" />
-            <path d="M20.5 8.5a8.5 8.5 0 100 15 7 7 0 010-15z" fill="var(--onb)" />
-            <circle cx="21.5" cy="11" r="1.5" fill="var(--onb)" />
-          </symbol>
         </defs>
       </svg>
 
@@ -762,8 +758,7 @@ export default function Home() {
         <div className="wrap">
           <nav aria-label="Main">
             <Link className="logo" href="#top" aria-label="Roziq home">
-              <svg><use href="#i-mark" /></svg>
-              <span>Roziq</span>
+              <Logo variant="full" className="h-9 w-auto" />
             </Link>
             <div className="lk">
               <a href="#features">Features</a>
@@ -1084,8 +1079,7 @@ export default function Home() {
           <div className="fg">
             <div>
               <Link className="logo" href="#top" style={{ padding: 0 }}>
-                <svg><use href="#i-mark" /></svg>
-                <span>Roziq</span>
+                <Logo variant="full" className="h-8 w-auto" />
               </Link>
               <p>The halal wealth platform for Pakistan. Shariah-compliant investing, Zakat and savings in one place.</p>
             </div>

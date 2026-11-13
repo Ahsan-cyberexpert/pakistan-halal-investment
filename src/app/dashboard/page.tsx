@@ -12,6 +12,7 @@ import {
   DemoReceipt,
   SellStockFlow,
   PinSecurity,
+  Logo,
 } from '@/components';
 import { UserProfile, Holding, ZakatRecord, Transaction, DashboardTab, SupportedLanguage } from '@/types';
 import { getStockBySymbol } from '@/lib/halal-stock-data';
@@ -571,12 +572,7 @@ export default function Dashboard() {
           {/* Logo row */}
           <div className="flex items-center justify-between px-6 py-6">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#047857] text-white">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                </svg>
-              </div>
-              <span className="font-extrabold text-xl tracking-tight text-[#0B1F17] dark:text-white">Roziq</span>
+              <Logo variant="full" className="h-8 w-auto" />
             </div>
             <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#FEF3C7] dark:bg-amber-500/10 text-[#92400E] dark:text-amber-400 border border-[#FDE68A] dark:border-amber-500/20">
               Demo

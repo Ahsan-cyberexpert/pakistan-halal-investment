@@ -1,5 +1,12 @@
 import type { Metadata } from 'next';
+import { Figtree } from 'next/font/google';
 import './globals.css';
+
+const figtree = Figtree({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-figtree',
+});
 
 export const viewport = {
   themeColor: '#059669',
@@ -62,12 +69,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-context="marketing" suppressHydrationWarning>
+    <html lang="en" data-context="marketing" suppressHydrationWarning className={figtree.variable}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Noto+Nastaliq+Urdu&display=swap"
+          rel="stylesheet"
+        />
       </head>
-      <body className="antialiased">
+      <body className={`antialiased ${figtree.variable}`}>
         {children}
       </body>
     </html>

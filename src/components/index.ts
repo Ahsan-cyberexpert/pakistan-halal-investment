@@ -25,6 +25,7 @@ export { default as HalalStockScanner } from './HalalStockScanner';
 export { default as LanguageSelect } from './LanguageSelect';
 export { default as LearnToEarn } from './LearnToEarn';
 export { default as LocalImpactMap } from './LocalImpactMap';
+export { default as Logo } from './Logo';
 export { default as MarketAlerts } from './MarketAlerts';
 export { default as MicroTakaful } from './MicroTakaful';
 export { default as MuftiAI } from './MuftiAI';

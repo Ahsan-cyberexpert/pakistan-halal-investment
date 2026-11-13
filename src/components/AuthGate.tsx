@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import Logo from './Logo';
 
 interface AuthGateProps {
   onSuccess: (user: UserProfile) => void;
@@ -212,26 +213,14 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
     <div className="fixed inset-0 z-[2000] bg-[#F4F7F5] dark:bg-[#0a0a0c] flex overflow-y-auto">
       {/* ── Left Hero Showcase Banner (Desktop Only - from Login.dc.html / Signup.dc.html) ── */}
       <aside className="hidden lg:flex w-[520px] xl:w-[600px] flex-none bg-[#064E3B] text-white p-12 xl:p-14 flex-col justify-between relative overflow-hidden">
-        {/* Giant Crescent Watermark */}
-        <svg
-          width="560"
-          height="560"
-          viewBox="0 0 24 24"
-          fill="#D1FAE5"
-          className="absolute -right-32 -bottom-28 opacity-[0.08] pointer-events-none select-none"
-          aria-hidden="true"
-        >
-          <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z" />
-        </svg>
+        {/* Giant Mark Watermark */}
+        <div className="absolute -right-16 -bottom-16 opacity-[0.08] pointer-events-none select-none">
+          <Logo variant="mark" dark className="w-[480px] h-[480px]" />
+        </div>
 
         {/* Top Logo */}
-        <div className="relative flex items-center gap-3">
-          <div className="w-11 h-11 rounded-[14px] bg-[#D1FAE5] flex items-center justify-center text-[#064E3B] shadow-xs">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z" />
-            </svg>
-          </div>
-          <span className="text-2xl font-extrabold tracking-tight">Roziq</span>
+        <div className="relative">
+          <Logo variant="full" dark className="h-10 w-auto" />
         </div>
 
         {/* Middle Feature Highlights */}
@@ -314,14 +303,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
       <main className="flex-1 flex flex-col items-center justify-center p-5 sm:p-8 relative min-w-0">
         {/* Mobile Top Header: Logo + Urdu (Matches Phone Screenshot media_1794527886748_d4a86452.png) */}
         <div className="flex lg:hidden items-center justify-between w-full max-w-[420px] mb-6">
-          <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-[#047857] flex items-center justify-center text-white shadow-xs">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-              </svg>
-            </div>
-            <span className="text-2xl font-extrabold tracking-tight text-[#0B1F17] dark:text-white">Roziq</span>
-          </div>
+          <Logo variant="full" className="h-8 w-auto" />
           <button
             type="button"
             onClick={() => {}}
@@ -347,11 +329,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
           <div className="space-y-5">
             {/* Desktop Only Logo */}
             <div className="hidden lg:flex flex-col items-center text-center mb-2">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#047857] text-white shadow-md mb-3">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                </svg>
-              </div>
+              <Logo variant="mark" className="h-16 w-auto mb-2" />
             </div>
 
             <div>
