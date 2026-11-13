@@ -12,8 +12,6 @@ import {
   DemoReceipt,
   SellStockFlow,
   PinSecurity,
-  LanguageSelect,
-  Onboarding,
 } from '@/components';
 import { UserProfile, Holding, ZakatRecord, Transaction, DashboardTab, SupportedLanguage } from '@/types';
 import { getStockBySymbol } from '@/lib/halal-stock-data';
@@ -222,8 +220,6 @@ export default function Dashboard() {
   const [zakatHistory, setZakatHistory] = useState<ZakatRecord[]>([]);
   const [activeTab, setActiveTab] = useState<DashboardTab>('home');
   const [lang, setLangState] = useState<SupportedLanguage>('en');
-  const [showLangSelect, setShowLangSelect] = useState(false);
-  const [showOnboarding, setShowOnboarding] = useState(false);
   const [theme, setTheme] = useState<'dark' | 'light'>('light');
   const [showTradingPin, setShowTradingPin] = useState(false);
   const [pendingTrade, setPendingTrade] = useState<any>(null);
@@ -282,13 +278,8 @@ export default function Dashboard() {
       document.documentElement.classList.remove('dark');
     }
 
-    const savedLang = localStorage.getItem('roziq_lang') as 'en' | 'ur';
-    const hasOnboarded = localStorage.getItem('roziq_onboarded');
-    if (!savedLang) setShowLangSelect(true);
-    else {
-      setLangState(savedLang);
-      if (!hasOnboarded) setShowOnboarding(true);
-    }
+    const savedLang = (localStorage.getItem('roziq_lang') as 'en' | 'ur') || 'en';
+    setLangState(savedLang);
 
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
@@ -348,12 +339,6 @@ export default function Dashboard() {
     localStorage.setItem(`roziq_zakat_${cnicKey}`, JSON.stringify(newZk));
   };
 
-  const handleLangSelect = (l: 'en' | 'ur') => {
-    setLangState(l);
-    localStorage.setItem('roziq_lang', l);
-    setShowLangSelect(false);
-    if (!localStorage.getItem('roziq_onboarded')) setShowOnboarding(true);
-  };
   const handleLangChange = (l: 'en' | 'ur') => {
     localStorage.setItem('roziq_lang', l);
     setLangState(l);
@@ -523,17 +508,7 @@ export default function Dashboard() {
   return (
     <>
       <ToastContainer />
-      {showLangSelect && <LanguageSelect onSelect={handleLangSelect} />}
-      {showOnboarding && !showLangSelect && (
-        <Onboarding
-          lang={lang}
-          onComplete={() => {
-            setShowOnboarding(false);
-            localStorage.setItem('roziq_onboarded', '1');
-          }}
-        />
-      )}
-      {!isAuthorized && !showLangSelect && !showOnboarding && <AuthGate onSuccess={handleAuthSuccess} />}
+      {!isAuthorized && <AuthGate onSuccess={handleAuthSuccess} />}
       {showTradingPin && (
         <PinSecurity
           mode="trading"
