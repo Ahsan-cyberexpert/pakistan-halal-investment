@@ -209,11 +209,122 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-[2000] bg-[#0d0d0f] flex flex-col items-center justify-center p-4 overflow-y-auto">
-      {/* Ambient glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-96 h-96 bg-emerald-500/8 rounded-full blur-[140px] pointer-events-none" />
+    <div className="fixed inset-0 z-[2000] bg-[#0d0d0f] lg:bg-[#F4F7F5] dark:lg:bg-[#0a0a0c] flex overflow-y-auto">
+      {/* ── Left Hero Showcase Banner (Desktop Only - from Login.dc.html / Signup.dc.html) ── */}
+      <aside className="hidden lg:flex w-[520px] xl:w-[600px] flex-none bg-[#064E3B] text-white p-12 xl:p-14 flex-col justify-between relative overflow-hidden">
+        {/* Giant Crescent Watermark */}
+        <svg
+          width="560"
+          height="560"
+          viewBox="0 0 24 24"
+          fill="#D1FAE5"
+          className="absolute -right-32 -bottom-28 opacity-[0.08] pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z" />
+        </svg>
 
-      <div className="relative z-10 w-full max-w-[340px] my-auto py-6">
+        {/* Top Logo */}
+        <div className="relative flex items-center gap-3">
+          <div className="w-11 h-11 rounded-[14px] bg-[#D1FAE5] flex items-center justify-center text-[#064E3B] shadow-xs">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z" />
+            </svg>
+          </div>
+          <span className="text-2xl font-extrabold tracking-tight">Roziq</span>
+        </div>
+
+        {/* Middle Feature Highlights */}
+        <div className="relative space-y-10 my-auto py-8">
+          <div className="space-y-3">
+            <span className="text-[12px] font-bold tracking-wider text-[#D1FAE5] uppercase">
+              Shariah-compliant, AAOIFI standards
+            </span>
+            <h1 className="text-4xl xl:text-[42px] font-extrabold leading-tight tracking-tight text-white">
+              {screen === 'register' ? 'Start investing the halal way.' : 'Invest in Pakistan, the halal way.'}
+            </h1>
+            <p className="text-base text-[#D1FAE5]/90 font-medium leading-relaxed">
+              {screen === 'register'
+                ? 'Create your free account in minutes and build generational halal wealth.'
+                : 'Shariah-screened stocks, Sukuk, and automated Zakat in one trusted platform.'}
+            </p>
+          </div>
+
+          {screen === 'register' ? (
+            <div className="space-y-4">
+              {[
+                { n: '01', title: 'Sign up', desc: 'Create your account with CNIC verification.' },
+                { n: '02', title: 'Screen', desc: 'Every asset is checked for debt and impure income.' },
+                { n: '03', title: 'Grow', desc: 'Invest in PSX equities and asset-backed Sukuk.' },
+                { n: '04', title: 'Preserve', desc: 'Automate Zakat and Shariah inheritance planning.' },
+              ].map((s) => (
+                <div key={s.n} className="flex items-start gap-4">
+                  <div className="w-11 h-11 flex-none rounded-[14px] bg-[#D1FAE5]/15 text-[#D1FAE5] font-extrabold text-sm flex items-center justify-center">
+                    {s.n}
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-white">{s.title}</h3>
+                    <p className="text-xs text-[#D1FAE5]/80 font-medium mt-0.5">{s.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="space-y-5">
+              {[
+                {
+                  title: 'Screened stocks',
+                  desc: 'Every PSX stock checked for debt and impure income.',
+                  d: 'M3 17l6-6 4 4 8-8 M15 7h6v6',
+                },
+                {
+                  title: 'Automated Zakat',
+                  desc: 'Nisab and 2.5% calculated from live gold and silver prices.',
+                  d: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z M12 7v10 M14.5 9.5C14 8.5 13 8 12 8c-1.5 0-2.5.8-2.5 2s1 1.7 2.5 2 2.5.8 2.5 2-1 2-2.5 2-2-.5-2.5-1.5',
+                },
+                {
+                  title: 'AI Mufti',
+                  desc: 'Ask questions in Urdu or English, by text or voice.',
+                  d: 'M21 12a8 8 0 0 1-11.5 7.2L4 20l1-4.5A8 8 0 1 1 21 12z',
+                },
+              ].map((f) => (
+                <div key={f.title} className="flex items-start gap-4">
+                  <div className="w-11 h-11 flex-none rounded-[14px] bg-[#D1FAE5]/15 text-[#D1FAE5] flex items-center justify-center">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <path d={f.d} />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-white">{f.title}</h3>
+                    <p className="text-xs text-[#D1FAE5]/80 font-medium mt-0.5">{f.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <span className="relative text-xs text-[#D1FAE5]/70 font-medium">
+          End-to-end encrypted · SECP inspired framework · AAOIFI standards
+        </span>
+      </aside>
+
+      {/* ── Right Content Form Shell (Mobile & Desktop Responsive) ── */}
+      <main className="flex-1 flex flex-col items-center justify-center p-5 sm:p-8 relative min-w-0">
+        {/* Top Urdu Toggle Button */}
+        <button
+          type="button"
+          onClick={() => {}}
+          className="absolute top-6 right-6 px-4 py-2 rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white font-bold text-sm shadow-xs hover:bg-slate-50 transition-colors"
+        >
+          اردو
+        </button>
+
+        {/* Ambient glow on dark mode */}
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-96 h-96 bg-emerald-500/8 rounded-full blur-[140px] pointer-events-none lg:hidden" />
+
+        <div className="relative z-10 w-full max-w-[420px] my-auto py-4">
 
         {/* ── LOGIN SCREEN ── */}
         {screen === 'login' && (
@@ -592,6 +703,7 @@ export default function AuthGate({ onSuccess }: AuthGateProps) {
           <span>End-to-end encrypted · SECP inspired framework · AAOIFI standards</span>
         </div>
       </div>
-    </div>
+    </main>
+  </div>
   );
 }
