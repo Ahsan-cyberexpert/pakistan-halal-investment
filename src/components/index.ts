@@ -6,7 +6,6 @@
  */
 
 export { default as AgriFinancing } from './AgriFinancing';
-export { default as AiMuftiChatbot } from './AiMuftiChatbot';
 export { default as AuthGate } from './AuthGate';
 export type { UserProfile } from './AuthGate';
 export { default as BalanceCard } from './BalanceCard';
@@ -36,7 +35,6 @@ export { default as PinSecurity } from './PinSecurity';
 export { default as PortfolioChart } from './PortfolioChart';
 export { default as PortfolioDashboard } from './PortfolioDashboard';
 export { default as PurificationTracker } from './PurificationTracker';
-export { default as RoziqAI } from './RoziqAI';
 export { default as SettingsTab } from './SettingsTab';
 export { default as SellStockFlow } from './SellStockFlow';
 export { default as ShariahScreener } from './ShariahScreener';
