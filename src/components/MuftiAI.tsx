@@ -13,6 +13,7 @@ export default function MuftiAI({ lang }: MuftiAIProps) {
   
   const recognitionRef = useRef<any>(null);
   const t = (en: string, ur: string) => (lang === 'ur' ? ur : en);
+  const askMuftiRef = useRef<(message: string) => Promise<void>>(async () => {});
 
   useEffect(() => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -24,7 +25,7 @@ export default function MuftiAI({ lang }: MuftiAIProps) {
 
       recognitionRef.current.onresult = (event: any) => {
         const text = event.results[0][0]?.transcript;
-        if (text) askMufti(text);
+        if (text) askMuftiRef.current(text);
       };
 
       recognitionRef.current.onend = () => setIsListening(false);
@@ -92,6 +93,7 @@ export default function MuftiAI({ lang }: MuftiAIProps) {
       setLoading(false);
     }
   };
+  askMuftiRef.current = askMufti;
 
   return (
     <div className="p-5 sm:p-6 rounded-[2.5rem] bg-slate-950 border border-amber-500/20 shadow-2xl relative overflow-hidden transition-all duration-500 min-h-[380px] max-h-[500px] flex flex-col" dir={lang === 'ur' ? 'rtl' : 'ltr'}>

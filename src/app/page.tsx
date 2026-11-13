@@ -205,7 +205,8 @@ export default function Home() {
       </header>
 
       {/* ── Main ── */}
-      <main id="main"><span id="top" /></main>
+      <main id="main">
+        <span id="top" />
 
       {/* ── Hero ── */}
       <div className="hero">
@@ -340,6 +341,7 @@ export default function Home() {
         <details><summary>Which Shariah standards do you use?</summary><p>Screening follows AAOIFI standards and PSX Shariah criteria for debt, income and assets, with independent scholar review.</p></details>
         <details><summary>How does dividend purification work?</summary><p>The impure share of a dividend is calculated, set aside, and routed to charity.</p></details>
       </div></section>
+      </main>
 
       {/* ── Footer ── */}
       <footer><div className="wrap">

@@ -1,11 +1,23 @@
 import type { Metadata } from 'next';
-import { Figtree } from 'next/font/google';
+import { Figtree, Newsreader, Noto_Nastaliq_Urdu } from 'next/font/google';
 import './globals.css';
 
 const figtree = Figtree({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-figtree',
+});
+
+const newsreader = Newsreader({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--font-newsreader',
+});
+
+const notoNastaliq = Noto_Nastaliq_Urdu({
+  subsets: ['arabic'],
+  weight: ['400', '700'],
+  variable: '--font-noto-nastaliq',
 });
 
 export const viewport = {
@@ -69,15 +81,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-context="marketing" suppressHydrationWarning className={figtree.variable}>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Noto+Nastaliq+Urdu&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html
+      lang="en"
+      data-context="marketing"
+      suppressHydrationWarning
+      className={`${figtree.variable} ${newsreader.variable} ${notoNastaliq.variable}`}
+    >
       <body className={`antialiased ${figtree.variable}`}>
         {children}
       </body>

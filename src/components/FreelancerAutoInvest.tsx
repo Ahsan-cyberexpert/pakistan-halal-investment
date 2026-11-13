@@ -17,6 +17,7 @@ export default function FreelancerAutoInvest() {
       {!connected ? (
         <div className="bg-gray-50 border border-gray-200 p-4 rounded-2xl">
           <div className="flex justify-around items-center mb-4">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/Payoneer_logo.svg" alt="Payoneer" className="h-4 opacity-70 grayscale" />
             <span className="text-gray-300">|</span>
             <div className="font-black text-emerald-500 text-lg tracking-tighter">SadaPay</div>

@@ -19,6 +19,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
   const [isListening, setIsListening] = useState<'ur' | 'en' | false>(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const recognitionRef = useRef<any>(null);
+  const sendPromptRef = useRef<(text: string, overrideLang?: 'ur' | 'en') => Promise<void>>(async () => {});
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -32,7 +33,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
           const text = event.results[0][0].transcript;
           const detectedSpeechLang = recognitionRef.current.lang.includes('ur') ? 'ur' : 'en';
           setTranscript(text);
-          sendPrompt(text, detectedSpeechLang);
+          sendPromptRef.current(text, detectedSpeechLang);
           setIsListening(false);
         };
 
@@ -121,6 +122,7 @@ export default function RoziqAI({ balance = 0, holdings = [], transactions = [],
       setIsProcessing(false);
     }
   };
+  sendPromptRef.current = sendPrompt;
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) sendPrompt(prompt);
