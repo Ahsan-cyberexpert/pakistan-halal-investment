@@ -16,13 +16,55 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'npm'
 
       - name: Install Dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Build Next.js App
-        run: npx next build
+      # ── Static export for Capacitor ──────────────────────────────────────
+      # Next.js output:'export' is incompatible with API routes.
+      # Strategy: temporarily move src/app/api → /tmp/api_backup,
+      # swap in a Capacitor-specific next.config, build the static site,
+      # then restore everything.
+      - name: Prepare Capacitor static build
+        run: |
+          # 1. Stash API routes (incompatible with static export)
+          mv src/app/api /tmp/api_backup
 
+          # 2. Write a capacitor-specific next.config.js (overwrites original)
+          cat > next.config.js << 'EOF'
+          /** @type {import("next").NextConfig} */
+          const nextConfig = {
+            output: 'export',
+            reactStrictMode: true,
+            images: { unoptimized: true },
+          };
+          module.exports = nextConfig;
+          EOF
+
+          # 3. Set Vercel API base so fetch() calls work from mobile app
+          echo "NEXT_PUBLIC_API_BASE=https://roziq.vercel.app" > .env.local
+
+      - name: Build Next.js static export (→ ./out)
+        run: npx next build
+        env:
+          NEXT_PUBLIC_API_BASE: https://roziq.vercel.app
+
+      - name: Verify web assets
+        run: |
+          if [ ! -f "out/index.html" ]; then
+            echo "ERROR: out/index.html not found"
+            ls -la
+            exit 1
+          fi
+          echo "✓ out/index.html present ($(du -sh out | cut -f1))"
+
+      - name: Restore API routes and original config
+        run: |
+          mv /tmp/api_backup src/app/api
+          git checkout next.config.js
+
+      # ── Android ──────────────────────────────────────────────────────────
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -34,20 +76,21 @@ jobs:
         with:
           packages: 'platform-tools platforms;android-35 build-tools;35.0.0'
 
-      - name: Add Capacitor Android
+      - name: Add Capacitor Android platform
         run: npx cap add android || true
 
       - name: Sync Capacitor
         run: npx cap sync android
 
-      - name: Build APK
+      - name: Build Debug APK
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --no-daemon
 
-      - name: Upload APK
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: Roziq-App-Debug
           path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
