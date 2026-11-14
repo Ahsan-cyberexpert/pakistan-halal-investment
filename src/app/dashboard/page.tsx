@@ -619,15 +619,50 @@ export default function Dashboard() {
 
         {/* ── Main Content Area ── */}
         <div className="flex flex-1 flex-col min-w-0 w-full">
-          {/* Header hidden on mobile/desktop as tabs render their own exact headers */}
-          <header className="hidden">
-            <div className="flex items-center gap-2 ml-auto">
-              {/* Language pill toggle */}
+          {/* Mobile Top Header (lg:hidden) */}
+          <header className="lg:hidden sticky top-0 z-40 bg-white/95 dark:bg-[#111215]/95 backdrop-blur-md border-b border-[#E3ECE7] dark:border-white/10 px-4 py-2.5 flex items-center justify-between shadow-xs">
+            <div className="flex items-center gap-2">
+              <Logo variant="full" className="h-7 w-auto" />
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-[#D1FAE5] dark:bg-emerald-950/60 text-[#047857] dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60">
+                Halal
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              {/* Theme toggle */}
+              <button
+                onClick={() => toggleTheme(theme === 'dark' ? 'light' : 'dark')}
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl border border-[#E3ECE7] dark:border-white/10 bg-[#F4F7F5] dark:bg-white/5 text-xs flex items-center justify-center text-[#55695F] dark:text-slate-300 hover:text-[#0B1F17] dark:hover:text-white transition-colors shadow-xs"
+                title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                aria-label="Toggle Theme"
+              >
+                {theme === 'dark' ? '☀️' : '🌙'}
+              </button>
+
+              {/* Language toggle */}
               <button
                 onClick={() => handleLangChange(lang === 'en' ? 'ur' : 'en')}
-                className="px-3 py-1 text-xs font-semibold rounded-full border border-[#E3ECE7] dark:border-white/10 bg-white dark:bg-white/5 text-[#0B1F17] dark:text-white hover:bg-[#F4F7F5] dark:bg-[#1C2029] dark:hover:bg-white/10 transition-colors shadow-xs"
+                className="h-8 sm:h-9 px-2.5 sm:px-3 rounded-xl border border-[#E3ECE7] dark:border-white/10 bg-[#F4F7F5] dark:bg-white/5 text-xs font-bold text-[#0B1F17] dark:text-white hover:bg-[#E3ECE7] dark:hover:bg-white/10 transition-colors shadow-xs"
+                aria-label="Toggle Language"
               >
                 {lang === 'en' ? 'اردو' : 'EN'}
+              </button>
+
+              {/* Settings button */}
+              <button
+                onClick={() => setActiveTab('settings')}
+                className={`h-8 sm:h-9 px-2.5 sm:px-3 rounded-xl border flex items-center gap-1 text-xs font-bold transition-all shadow-xs ${
+                  activeTab === 'settings'
+                    ? 'bg-[#D1FAE5] dark:bg-emerald-950/70 text-[#047857] dark:text-emerald-300 border-[#047857]/40 dark:border-emerald-700/60'
+                    : 'border-[#E3ECE7] dark:border-white/10 bg-[#F4F7F5] dark:bg-white/5 text-[#55695F] dark:text-slate-300 hover:text-[#0B1F17] dark:hover:text-white'
+                }`}
+                aria-label="Settings"
+              >
+                <svg width="15" height="15" viewBox="0 0 18 18" fill="none">
+                  <circle cx="9" cy="9" r="2.5" stroke="currentColor" strokeWidth="1.6"/>
+                  <path d="M9 1.5v2M9 14.5v2M1.5 9h2M14.5 9h2M3.7 3.7l1.4 1.4M12.9 12.9l1.4 1.4M3.7 14.3l1.4-1.4M12.9 5.1l1.4-1.4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+                </svg>
+                <span>{lang === 'ur' ? 'سیٹنگز' : 'Settings'}</span>
               </button>
             </div>
           </header>
@@ -929,9 +964,120 @@ export default function Dashboard() {
                   </label>
                 </div>
 
-                {/* Stock List Desktop Table with overflow scroll for small screens */}
-                <section aria-label="Stock list" className="bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 rounded-[20px] overflow-x-auto shadow-xs">
-                  <div className="min-w-[720px]">
+                {/* ── MOBILE STOCK CARDS (block lg:hidden) - Zero text merging, perfect readability on any phone ── */}
+                <div className="block lg:hidden space-y-3">
+                  {DESKTOP_STOCKS
+                    .filter((s) => {
+                      if (stockFilter === 'halal') return s.score >= 5;
+                      if (stockFilter === 'excluded') return s.score < 5;
+                      return true;
+                    })
+                    .filter((s) =>
+                      desktopStockSearch
+                        ? s.name.toLowerCase().includes(desktopStockSearch.toLowerCase()) ||
+                          s.symbol.toLowerCase().includes(desktopStockSearch.toLowerCase())
+                        : true
+                    )
+                    .map((s) => {
+                      const ok = s.score >= 5;
+                      const up = s.chg >= 0;
+                      const pct = ((Math.abs(s.chg) / (s.price - s.chg)) * 100).toFixed(2);
+
+                      return (
+                        <div
+                          key={s.symbol}
+                          className="rounded-[20px] bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 p-4 shadow-xs space-y-3"
+                        >
+                          {/* Top Row: Initial Avatar, Name, Symbol, and Shariah Pill */}
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="flex items-center gap-3 min-w-0 flex-1">
+                              <div
+                                className={`w-11 h-11 rounded-[14px] flex items-center justify-center text-sm font-extrabold shrink-0 ${
+                                  ok
+                                    ? 'bg-[#D1FAE5] text-[#064E3B] dark:bg-emerald-950/60 dark:text-emerald-300'
+                                    : 'bg-[#FEE4E2] text-[#B42318] dark:bg-rose-950/60 dark:text-rose-300'
+                                }`}
+                              >
+                                {s.ini}
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <h3 className="text-sm font-bold text-[#0B1F17] dark:text-white leading-tight break-words">
+                                  {s.name}
+                                </h3>
+                                <p className="text-xs font-semibold text-[#55695F] dark:text-slate-400 mt-0.5">
+                                  {s.symbol} • PSX
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* Shariah Score Pill */}
+                            <div className="shrink-0">
+                              <span
+                                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-black ${
+                                  ok
+                                    ? 'bg-emerald-50 dark:bg-emerald-950/50 text-[#047857] dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
+                                    : 'bg-rose-50 dark:bg-rose-950/50 text-[#B42318] dark:text-rose-300 border border-rose-200 dark:border-rose-800'
+                                }`}
+                              >
+                                {ok ? '✓ Halal' : '✕ Excluded'} ({s.score.toFixed(1)}/10)
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Middle Row: Price & 24h Move */}
+                          <div className="flex items-center justify-between pt-2 border-t border-[#E3ECE7] dark:border-white/5">
+                            <div>
+                              <span className="text-[11px] font-medium text-[#55695F] dark:text-slate-400 block">
+                                Current Price
+                              </span>
+                              <span className="text-lg font-black text-[#0B1F17] dark:text-white tabular-nums">
+                                PKR {s.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                              </span>
+                            </div>
+
+                            <div className="text-right">
+                              <span className="text-[11px] font-medium text-[#55695F] dark:text-slate-400 block">
+                                Today&apos;s Move
+                              </span>
+                              <span
+                                className={`inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-md ${
+                                  up
+                                    ? 'bg-emerald-100/70 dark:bg-emerald-950/60 text-[#047857] dark:text-emerald-300'
+                                    : 'bg-rose-100/70 dark:bg-rose-950/60 text-[#B42318] dark:text-rose-300'
+                                }`}
+                              >
+                                {(up ? '▲ +' : '▼ ') + Math.abs(s.chg).toFixed(2)} ({pct}%)
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Bottom Row: Volume & Invest Button */}
+                          <div className="flex items-center justify-between gap-3 pt-2 border-t border-[#E3ECE7] dark:border-white/5">
+                            <span className="text-xs text-[#55695F] dark:text-slate-400 font-medium">
+                              Volume: <strong className="text-[#0B1F17] dark:text-white">{s.vol}</strong>
+                            </span>
+
+                            {ok ? (
+                              <button
+                                onClick={() => initiateBuyStock(s.symbol, 10000)}
+                                className="h-9 px-4 rounded-xl bg-[#047857] hover:bg-[#064E3B] text-white font-bold text-xs shadow-xs transition-colors active:scale-95"
+                              >
+                                Invest (Buy)
+                              </button>
+                            ) : (
+                              <span className="text-xs font-semibold text-[#B42318] dark:text-rose-400 px-3 py-1 bg-rose-50 dark:bg-rose-950/30 rounded-lg">
+                                Not Compliant
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+
+                {/* ── DESKTOP STOCK TABLE (hidden lg:block) - High-res wide monitor layout ── */}
+                <section aria-label="Stock list" className="hidden lg:block bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 rounded-[20px] overflow-hidden shadow-xs">
+                  <div>
                     <div className="grid grid-cols-[minmax(0,1fr)_120px_150px_110px_110px_110px_110px] items-center h-12 px-6 text-xs font-bold tracking-wider uppercase text-[#55695F] dark:text-slate-400 bg-slate-50/50 dark:bg-white/[0.02]">
                       <span>Company</span>
                       <span className="text-right">Price (PKR)</span>
@@ -964,11 +1110,11 @@ export default function Dashboard() {
                         return (
                           <div
                             key={s.symbol}
-                            className="grid grid-cols-[minmax(0,1fr)_120px_150px_110px_110px_110px_110px] items-center h-16 px-6 border-t border-[#E3ECE7] dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#232936]/40 dark:hover:bg-white/[0.02] transition-colors"
+                            className="grid grid-cols-[minmax(0,1fr)_120px_150px_110px_110px_110px_110px] items-center min-h-[4.25rem] py-3.5 px-6 border-t border-[#E3ECE7] dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#232936]/40 dark:hover:bg-white/[0.02] transition-colors"
                           >
                             <div className="flex items-center gap-4">
                               <div
-                                className={`w-10 h-10 rounded-[12px] flex items-center justify-center text-sm font-extrabold ${
+                                className={`w-10 h-10 rounded-[12px] flex items-center justify-center text-sm font-extrabold shrink-0 ${
                                   ok
                                     ? 'bg-[#D1FAE5] text-[#064E3B]'
                                     : 'bg-[#FEE4E2] text-[#B42318]'
@@ -977,7 +1123,7 @@ export default function Dashboard() {
                                 {s.ini}
                               </div>
                               <div className="flex flex-col">
-                                <span className="text-base font-bold text-[#0B1F17] dark:text-white">{s.name}</span>
+                                <span className="text-base font-bold text-[#0B1F17] dark:text-white leading-snug">{s.name}</span>
                                 <span className="text-[13px] font-semibold text-[#55695F] dark:text-slate-400">{s.symbol}</span>
                               </div>
                             </div>
@@ -1143,9 +1289,94 @@ export default function Dashboard() {
                   </label>
                 </div>
 
-                {/* Sukuk List Table with horizontal scroll on small devices */}
-                <section aria-label="Sukuk list" className="bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 rounded-[20px] overflow-x-auto shadow-xs">
-                  <div className="min-w-[720px]">
+                {/* ── MOBILE SUKUK CARDS (block lg:hidden) - Zero text merging, perfect readability on any phone ── */}
+                <div className="block lg:hidden space-y-3">
+                  {DESKTOP_SUKUK
+                    .filter((s) => {
+                      if (sukukFilter === 'govt') return s.isGov;
+                      if (sukukFilter === 'corp') return !s.isGov;
+                      return true;
+                    })
+                    .filter((s) =>
+                      desktopSukukSearch
+                        ? s.name.toLowerCase().includes(desktopSukukSearch.toLowerCase()) ||
+                          s.type.toLowerCase().includes(desktopSukukSearch.toLowerCase())
+                        : true
+                    )
+                    .map((s) => (
+                      <div
+                        key={s.name}
+                        className="rounded-[20px] bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 p-4 shadow-xs space-y-3"
+                      >
+                        {/* Top: Icon, Title, Type Pill, Score */}
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex items-center gap-3 min-w-0 flex-1">
+                            <div className="w-11 h-11 rounded-[14px] bg-[#D1FAE5] dark:bg-emerald-950/60 text-[#064E3B] dark:text-emerald-300 flex items-center justify-center shrink-0">
+                              {s.isGov ? (
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M3 21h18 M5 21V10 M9 21V10 M15 21V10 M19 21V10 M3 10l9-6 9 6z" />
+                                </svg>
+                              ) : (
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M4 8h16v12H4z M9 8V5h6v3 M4 13h16" />
+                                </svg>
+                              )}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <h3 className="text-sm font-bold text-[#0B1F17] dark:text-white leading-snug break-words">
+                                {s.name}
+                              </h3>
+                              <span className="inline-block text-[11px] font-semibold text-[#55695F] dark:text-slate-400 mt-0.5">
+                                {s.type} • 100% Asset-Backed
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Shariah Score Pill */}
+                          <div className="shrink-0">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-black bg-emerald-50 dark:bg-emerald-950/50 text-[#047857] dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                              ★ {s.score.toFixed(1)}/10
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Grid of Key Financial Info */}
+                        <div className="grid grid-cols-2 gap-2 p-3 rounded-xl bg-[#F4F7F5] dark:bg-white/[0.03] text-xs">
+                          <div>
+                            <span className="text-[#55695F] dark:text-slate-400 block text-[11px]">Expected Return</span>
+                            <span className="font-extrabold text-[#047857] dark:text-emerald-400 text-sm">{s.ret.toFixed(2)}% p.a.</span>
+                          </div>
+                          <div>
+                            <span className="text-[#55695F] dark:text-slate-400 block text-[11px]">Tenor</span>
+                            <span className="font-bold text-[#0B1F17] dark:text-white">{s.tenor}</span>
+                          </div>
+                          <div>
+                            <span className="text-[#55695F] dark:text-slate-400 block text-[11px]">Profit Payout</span>
+                            <span className="font-medium text-[#0B1F17] dark:text-slate-300">{s.payout}</span>
+                          </div>
+                          <div>
+                            <span className="text-[#55695F] dark:text-slate-400 block text-[11px]">Min. Investment</span>
+                            <span className="font-bold text-[#0B1F17] dark:text-white">PKR {s.min.toLocaleString('en-US')}</span>
+                          </div>
+                        </div>
+
+                        {/* Bottom Action */}
+                        <button
+                          onClick={() => handleBuySukuk({ type: 'buy_sukuk', amount: s.min, name: s.name })}
+                          className="w-full h-10 rounded-xl bg-[#047857] hover:bg-[#064E3B] text-white font-bold text-xs sm:text-sm shadow-xs transition-colors flex items-center justify-center gap-2 active:scale-98"
+                        >
+                          <span>Invest in {s.name}</span>
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="9 18 15 12 9 6" />
+                          </svg>
+                        </button>
+                      </div>
+                    ))}
+                </div>
+
+                {/* ── DESKTOP SUKUK TABLE (hidden lg:block) - High-res wide monitor layout ── */}
+                <section aria-label="Sukuk list" className="hidden lg:block bg-white dark:bg-[#16171b] border border-[#E3ECE7] dark:border-white/10 rounded-[20px] overflow-hidden shadow-xs">
+                  <div>
                     <div className="grid grid-cols-[minmax(0,1fr)_110px_120px_130px_130px_120px_110px] items-center h-12 px-6 text-xs font-bold tracking-wider uppercase text-[#55695F] dark:text-slate-400 bg-slate-50/50 dark:bg-white/[0.02]">
                       <span>Sukuk</span>
                       <span className="text-right">Return p.a.</span>
@@ -1171,7 +1402,7 @@ export default function Dashboard() {
                       .map((s) => (
                         <div
                           key={s.name}
-                          className="grid grid-cols-[minmax(0,1fr)_110px_120px_130px_130px_120px_110px] items-center h-16 px-6 border-t border-[#E3ECE7] dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#232936]/40 dark:hover:bg-white/[0.02] transition-colors"
+                          className="grid grid-cols-[minmax(0,1fr)_110px_120px_130px_130px_120px_110px] items-center min-h-[4.25rem] py-3.5 px-6 border-t border-[#E3ECE7] dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#232936]/40 dark:hover:bg-white/[0.02] transition-colors"
                         >
                           <div className="flex items-center gap-4">
                             <div className="w-10 h-10 rounded-[12px] bg-[#D1FAE5] text-[#064E3B] flex items-center justify-center flex-shrink-0">
@@ -1186,7 +1417,7 @@ export default function Dashboard() {
                               )}
                             </div>
                             <div className="flex flex-col">
-                              <span className="text-base font-bold text-[#0B1F17] dark:text-white">{s.name}</span>
+                              <span className="text-base font-bold text-[#0B1F17] dark:text-white leading-snug">{s.name}</span>
                               <span className="text-[13px] font-semibold text-[#55695F] dark:text-slate-400">{s.type}</span>
                             </div>
                           </div>
@@ -1945,7 +2176,7 @@ export default function Dashboard() {
                 {/* Delete account */}
                 <button
                   onClick={() => setShowResetModal(true)}
-                  className="flex w-full items-center justify-between p-5 hover:bg-red-50/50 dark:hover:bg-red-50 dark:bg-red-950/600/5 transition-colors text-left"
+                  className="flex w-full items-center justify-between p-5 hover:bg-red-50/50 dark:hover:bg-red-950/30 transition-colors text-left"
                 >
                   <div>
                     <span className="text-sm font-bold text-[#B42318] dark:text-red-400">
@@ -2000,28 +2231,28 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* ── Mobile Bottom Navigation (72px Height, Exact Match to Image 9) ── */}
-      <div className="fixed bottom-0 left-0 right-0 h-[72px] bg-white dark:bg-[#111215] border-t border-[#E3ECE7] dark:border-white/10 z-50 flex items-center justify-around px-2 lg:hidden shadow-lg">
-        {NAV_ITEMS.filter((n) => ['home', 'portfolio', 'assets', 'kameti', 'zakat', 'mufti'].includes(n.id)).map((item) => {
+      {/* ── Mobile Bottom Navigation (with all 7 tabs including Settings) ── */}
+      <nav aria-label="Mobile Navigation" className="fixed bottom-0 left-0 right-0 h-[68px] sm:h-[72px] bg-white/95 dark:bg-[#111215]/95 backdrop-blur-md border-t border-[#E3ECE7] dark:border-white/10 z-50 flex items-center justify-between px-1 sm:px-2 lg:hidden shadow-lg">
+        {NAV_ITEMS.map((item) => {
           const isActive = activeTab === (item.id as DashboardTab);
           return (
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id as DashboardTab)}
-              className={`flex-1 min-h-[44px] flex flex-col items-center justify-center gap-1 py-1 transition-all ${
+              className={`flex-1 min-h-[46px] flex flex-col items-center justify-center gap-0.5 py-1 px-0.5 transition-all active:scale-95 ${
                 isActive
                   ? 'text-[#047857] dark:text-emerald-400 font-bold'
-                  : 'text-[#55695F] dark:text-slate-400 hover:text-[#0B1F17]'
+                  : 'text-[#55695F] dark:text-slate-400 hover:text-[#0B1F17] dark:hover:text-white'
               }`}
             >
-              <span>{item.icon}</span>
-              <span className="text-[11px] leading-tight font-medium">
+              <span className="scale-90 sm:scale-100">{item.icon}</span>
+              <span className="text-[10px] leading-tight font-medium truncate max-w-[48px]">
                 {lang === 'ur' ? item.labelUr : item.labelEn}
               </span>
             </button>
           );
         })}
-      </div>
+      </nav>
 
       <SovereignScan isOpen={isScanning} onComplete={onScanComplete} />
     </>
