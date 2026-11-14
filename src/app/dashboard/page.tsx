@@ -2231,22 +2231,22 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* ── Mobile Bottom Navigation (with all 7 tabs including Settings) ── */}
-      <nav aria-label="Mobile Navigation" className="fixed bottom-0 left-0 right-0 h-[68px] sm:h-[72px] bg-white/95 dark:bg-[#111215]/95 backdrop-blur-md border-t border-[#E3ECE7] dark:border-white/10 z-50 flex items-center justify-between px-1 sm:px-2 lg:hidden shadow-lg">
-        {NAV_ITEMS.map((item) => {
+      {/* ── Mobile Bottom Navigation (6 Core Tabs - Settings is at Top Bar) ── */}
+      <nav aria-label="Mobile Navigation" className="fixed bottom-0 left-0 right-0 h-[68px] sm:h-[72px] bg-white/95 dark:bg-[#111215]/95 backdrop-blur-md border-t border-[#E3ECE7] dark:border-white/10 z-50 flex items-center justify-around px-2 lg:hidden shadow-lg">
+        {NAV_ITEMS.filter((item) => item.id !== 'settings').map((item) => {
           const isActive = activeTab === (item.id as DashboardTab);
           return (
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id as DashboardTab)}
-              className={`flex-1 min-h-[46px] flex flex-col items-center justify-center gap-0.5 py-1 px-0.5 transition-all active:scale-95 ${
+              className={`flex-1 min-h-[46px] flex flex-col items-center justify-center gap-1 py-1 transition-all active:scale-95 ${
                 isActive
                   ? 'text-[#047857] dark:text-emerald-400 font-bold'
                   : 'text-[#55695F] dark:text-slate-400 hover:text-[#0B1F17] dark:hover:text-white'
               }`}
             >
-              <span className="scale-90 sm:scale-100">{item.icon}</span>
-              <span className="text-[10px] leading-tight font-medium truncate max-w-[48px]">
+              <span className="scale-95 sm:scale-100">{item.icon}</span>
+              <span className="text-[11px] leading-tight font-medium">
                 {lang === 'ur' ? item.labelUr : item.labelEn}
               </span>
             </button>
